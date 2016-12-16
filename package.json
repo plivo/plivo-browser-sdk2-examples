@@ -1,0 +1,16 @@
+{
+  "name": "plivo-sample-app",
+  "description": "Plivo SDK example app",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ejs": "~1.0.0",
+    "express": "^4.9.8"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-express": "^0.3.5"
+  }
+}

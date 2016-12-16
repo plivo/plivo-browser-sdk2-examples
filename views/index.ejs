@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Plivo Webphone Demo</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="assets/example.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <div class="row text-center">
+        <div class="col-md-12">
+            <img id="plivo-logo" class="img-responsive center-block" src="assets/logo.png">
+        </div>
+    </div>
+    <div class="row text-center">
+        <div class="col-md-12">
+            <h4>WebSDK Webphone Demo</h4>
+            <h6><i>Chrome/Firefox Supported Only</i></h6>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div id="login_box" title="Login" style="">
+                <div class="form-group">
+                    <label for="usr">Username:</label>
+                    <input type="text" class="form-control" id="username" placeholder="Endpoint username">
+                </div>
+                <div class="form-group">
+                    <label for="pwd">Password:</label>
+                    <input type="password" class="form-control" id="password" placeholder="Endpoint password">
+                </div>
+                <span style="color: red" id="status_txt"></span><br>
+                <button type="button" class="btn btn-default btn-primary btn-block" id="btn_login" onclick="login()">Login</button>
+            </div>
+            <form id="callcontainer" style="display: none">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="to" value="" id="to" placeholder="Phone number or a SIP URI">
+                </div>
+                <button type="button" class="btn btn-default btn-primary" id="make_call" onclick="call()">Call</button>
+                <button type="button" class="btn btn-default btn-primary" id="btn_logout" onclick="logout()">Logout</button>
+            </form>
+            <div id="incoming_callbox" style="display: none;" class="call"><a>
+                </a><a href="#" class="btn main-btn btn-success" onclick="answer()">Answer</a>
+                <a href="#" class="btn main-btn btn-danger" onclick="reject()">Reject</a>
+            </div>
+            <div id="btn-container" style="display: none">
+                <a href="#" id="hangup_call" class="btn main-btn btn-danger" onclick="hangup();">Hangup</a>
+                <a href="#" id="linkMute" class="badge badge-warning" onclick="mute();">Mute</a>
+                <a href="#" id="linkUnmute" class="badge badge-warning" onclick="unmute();" style="display: none">Unmute</a><br>
+
+                <a class="btn btn-info" href="#" onclick="dtmf('1');">1</a>
+                <a class="btn btn-info" href="#" onclick="dtmf('2');">2</a>
+                <a class="btn btn-info" href="#" onclick="dtmf('3');">3</a><br>
+
+                <a class="btn btn-info" href="#" onclick="dtmf('4');">4</a>
+                <a class="btn btn-info" href="#" onclick="dtmf('5');">5</a>
+                <a class="btn btn-info" href="#" onclick="dtmf('6');">6</a><br>
+
+                <a class="btn btn-info" href="#" onclick="dtmf('7');">7</a>
+                <a class="btn btn-info" href="#" onclick="dtmf('8');">8</a>
+                <a class="btn btn-info" href="#" onclick="dtmf('9');">9</a><br>
+
+                <a class="btn btn-info" href="#" onclick="dtmf('*');">*</a>
+                <a class="btn btn-info" href="#" onclick="dtmf('0');">0</a>
+                <a class="btn btn-info" href="#" onclick="dtmf('#');"> #</a><br>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<!--<script src="https://api.callstats.io/static/callstats.min.js"></script>-->
+<script type="text/javascript" src="assets/plivowebsdk.js"></script>
+<script type="text/javascript" src="assets/example.js"></script>
+</body>
+</html>
+

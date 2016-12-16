@@ -1,0 +1,37 @@
+body {
+    padding-bottom: 20px;
+}
+
+#plivo-logo {
+    width: 25%;
+    height: 25%;
+}
+
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: #89B147 !important;
+    border: none;
+}
+
+#btn-container a{
+    margin-top:7px;
+    min-width:7px;
+}
+.metrics{
+    margin-bottom: 10px;
+    padding: 10px;
+    z-index: 10000;
+    display: inline-block;
+    background: rgba(0,153,204,0.93);
+    border: 1px solid #006b8f;
+    color: #fff;
+    font-size: 13px;
+    text-align: center;
+    border-radius: 3px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    outline: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    font-family: monospace;	
+}
