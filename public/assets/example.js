@@ -197,8 +197,8 @@ $(document).ready(function() {
       optional: [ { googAutoGainControl: false } ]
     },
     enableTracking: true,
-    appId: '181413170',
-    appSecret: 's/6c6KfEuAGv:ybDVbpGia6gCNPUgSO0je0QRetcTgKN0fRwmohbJudc='
+    appId: '110',
+    appSecret: 'aCNdskhfkasdh0mohbJ'
   };
   plivoWebSdk = new window.Plivo(options);
 
