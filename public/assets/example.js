@@ -196,10 +196,9 @@ $(document).ready(function() {
     audioConstraints: {
       optional: [ { googAutoGainControl: false } ]
     },
-    callStatsIo: {
-      appId: '181413170',
-      appSecret: 's/6c6KfEuAGv:ybDVbpGia6gCNPUgSO0je0QRetcTgKN0fRwmohbJudc='
-    }
+    enableTracking: true,
+    appId: '181413170',
+    appSecret: 's/6c6KfEuAGv:ybDVbpGia6gCNPUgSO0je0QRetcTgKN0fRwmohbJudc='
   };
   plivoWebSdk = new window.Plivo(options);
 
