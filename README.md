@@ -19,12 +19,11 @@ In the document's ready function is where the Plivo JS Objects is initialised
       permOnClick: false,
       enableIPV6: false,
       codecs: ['PCMU', 'OPUS'],
+      appId: '1x8xxxxx2',
+      appSecret: 's/xxxxxxcxxxuAGv:xxxxxxabcd',
+      enableTracking: true,
       audioConstraints: {
         optional: [ { googAutoGainControl: false } ]
-      },
-      callStatsIo: {
-        appId: '1x8xxxxx2',
-        appSecret: 's/xxxxxxcxxxuAGv:xxxxxxabcd'
       }
     };
     plivoWebSdk = new window.Plivo(options);
