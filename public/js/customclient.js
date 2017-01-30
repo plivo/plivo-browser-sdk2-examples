@@ -7,14 +7,14 @@ function login(username, password) {
 			plivoWebSdk.client.login(username, password);
 			$('#sipUserName').html('sip:'+username+'@'+plivoWebSdk.client.phone.configuration.hostport_params);
 			document.querySelector('title').innerHTML=username;
-		}	
+		}
 }
 function onWebrtcNotSupported() {
 	console.warn('no webRTC support');
 	alert('No webRTC');
 }
 function mediaMetrics(obj){
-  console.info(obj);
+  console.table(obj);
   var message = obj.type;
   var classExist = document.querySelector('.-'+obj.type);  
   if(obj.type.match('audio') && obj.value > 50){
@@ -265,7 +265,7 @@ $('.num').click(function () {
 
 // variables to declare 
 
-var plivoWebSdk; // this will be retrived from settings in UI
+var plivoWebSdk;
 
 function startPhone(username, password){
 		if(!username) return;
