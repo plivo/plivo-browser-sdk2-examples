@@ -16,26 +16,27 @@
         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#mysettings">Settings</button>
         <button type="button" class="btn btn-info" id=uiLogin data-toggle="modal" data-target="#login">Login</button>
         <button type="button" class="btn btn-info" id=uiLogout onclick="window.location.reload()">logout</button>   
-        <span class="lead white" style="margin-left:25%;">Plivo Websdk Demo</span>>
+        <span class="lead white client-name">Plivo web client</span>
         <span class="lead pull-right white" id=sipUserName >Not ready...</span>
 
     </div>
     <div class="panel panel-success">
+        <div class="loader"></div>
         <div class="container">
             <span class="lead text-primary"> phone status: </span>
             <span class="lead" id=phonestatus>Not ready...</span>
         </div>
         <div class="container">
             <span class="lead text-primary"> call status: </span>
-            <span class="lead" id=callstatus>Ideal</span>
+            <span class="lead" id=callstatus>idle</span>
         </div>  
         <div class="panel-body">
             <div class="container">
                 <div class=""> 
                     <div class="col-md-4 phone">
                         <div class="row1">
-                            <div class="col-md-12">
-                            <input type="text" name="name" onkeyup="trimSpace(this)" onblur="trimSpace(this)" id="toNumber" class="form-control tel" value="" />
+                            <div class="col-md-12 white-shadow">
+                            <input type="text" name="name" onkeyup="trimSpace(this)" onblur="trimSpace(this)" id="toNumber" class="form-control tel" placeholder="sip:plivoendpoint@phone.plivo.com || + Phone#" value="" />
                                 <div class="num-pad">
                                 <div class="span4">
                                     <div class="num">
@@ -198,7 +199,10 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>                      
+                            <div class="col-md-6">
+                                <canvas id="audio-local"></canvas>
+                            </div>                          
+                        </div>                                          
                     </div>
                 </div>
             </div>
@@ -215,6 +219,7 @@
                 <div class="form-group">
                   <textarea class="form-control monospace" rows="5" id="appSettings"></textarea>
                 </div>
+                <label class="checkbox-inline" data-toggle="tooltip" title="Just enable and close popup. No need to update!"><input id=micVisualizer type="checkbox" value="">Mic Visualizer</label>
             </div>
             <div class="modal-footer">
                 <button type="button" id="resetSettings" class="btn btn-info" data-dismiss="modal" data-toggle="tooltip" title="Please reload the page to reflect changes">reset</button>           
@@ -301,7 +306,7 @@
     </div>      
 </div>
 <div class="feedback">
-    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#sendQualityFeedback">Feedback</button> 
+    <button type="button" class="btn btn-info" id="clickFeedback" data-toggle="modal" data-target="#sendQualityFeedback">Feedback</button>  
 </div>
 <div class="alertmsg">
     <!-- media metrics message comes here -->

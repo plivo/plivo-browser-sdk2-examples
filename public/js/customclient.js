@@ -2,26 +2,42 @@
 // UI tweaks
 $('#makecall').attr('class', 'btn btn-success btn-block flatbtn disabled');
 
+function kickStartNow(){
+		$('.callScreen').hide();
+		$('.loader').show();
+		$('.fadein-effect').fadeIn(5000);	
+}
 function login(username, password) {
 		if(username){
 			plivoWebSdk.client.login(username, password);
 			$('#sipUserName').html('sip:'+username+'@'+plivoWebSdk.client.phone.configuration.hostport_params);
 			document.querySelector('title').innerHTML=username;
-		}
+		}	
 }
 function onWebrtcNotSupported() {
 	console.warn('no webRTC support');
 	alert('No webRTC');
 }
 function mediaMetrics(obj){
-  console.table(obj);
-  var message = obj.type;
-  var classExist = document.querySelector('.-'+obj.type);  
-  if(obj.type.match('audio') && obj.value > 50){
-  	message = "same level";
-  }
-  if(obj.active){
-  	classExist? classExist.remove() : null; 
+	/** 
+	* Set a trigger for Quality Feedback popup when there is an warning druing call using sessionStorage
+	* During `onCallTerminated` event check for `triggerFB` flag
+	*/
+	sessionStorage.setItem('triggerFB',true);
+	console.table([obj]);
+	var message = obj.type;
+	var classExist = document.querySelector('.-'+obj.type);
+
+	/**
+	* If there is a same audio level for 3 samples then we will get a trigger
+	* If audio level is greater than 30 then it could be some continuous echo or user is not speaking
+	* Set message "same level" for audio greater than 30. Less than 30 could be a possible mute  	
+	*/
+	if(obj.type.match('audio') && obj.value > 30){
+		message = "same level";
+	}
+	if(obj.active){
+		classExist? classExist.remove() : null; 
 	$(".alertmsg").prepend(
 	  '<div class="metrics -'+obj.type+'">' +
 	  '<span style="margin-left:20px;">'+obj.level+' | </span>' +
@@ -30,10 +46,10 @@ function mediaMetrics(obj){
 	  '<span aria-hidden="true" onclick="closeMetrics(this)" style="margin-left:25px;cursor:pointer;">X</span>' +
 	  '</div>'
 	);
-  }
-  if(!obj.active && classExist){
-  	document.querySelector('.-'+obj.type).remove();
-  }
+	}
+	if(!obj.active && classExist){
+		document.querySelector('.-'+obj.type).remove();
+	}
 }
 function onReady(){
 	$('#phonestatus').html('trying to login...');
@@ -46,11 +62,13 @@ function onLogin(){
 	$('#uiLogin').hide();
 	$('#uiLogout').show();
 	$('.feedback').show();
+	$('.loader').remove();
 }
 function onLoginFailed(reason){
 	$('#phonestatus').html('login failed');
 	console.info('onLoginFailed ',reason);
-	customAlert('Login failure :',reason);	
+	customAlert('Login failure :',reason);
+	$('.loader').remove()	
 }
 function onLogout(){
 	$('#phonestatus').html('Offline');
@@ -67,18 +85,21 @@ function onCallRemoteRinging(){
 function onCallAnswered(){
 	console.info('onCallAnswered');
 	$('#callstatus').html('Answered');
-	// $('.dialpad').show();
 	var timer = 0;
 	window.calltimer = setInterval(function(){
 		timer = timer +1;
 		$('#callDuration').html(timer.calltimer());
 	},1000);
-
 }
 function onCallTerminated(){
 	$('#callstatus').html('Call Ended');
 	console.info('onCallTerminated');
-	callOff();	
+	if(sessionStorage.getItem('triggerFB')){
+		$('#clickFeedback').trigger('click');
+		// clear at end of every call
+		sessionStorage.removeItem('triggerFB');
+	}
+	callOff();
 }
 function onCallFailed(reason){
 	$('#callstatus').html('call failed');
@@ -110,8 +131,8 @@ function closeMetrics(e){
 }
 
 function resetSettings(source){
-	// var defaultSettings = { "debug": "DEBUG","codecs": ["OPUS","PCMU"],"permOnClick": false,"enableIPV6": false, "audioConstraints": { "optional": [ { "googAutoGainControl": false } ] }, "enableTracking": false, "appId": null, "appSecret": null}
-	var defaultSettings = { "debug": "DEBUG", "permOnClick": true, "codecs": ["OPUS","PCMU"], "enableIPV6": false, "audioConstraints": { "optional": [ { "googAutoGainControl": false } ] }, "enableTracking": false}
+	// You can use all your default settings to go in as options during sdk init
+	var defaultSettings = {"debug":"DEBUG","permOnClick":true,"codecs":["OPUS","PCMU"],"enableIPV6":false,"audioConstraints":{"optional":[{"googAutoGainControl":false}]},"dscp":true,"enableTracking":false,"appId":"1xxxxxxxx0"}
 	var uiSettings = document.querySelector('#appSettings');
 	uiSettings.value = JSON.stringify(defaultSettings);
 	if(source == 'clickTrigger')
@@ -153,8 +174,8 @@ function callOff(){
 	$('.outboundBeforeAnswer').hide();
 	window.calltimer? clearInterval(window.calltimer) : false;
 	setTimeout(function(){
-		$('#callstatus').html('Ideal');
-		$('.callinfo').hide();
+		$('#callstatus').html('Idle');
+		$('.callinfo').hide();		
 	},3000);
 }
 
@@ -192,6 +213,15 @@ $('#Hangup').click(function(){
 		callOff();
 	}
 });
+
+/** 
+* Hangup calls on page reload / close
+* This is will prevent the other end still listening for dead call
+*/
+window.onbeforeunload = function () {
+    plivoWebSdk.client.hangup();
+};
+
 $('#tmute').click(function(e){
 	var event = e.currentTarget.getAttribute('data-toggle');
 	if(event == "mute"){
@@ -206,12 +236,14 @@ $('#tmute').click(function(e){
 });
 $('#makecall').click(function(e){
 	var to = $('#toNumber').val().replace(" ","");
+	var extraHeaders = {'X-PH-header1': 'test1', 'X-PH-header2': 'test2'};
 	var callEnabled = $('#makecall').attr('class').match('disabled');
 	if(!to || !plivoWebSdk || !!callEnabled){return};
+	plivoWebSdk.client.call(to,extraHeaders);	
 	console.info('Click make call : ',to);
+
 	$('.callScreen').show();
 	$('.AfterAnswer').show();
-	plivoWebSdk.client.call(to);
 	$('#boundType').html('Outgoing :');
 	$('#callNum').html(to);
 	$('#callDuration').html('00:00:00');
@@ -231,6 +263,7 @@ $('#resetSettings').click(function(e){
 $('#qualityRange').click(function(e){
 	var value = e.currentTarget.value;
 	$('#qualityNumber').html('Rating: '+value);
+	// Show quality issue reasons only if rating is less then 4
 	if(value < 4){
 		$('.lowQualityRadios').show();
 	}else{
@@ -265,11 +298,10 @@ $('.num').click(function () {
 
 // variables to declare 
 
-var plivoWebSdk;
+var plivoWebSdk; // this will be retrived from settings in UI
 
 function startPhone(username, password){
 		if(!username) return;
-		$('.callScreen').hide();
 		var options = refreshSettings();
         plivoWebSdk = new window.Plivo(options);
 		plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
@@ -286,6 +318,8 @@ function startPhone(username, password){
 		plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
 		plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
 
+		//Show screen loader and other UI stuffs
+		kickStartNow();
         plivoWebSdk.client.setRingTone(true);
         plivoWebSdk.client.setRingToneBack(true);
         login(username, password);

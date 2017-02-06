@@ -19,7 +19,6 @@ This is where we initialise a new Plivo object by passing `options` like `plivoW
     var plivoWebSdk; 
     function startPhone(username, password){
         if(!username) return;
-        $('.callScreen').hide();
         var options = refreshSettings();
             plivoWebSdk = new window.Plivo(options);
         plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
@@ -35,9 +34,12 @@ This is where we initialise a new Plivo object by passing `options` like `plivoW
         plivoWebSdk.client.on('onIncomingCall', onIncomingCall);
         plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
         plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
+    
+        //Show screen loader and other UI stuffs
+        kickStartNow();
             plivoWebSdk.client.setRingTone(true);
             plivoWebSdk.client.setRingToneBack(true);
-            login(username, password); // username and password will be retrived from login UI
+            login(username, password);
     }
 
 We have access to `options` from UI as SETTINGS menu. You can update your settings in the UI and click on LOGIN to boot the phone.
@@ -184,6 +186,14 @@ This code may be used to terminate a call.
       }
     });
 
+
+### Hangup calls on page reload / close
+Setup an unload listener 
+
+      window.onbeforeunload = function () {
+          plivoWebSdk.client.hangup();
+      }; 
+
 ### Implementing MediaMetrics
 
 A simple dynamic UI to show notifications when some `warning` events get emitted from Plivo SDK
@@ -191,10 +201,11 @@ A simple dynamic UI to show notifications when some `warning` events get emitted
 Please watch chrome or firefox debugger console to see the comple info during call
 
     function mediaMetrics(obj){
-      console.table(obj);
+      sessionStorage.setItem('triggerFB',true);
+      console.table([obj]);
       var message = obj.type;
-      var classExist = document.querySelector('.-'+obj.type);  
-      if(obj.type.match('audio') && obj.value > 50){
+      var classExist = document.querySelector('.-'+obj.type);
+      if(obj.type.match('audio') && obj.value > 30){
         message = "same level";
       }
       if(obj.active){
