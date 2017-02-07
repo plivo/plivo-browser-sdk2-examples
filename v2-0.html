@@ -4,6 +4,7 @@
 	<title>Plivo webphone</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" type="image/png" href="//s3.amazonaws.com/plivowebrtc/assets/favicon.png">
 	<script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -693,7 +694,7 @@
 
 	function resetSettings(source){
 		// You can use all your default settings to go in as options during sdk init
-		var defaultSettings = {"debug":"DEBUG","permOnClick":true,"codecs":["OPUS","PCMU"],"enableIPV6":false,"audioConstraints":{"optional":[{"googAutoGainControl":false}]},"dscp":true,"enableTracking":false,"appId":"1xxxxxxxx0"}
+		var defaultSettings = {"debug":"INFO","permOnClick":false,"codecs":["OPUS","PCMU"],"enableIPV6":false,"audioConstraints":{"optional":[{"googAutoGainControl":false}]},"dscp":true,"enableTracking":false,"appId":"1xxxxxxxx0"}
 		var uiSettings = document.querySelector('#appSettings');
 		uiSettings.value = JSON.stringify(defaultSettings);
 		if(source == 'clickTrigger')
