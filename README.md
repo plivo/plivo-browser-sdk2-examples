@@ -58,7 +58,7 @@ a `startPhone` function to hook all our Events
 We have access to `options` from UI as SETTINGS menu. You can update your settings in the UI and click on LOGIN to boot the phone.
 ### Document ready state
 
->If you are directly calling login on page load, Please make sure you do that on only document ready*
+>If you're directly calling login on page load, Please make sure you do that on only after document ready!
 
 ```html
     <script type="text/javascript">
