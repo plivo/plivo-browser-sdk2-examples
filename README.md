@@ -2,6 +2,8 @@
 ##### We have come up with simple webphone here!
 *This is a very simple demo showing how you can make phone calls from the web browser to both sip addresses and PSTN phone numbers without installing any plugin.*
 
+#![plivo-websdk-2.0-example](img/callscreen.png)
+
 ---
 *Checkout [live web phone demo](https://s3.amazonaws.com/plivowebrtc/v2-0.html) 
 To use the live demo, please sign up for a Plivo account here: https://manage.plivo.com/accounts/register/ then make a Plivo Endpoint here: https://manage.plivo.com/endpoint/create/. You must use a Plivo Endpoint to log into the WebSDK demo page. Please do not try to use your Plivo account credentials to log into the demo.*
@@ -66,6 +68,7 @@ We have access to `options` from UI as SETTINGS menu. You can update your settin
 ```
 ### Login 
 login starts off with accepting Plivo Endpoint Credentials in login menu
+#![plivo-websdk-2.0-example](img/login.png)
 ```js
     function login(username, password) {
         if(username){
@@ -80,6 +83,8 @@ login starts off with accepting Plivo Endpoint Credentials in login menu
 ```    
 ### Settings part
 *This code will help you to play witht `options` params directly in UI, but in your production env, you can hard code your `options` param*
+#![plivo-websdk-2.0-example](img/settings.png)
+
 ```js
 function resetSettings(source){
   var defaultSettings = { "debug": "DEBUG", "permOnClick": true, "codecs": ["OPUS","PCMU"], "enableIPV6": false, "audioConstraints": { "optional": [ { "googAutoGainControl": false } ] }, "enableTracking": false}
@@ -214,6 +219,7 @@ window.onbeforeunload = function () {
 ### Implementing MediaMetrics
 
 A simple dynamic UI to show notifications when some `warning` events get emitted from Plivo SDK
+#![plivo-websdk-2.0-example](img/metrics.png)
 
 Please watch chrome or firefox debugger console to see the comple info during call
 ```js
@@ -244,6 +250,8 @@ function mediaMetrics(obj){
 ### Sending Feedback
 There is a predefined list of feedback comments shown in UI for the score range from 1-3
 Score 4 and 5 can have good and perfect as its comments.
+#![plivo-websdk-2.0-example](img/feedback.png)
+
 ```js
 $('#sendFeedback').click(function(){
   var score = $('#qualityRange').val();
