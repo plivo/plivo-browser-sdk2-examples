@@ -47,16 +47,19 @@ a `startPhone` function to hook all our Events
         plivoWebSdk.client.on('onIncomingCall', onIncomingCall);
         plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
         plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
-    
         //Show screen loader and other UI stuffs
         kickStartNow();
-            plivoWebSdk.client.setRingTone(true);
-            plivoWebSdk.client.setRingToneBack(true);
-            login(username, password);
+        // Allow to set default ring tones
+        plivoWebSdk.client.setRingTone(true);
+        plivoWebSdk.client.setRingToneBack(true);
+        login(username, password);
     }
 ```
 We have access to `options` from UI as SETTINGS menu. You can update your settings in the UI and click on LOGIN to boot the phone.
 ### Document ready state
+
+>If you are directly calling login on page load, Please make sure you do that on only document ready*
+
 ```html
     <script type="text/javascript">
         $( document ).ready(function() {
