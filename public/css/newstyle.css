@@ -1,5 +1,12 @@
 @import url(//fonts.googleapis.com/css?family=Lato:300);
 @import url(//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css);
+body{ 
+background: url(despic.png) no-repeat center center fixed; 
+-webkit-background-size: cover;
+-moz-background-size: cover;
+-o-background-size: cover;
+background-size: cover;
+}
 body
 {
     margin: 0;
@@ -17,6 +24,14 @@ p
     padding: 0 0 10px 0;
     line-height: 20px;
 }
+.phone-panel{
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+  box-shadow: 0 1px 1px rgba(0,0,0,.05);
+  border-color: white;  
+}
 .span4
 {
     width: 80px;
@@ -27,14 +42,15 @@ p
 .phone
 {
     margin-top: 15px;
-    background: #fff;
+    background: rgba(150, 209, 150, 0.09);
 }
 .tel
 {
-    margin-bottom: 10px;
-    margin-top: 10px;
-/*    border: 1px solid #9e9e9e;
-    border-radius: 0px;*/
+  margin-bottom: 10px;
+  margin-top: 10px;
+  background-color: rgba(0, 0, 0, 0);
+  color: white;
+  font-weight: 600;
 }
 .num-pad
 {
@@ -49,13 +65,12 @@ p
     border-radius: 999px;
     -moz-border-radius: 999px;
     height: 80px;
-    background-color: #fff;
-    color: #333;
+    /*background-color: #fff;*/
     cursor: pointer;
 }
 .num:hover
 {
-    background-color: #9e9e9e;
+    background-color: #5cb85c;
     color: #fff;
     transition-property: background-color .2s linear 0s;
     -moz-transition: background-color .2s linear 0s;
@@ -69,7 +84,7 @@ p
     /*margin-top: 15px;*/
     font-family: 'Lato' , sans-serif;
     line-height: 30px;
-    color: #333;
+    color: white;
 }
 .small
 {
@@ -162,7 +177,9 @@ p
 }
 
 .white{
-    color: white;
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .feedback{
@@ -214,10 +231,15 @@ p
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);    
 }
 .client-name{
-    margin-left:25%;
-    font-size:xx-large;
+  margin-left: 20%;
+  position: absolute;
+  font-size: 30px;
+  font-weight: 600;
+  color: gray;
 }
-
+.lead{
+  font-weight: 600;
+}
 .loader {
   position: absolute;
   left: 50%;
