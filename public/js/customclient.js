@@ -132,7 +132,7 @@ function closeMetrics(e){
 
 function resetSettings(source){
 	// You can use all your default settings to go in as options during sdk init
-	var defaultSettings = {"debug":"DEBUG","permOnClick":true,"codecs":["OPUS","PCMU"],"enableIPV6":false,"audioConstraints":{"optional":[{"googAutoGainControl":false}]},"dscp":true,"enableTracking":false,"appId":"1xxxxxxxx0"}
+	var defaultSettings = {"debug":"DEBUG","permOnClick":true,"codecs":["OPUS","PCMU"],"enableIPV6":false,"audioConstraints":{"optional":[{"googAutoGainControl":false}]},"dscp":true,"enableTracking":false}
 	var uiSettings = document.querySelector('#appSettings');
 	uiSettings.value = JSON.stringify(defaultSettings);
 	if(source == 'clickTrigger')
