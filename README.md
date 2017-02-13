@@ -4,13 +4,13 @@
 #![plivo-websdk-2.0-example](img/callscreen.png)
 
 ---
-*To use the [live web phone demo](https://s3.amazonaws.com/plivowebrtc/v2-0.html) 
+*To use the [live web phone demo](https://s3.amazonaws.com/plivowebrtc/v2-0.html)*
 
-a. Sign up for a Plivo account here: https://manage.plivo.com/accounts/register/ 
+*a. Sign up for a Plivo account here: https://manage.plivo.com/accounts/register/ *
 
-b. Create a Plivo Endpoint here: https://manage.plivo.com/endpoint/create/.
+*b. Create a Plivo Endpoint here: https://manage.plivo.com/endpoint/create/.*
 
-c. Use this Plivo endpoint to login after deploying the application*
+*c. Use this Plivo endpoint to login after deploying the application*
 
 ---
 ### Deploying the application
@@ -263,5 +263,4 @@ $('#sendFeedback').click(function(){
   plivoWebSdk.client.sendQualityFeedback(lastCallid,score,comment);
   customAlert('Quality feedback','success');
 });
-```    
-    
+```
