@@ -1,15 +1,16 @@
 ## Plivo Web SDK v2.0 Example
-##### We have come up with simple webphone here!
-*This is a very simple demo showing how you can make phone calls from the web browser to both sip addresses and PSTN phone numbers without installing any plugin.*
+*This Plivo example shows how to use all the features in Plivo WebSDK 2.0 using a simple webphone demo. This demo helps in making phone calls from web browser to both sip addresses and PSTN phone numbers without installing any plugins.*
 
 #![plivo-websdk-2.0-example](img/callscreen.png)
 
 ---
-*Checkout [live web phone demo](https://s3.amazonaws.com/plivowebrtc/v2-0.html) 
-To use the live demo, please sign up for a Plivo account here: https://manage.plivo.com/accounts/register/ then make a Plivo Endpoint here: https://manage.plivo.com/endpoint/create/. You must use a Plivo Endpoint to log into the WebSDK demo page. Please do not try to use your Plivo account credentials to log into the demo.*
+*To use the [live web phone demo](https://s3.amazonaws.com/plivowebrtc/v2-0.html) 
+a. Sign up for a Plivo account here: https://manage.plivo.com/accounts/register/ 
+b. Create a Plivo Endpoint here: https://manage.plivo.com/endpoint/create/. 
+c. Use this Plivo endpoint to login after deploying the application*
 
 ---
-### Install
+### Deploying the application
 
 ```
 git checkout https://github.com/plivo/plivo-websdk-2.0-example.git
@@ -17,17 +18,12 @@ npm install
 npm start
 ```
 
-### Output
-```
-Our app is running on http://localhost:8080
-```
-### Usage
-> Always include Plivo lib file  in the `<body>` tag and then include your custom wrapper client
+### Initialization
+> Include plivowebsdk-2.0-stable.min.js in the <body> tag before you include other javascript files dependent on the SDK. 
 
-##### You always have a choice to design your own phone client but this is just a quick kiskstart
-Lets create a `customclient.js` file and declare a variable `var plivoWebSdk;` 
-This is where we initialise a new Plivo object by passing `options` like `plivoWebSdk = new window.Plivo(options);`
-a `startPhone` function to hook all our Events
+Lets create a `customclient.js` file and declare a variable `var plivoWebSdk;`
+This is where we initialise a new Plivo object by passing `options` as `plivoWebSdk = new window.Plivo(options);`. The application can set up listeners for events as shown in the `startPhone` function below. 
+
 ```js
     var plivoWebSdk; 
     function startPhone(username, password){
@@ -55,10 +51,11 @@ a `startPhone` function to hook all our Events
         login(username, password);
     }
 ```
-We have access to `options` from UI as SETTINGS menu. You can update your settings in the UI and click on LOGIN to boot the phone.
+In the demo, `options` can be set from UI in the SETTINGS menu. Once the SETTINGS is updated clicking on LOGIN will boot the phone again.
+
 ### Document ready state
 
->If you're directly calling login on page load, Please make sure you do that on only after document ready!
+>If you're directly calling login on page load, please make sure you do that only after HTML document ready. 
 
 ```html
     <script type="text/javascript">
@@ -70,7 +67,7 @@ We have access to `options` from UI as SETTINGS menu. You can update your settin
     </script>
 ```
 ### Login 
-login starts off with accepting Plivo Endpoint Credentials in login menu
+Login accepts Plivo Endpoint Credentials. 
 #![plivo-websdk-2.0-example](img/login.png)
 ```js
     function login(username, password) {
@@ -84,8 +81,8 @@ login starts off with accepting Plivo Endpoint Credentials in login menu
       startPhone(userName, password);
     });  
 ```    
-### Settings part
-*This code will help you to play witht `options` params directly in UI, but in your production env, you can hard code your `options` param*
+### Options
+*Options allow to disable tracking, setting codec type, enabling and disabling AEC/AGC etc. The list of all the settings can be found in the documentation page.*
 #![plivo-websdk-2.0-example](img/settings.png)
 
 ```js
@@ -122,8 +119,8 @@ $('#resetSettings').click(function(e){
   resetSettings('clickTrigger');
 });    
 ```    
-### Registering
-Registration related events that need to be handled
+### Registration
+The following snippet shows how to handle registration related events in the application
 ```js
 function onReady(){
   $('#phonestatus').html('trying to login...');
@@ -147,8 +144,8 @@ function onLogout(){
   console.info('onLogout');
 }
 ```    
-### Making a call
-Enter the number or sip uri in the post login UI and click the call button. This action causes the following code to run
+### Outgoing call
+Given a number or SIP URI, this snippet shows how to make an outgoing call. The following snippet takes input from the dial pad UI. 
 ```js
 $('#makecall').click(function(e){
   var to = $('#toNumber').val().replace(" ","");
@@ -165,7 +162,8 @@ $('#makecall').click(function(e){
 });
 ```
 ### Handling Incoming calls
-By creating the onIncomingCall listener, the plivoWebSdk object can handle calls coming into the Plivo Endpoint. 
+By creating the `onIncomingCall` listener, the `plivoWebSdk` object can handle incoming calls to the Plivo Endpoint.
+
 ```js
 function onIncomingCall(callerName, extraHeaders){
   console.info(callerName, extraHeaders);
@@ -180,10 +178,9 @@ function onIncomingCallCanceled(){
   console.info('onIncomingCallCanceled');
   callOff();
 }
-
-/**
-The UI which shows an incoming call is rendered with the above code. The two actions that can be performed now are answer or reject. The code for answering looks like this.
-*/
+```
+The following snippet shows how to answer an incoming call
+```
 $('#inboundAccept').click(function(){
   console.info('Call accept clicked');
   plivoWebSdk.client.answer();
@@ -191,14 +188,13 @@ $('#inboundAccept').click(function(){
   $('.AfterAnswer').show();
 });
 ```
-The reject code looks like this
+The following snippet shows how to reject an incoming call
 ```js
 $('#inboundReject').click(function(){
   console.info('callReject');
   plivoWebSdk.client.reject();
 });
 ```
-
 ### Terminating a call
 This code may be used to terminate a call. 
 ```js
@@ -211,9 +207,9 @@ $('#Hangup').click(function(){
   }
 });
 ```
-### Hangup calls on page reload / close 
-*this will prevent dead calls on the other leg*
-Setup an unload listener 
+### Hangup calls on page reload or close 
+This snippet will hangup existing calls when page is refreshed or closed. 
+ 
 ```js
 window.onbeforeunload = function () {
   plivoWebSdk.client.hangup();
@@ -221,10 +217,11 @@ window.onbeforeunload = function () {
 ```
 ### Implementing MediaMetrics
 
-A simple dynamic UI to show notifications when some `warning` events get emitted from Plivo SDK
+This snippet shows how to handle network or media related events from the SDK. A simple dynamic UI to show notifications when some warning events get emitted from Plivo SDK
+
 #![plivo-websdk-2.0-example](img/metrics.png)
 
-Please watch chrome or firefox debugger console to see the comple info during call
+Please check Chrome or Firefox console to see the complete info of the event. 
 ```js
 function mediaMetrics(obj){
   sessionStorage.setItem('triggerFB',true);
@@ -251,8 +248,7 @@ function mediaMetrics(obj){
 }
 ```
 ### Sending Feedback
-There is a predefined list of feedback comments shown in UI for the score range from 1-3
-Score 4 and 5 can have good and perfect as its comments.
+The following snippet shows how to collect feedback using the SDK. There is a predefined list of feedback comments that users can select for the score range from 1-3. In this application we are taking “good” and “perfect” as feedback for scores 4 and 5.
 #![plivo-websdk-2.0-example](img/feedback.png)
 
 ```js
@@ -264,5 +260,4 @@ $('#sendFeedback').click(function(){
   plivoWebSdk.client.sendQualityFeedback(lastCallid,score,comment);
   customAlert('Quality feedback','success');
 });
-```    
-    
+```
