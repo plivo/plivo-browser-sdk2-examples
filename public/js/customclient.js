@@ -334,5 +334,4 @@ function initPhone(username, password){
     plivoWebSdk.client.setRingTone(true);
     plivoWebSdk.client.setRingToneBack(true);
     console.log('initPhone ready!')
-		//Show screen loader and other UI stuffs
 }

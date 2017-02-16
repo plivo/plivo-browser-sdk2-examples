@@ -25,14 +25,13 @@ npm start
 > Include plivowebsdk-2.0-stable.min.js in the <body> tag before you include other javascript files dependent on the SDK. 
 
 Lets create a `customclient.js` file and declare a variable `var plivoWebSdk;`
-This is where we initialise a new Plivo object by passing `options` as `plivoWebSdk = new window.Plivo(options);`. The application can set up listeners for events as shown in the `startPhone` function below. 
+This is where we initialise a new Plivo object by passing `options` as `plivoWebSdk = new window.Plivo(options);`. The application can set up listeners for events as shown in the `initPhone` function below. 
 
 ```js
     var plivoWebSdk; 
-    function startPhone(username, password){
-        if(!username) return;
-        var options = refreshSettings();
-            plivoWebSdk = new window.Plivo(options);
+function initPhone(username, password){
+    var options = refreshSettings();
+        plivoWebSdk = new window.Plivo(options);
         plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
         plivoWebSdk.client.on('onLogin', onLogin);
         plivoWebSdk.client.on('onLogout', onLogout);
@@ -46,12 +45,9 @@ This is where we initialise a new Plivo object by passing `options` as `plivoWeb
         plivoWebSdk.client.on('onIncomingCall', onIncomingCall);
         plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
         plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
-        //Show screen loader and other UI stuffs
-        kickStartNow();
-        // Allow to set default ring tones
         plivoWebSdk.client.setRingTone(true);
         plivoWebSdk.client.setRingToneBack(true);
-        login(username, password);
+        console.log('initPhone ready!')
     }
 ```
 In the demo, `options` can be set from UI in the SETTINGS menu. Once the SETTINGS is updated clicking on LOGIN will boot the phone again.
@@ -64,8 +60,8 @@ In the demo, `options` can be set from UI in the SETTINGS menu. Once the SETTING
     <script type="text/javascript">
         $( document ).ready(function() {
             console.log( "HTML ready!" );
-            resetSettings(); // always reset your settings on page load
-            refreshSettings(); // try to bring up if any settings that are saved locally
+            resetSettings(); // Optional, reset your Plivo settings on page load
+            initPhone(); // Optional, Initialise Plivo sdk instance on load
         }); 
     </script>
 ```
@@ -74,15 +70,21 @@ Login accepts Plivo Endpoint Credentials.
 #![plivo-websdk-2.0-example](img/login.png)
 ```js
     function login(username, password) {
-        if(username){
+        if(username && password){
+          //start UI load spinner
+          kickStartNow();     
           plivoWebSdk.client.login(username, password);
+          $('#sipUserName').html('sip:'+username+'@'+plivoWebSdk.client.phone.configuration.hostport_params);
+          document.querySelector('title').innerHTML=username;
+        }else{
+          console.error('username/password missing!')
         }
     }
     $('#clickLogin').click(function(e){
       var userName = $('#loginUser').val();
       var password = $('#loginPwd').val();
-      startPhone(userName, password);
-    });  
+      login(userName, password);
+    });
 ```    
 ### Options
 *Options allow to disable tracking, setting codec type, enabling and disabling AEC/AGC etc. The list of all the settings can be found in the documentation page.*
@@ -90,7 +92,7 @@ Login accepts Plivo Endpoint Credentials.
 
 ```js
 function resetSettings(source){
-  var defaultSettings = { "debug": "DEBUG", "permOnClick": true, "codecs": ["OPUS","PCMU"], "enableIPV6": false, "audioConstraints": { "optional": [ { "googAutoGainControl": false } ] }, "enableTracking": false}
+  var defaultSettings = { "debug": "DEBUG", "permOnClick": true, "codecs": ["OPUS","PCMU"], "enableIPV6": false, "audioConstraints": { "optional": [ { "googAutoGainControl": false } ] }, "enableTracking": true}
   var uiSettings = document.querySelector('#appSettings');
   uiSettings.value = JSON.stringify(defaultSettings);
   if(source == 'clickTrigger')
@@ -215,7 +217,7 @@ This snippet will hangup existing calls when page is refreshed or closed.
  
 ```js
 window.onbeforeunload = function () {
-  plivoWebSdk.client.hangup();
+  plivoWebSdk.client && plivoWebSdk.client.logout();
 }; 
 ```
 ### Implementing MediaMetrics
