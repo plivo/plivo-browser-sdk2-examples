@@ -11,6 +11,13 @@
   <style type="text/css">
 	@import url(//fonts.googleapis.com/css?family=Lato:300);
 	@import url(//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css);
+	body{ 
+	background: url(//s3.amazonaws.com/plivowebrtc/assets/despic.png) no-repeat center center fixed; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	}
 	body
 	{
 	    margin: 0;
@@ -28,6 +35,14 @@
 	    padding: 0 0 10px 0;
 	    line-height: 20px;
 	}
+	.phone-panel{
+	  margin-bottom: 20px;
+	  border: 1px solid transparent;
+	  border-radius: 4px;
+	  -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+	  box-shadow: 0 1px 1px rgba(0,0,0,.05);
+	  border-color: white;  
+	}
 	.span4
 	{
 	    width: 80px;
@@ -38,14 +53,15 @@
 	.phone
 	{
 	    margin-top: 15px;
-	    background: #fff;
+	    background: rgba(150, 209, 150, 0.09);
 	}
 	.tel
 	{
-	    margin-bottom: 10px;
-	    margin-top: 10px;
-	/*    border: 1px solid #9e9e9e;
-	    border-radius: 0px;*/
+	  margin-bottom: 10px;
+	  margin-top: 10px;
+	  background-color: rgba(0, 0, 0, 0);
+	  color: white;
+	  font-weight: 600;
 	}
 	.num-pad
 	{
@@ -60,13 +76,12 @@
 	    border-radius: 999px;
 	    -moz-border-radius: 999px;
 	    height: 80px;
-	    background-color: #fff;
-	    color: #333;
+	    /*background-color: #fff;*/
 	    cursor: pointer;
 	}
 	.num:hover
 	{
-	    background-color: #9e9e9e;
+	    background-color: #5cb85c;
 	    color: #fff;
 	    transition-property: background-color .2s linear 0s;
 	    -moz-transition: background-color .2s linear 0s;
@@ -80,7 +95,7 @@
 	    /*margin-top: 15px;*/
 	    font-family: 'Lato' , sans-serif;
 	    line-height: 30px;
-	    color: #333;
+	    color: white;
 	}
 	.small
 	{
@@ -173,7 +188,9 @@
 	}
 
 	.white{
-	    color: white;
+	  color: white;
+	  font-size: 20px;
+	  font-weight: 600;
 	}
 
 	.feedback{
@@ -225,10 +242,15 @@
 	    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);    
 	}
 	.client-name{
-	    margin-left:25%;
-	    font-size:xx-large;
+	  margin-left: 20%;
+	  position: absolute;
+	  font-size: 30px;
+	  font-weight: 600;
+	  color: gray;
 	}
-
+	.lead{
+	  font-weight: 600;
+	}
 	.loader {
 	  position: absolute;
 	  left: 50%;
@@ -254,29 +276,29 @@
 	@keyframes spin {
 	  0% { transform: rotate(0deg); }
 	  100% { transform: rotate(360deg); }
-	}  	
+	}
   </style>	
 </head>
 <body>
 <div class="container">
-		<img src="//s3.amazonaws.com/plivowebrtc/assets/logo.png">
+		<img src="//www.plivo.com/assets/dist/img/logo.png">
 	<div class="page-header">
-		<button type="button" class="btn btn-info" data-toggle="modal" data-target="#mysettings">Settings</button>
-		<button type="button" class="btn btn-danger" id=uiLogin data-toggle="modal" data-target="#login">Login</button>
-		<button type="button" class="btn btn-info" id=uiLogout onclick="window.location.reload()">logout</button>	
+		<button type="button" class="btn btn-success" data-toggle="modal" data-target="#mysettings">Settings</button>
+		<button type="button" class="btn btn-default" id=uiLogin data-toggle="modal" data-target="#login">Login</button>
+		<button type="button" class="btn btn-default" id=uiLogout onclick="window.location.reload()">logout</button>	
 		<span class="lead white client-name">Plivo web client</span>
 		<span class="lead pull-right white" id=sipUserName >Not ready...</span>
 
 	</div>
-	<div class="panel panel-success">
+	<div class="phone-panel">
 		<div class="loader"></div>
 		<div class="container">
-			<span class="lead text-primary"> phone status: </span>
-			<span class="lead" id=phonestatus>Not ready...</span>
+			<span class="lead text-success"> phone status: </span>
+			<span class="white" id=phonestatus>Not ready...</span>
 		</div>
 		<div class="container">
-			<span class="lead text-primary"> call status: </span>
-			<span class="lead" id=callstatus>idle</span>
+			<span class="lead text-success"> call status: </span>
+			<span class="white" id=callstatus>idle</span>
 		</div>	
 		<div class="panel-body">
 			<div class="container">
@@ -284,7 +306,7 @@
 			        <div class="col-md-4 phone">
 			            <div class="row1">
 			                <div class="col-md-12 white-shadow">
-			                <input type="text" name="name" onkeyup="trimSpace(this)" onblur="trimSpace(this)" id="toNumber" class="form-control tel" placeholder="sip:plivoendpoint@phone.plivo.com || + Phone#" value="" />
+			                <input type="text" name="name" onmouseout="trimSpace(this)" id="toNumber" class="form-control tel" placeholder="sip:plivoendpoint@phone.plivo.com || + Phone#" value="" />
 			                    <div class="num-pad">
 			                    <div class="span4">
 			                        <div class="num">
@@ -406,7 +428,7 @@
 			            <div class="clearfix">
 			            </div>
 			        </div>
-			        <div class="col-md col-md-offset-6">
+			        <div class="col-md col-md-offset-6 white">
 			        	<div class="callinfo">
 			        		<h4 id="boundType">Fetching...</h4>
 			        		<h4 id="callNum">Fetching...</h4>
@@ -467,7 +489,6 @@
 			    <div class="form-group">
 			      <textarea class="form-control monospace" rows="5" id="appSettings"></textarea>
 			    </div>
-			    <label class="checkbox-inline" data-toggle="tooltip" title="Just enable and close popup. No need to update!"><input id=micVisualizer type="checkbox" value="">Mic Visualizer</label>
 		    </div>
 		    <div class="modal-footer">
 				<button type="button" id="resetSettings" class="btn btn-info" data-dismiss="modal" data-toggle="tooltip" title="Please reload the page to reflect changes">reset</button>		    
@@ -492,7 +513,7 @@
 				    </div>
 				    <div class="form-group col-xs-4">
 				      <label for="loginPwd">Password</label>
-				      <input type="text" class="form-control" id="loginPwd" placeholder="password">
+				      <input type="password" class="form-control" id="loginPwd" placeholder="password">
 				    </div class="form-group">
 				  </form>
 				</div>
@@ -554,13 +575,14 @@
 	</div>		
 </div>
 <div class="feedback">
-	<button type="button" class="btn btn-info" id="clickFeedback" data-toggle="modal" data-target="#sendQualityFeedback">Feedback</button>	
+	<button type="button" class="btn btn-success" id="clickFeedback" data-toggle="modal" data-target="#sendQualityFeedback">Feedback</button>	
 </div>
 <div class="alertmsg">
 	<!-- media metrics message comes here -->
 </div>
-<script type="text/javascript" src="//s3.amazonaws.com/plivosdk/web/plivowebsdk-2.0-beta.min.js"></script>
+<script type="text/javascript" src="//s3.amazonaws.com/plivosdk/web/plivowebsdk-2.0.1-beta.min.js"></script>
 <script type="text/javascript">
+
 	// UI tweaks
 	$('#makecall').attr('class', 'btn btn-success btn-block flatbtn disabled');
 
@@ -570,11 +592,15 @@
 			$('.fadein-effect').fadeIn(5000);	
 	}
 	function login(username, password) {
-			if(username){
+			if(username && password){
+				//start UI load spinner
+				kickStartNow();			
 				plivoWebSdk.client.login(username, password);
 				$('#sipUserName').html('sip:'+username+'@'+plivoWebSdk.client.phone.configuration.hostport_params);
 				document.querySelector('title').innerHTML=username;
-			}	
+			}else{
+				console.error('username/password missing!')
+			}
 	}
 	function onWebrtcNotSupported() {
 		console.warn('no webRTC support');
@@ -582,7 +608,7 @@
 	}
 	function mediaMetrics(obj){
 		/** 
-		* Set a trigger for Quality Feedback popup when there is an warning druing call using sessionStorage
+		* Set a trigger for Quality FB popup when there is an warning druing call using sessionStorage
 		* During `onCallTerminated` event check for `triggerFB` flag
 		*/
 		sessionStorage.setItem('triggerFB',true);
@@ -694,7 +720,7 @@
 
 	function resetSettings(source){
 		// You can use all your default settings to go in as options during sdk init
-		var defaultSettings = {"debug":"INFO","permOnClick":false,"codecs":["OPUS","PCMU"],"enableIPV6":false,"audioConstraints":{"optional":[{"googAutoGainControl":false}]},"dscp":true,"enableTracking":false}
+		var defaultSettings = {"debug":"DEBUG","permOnClick":true,"codecs":["OPUS","PCMU"],"enableIPV6":false,"audioConstraints":{"optional":[{"googAutoGainControl":false}]},"dscp":true,"enableTracking":true}
 		var uiSettings = document.querySelector('#appSettings');
 		uiSettings.value = JSON.stringify(defaultSettings);
 		if(source == 'clickTrigger')
@@ -781,7 +807,7 @@
 	* This is will prevent the other end still listening for dead call
 	*/
 	window.onbeforeunload = function () {
-	    plivoWebSdk.client.hangup();
+	    plivoWebSdk.client && plivoWebSdk.client.logout();
 	};
 
 	$('#tmute').click(function(e){
@@ -845,7 +871,7 @@
 	$('#clickLogin').click(function(e){
 		var userName = $('#loginUser').val();
 		var password = $('#loginPwd').val();
-		startPhone(userName, password);
+		login(userName, password);
 	});
 
 	$('.num').click(function () {
@@ -862,37 +888,33 @@
 
 	var plivoWebSdk; // this will be retrived from settings in UI
 
-	function startPhone(username, password){
-			if(!username) return;
-			var options = refreshSettings();
-	        plivoWebSdk = new window.Plivo(options);
-			plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
-			plivoWebSdk.client.on('onLogin', onLogin);
-			plivoWebSdk.client.on('onLogout', onLogout);
-			plivoWebSdk.client.on('onLoginFailed', onLoginFailed);
-			plivoWebSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
-			plivoWebSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
-			plivoWebSdk.client.on('onCallFailed', onCallFailed);
-			plivoWebSdk.client.on('onCallAnswered', onCallAnswered);
-			plivoWebSdk.client.on('onCallTerminated', onCallTerminated);
-			plivoWebSdk.client.on('onCalling', onCalling);
-			plivoWebSdk.client.on('onIncomingCall', onIncomingCall);
-			plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
-			plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
-
-			//Show screen loader and other UI stuffs
-			kickStartNow();
-	        plivoWebSdk.client.setRingTone(true);
-	        plivoWebSdk.client.setRingToneBack(true);
-	        login(username, password);
-	}	
+	function initPhone(username, password){
+		var options = refreshSettings();
+		plivoWebSdk = new window.Plivo(options);
+		plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
+		plivoWebSdk.client.on('onLogin', onLogin);
+		plivoWebSdk.client.on('onLogout', onLogout);
+		plivoWebSdk.client.on('onLoginFailed', onLoginFailed);
+		plivoWebSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
+		plivoWebSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
+		plivoWebSdk.client.on('onCallFailed', onCallFailed);
+		plivoWebSdk.client.on('onCallAnswered', onCallAnswered);
+		plivoWebSdk.client.on('onCallTerminated', onCallTerminated);
+		plivoWebSdk.client.on('onCalling', onCalling);
+		plivoWebSdk.client.on('onIncomingCall', onIncomingCall);
+		plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
+		plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
+		plivoWebSdk.client.setRingTone(true);
+		plivoWebSdk.client.setRingToneBack(true);
+		console.log('initPhone ready!')
+	}
 </script>
 <script type="text/javascript">
 	$( document ).ready(function() {
 	    console.log( "HTML ready!" );
 	    $('[data-toggle="tooltip"]').tooltip();
 	    resetSettings();
-	    refreshSettings();
+	    initPhone();
 	});	
 </script>
 </body>
