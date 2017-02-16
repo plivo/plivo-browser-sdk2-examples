@@ -8,11 +8,15 @@ function kickStartNow(){
 		$('.fadein-effect').fadeIn(5000);	
 }
 function login(username, password) {
-		if(username){
+		if(username && password){
+			//start UI load spinner
+			kickStartNow();			
 			plivoWebSdk.client.login(username, password);
 			$('#sipUserName').html('sip:'+username+'@'+plivoWebSdk.client.phone.configuration.hostport_params);
 			document.querySelector('title').innerHTML=username;
-		}	
+		}else{
+			console.error('username/password missing!')
+		}
 }
 function onWebrtcNotSupported() {
 	console.warn('no webRTC support');
@@ -20,7 +24,7 @@ function onWebrtcNotSupported() {
 }
 function mediaMetrics(obj){
 	/** 
-	* Set a trigger for Quality Feedback popup when there is an warning druing call using sessionStorage
+	* Set a trigger for Quality FB popup when there is an warning druing call using sessionStorage
 	* During `onCallTerminated` event check for `triggerFB` flag
 	*/
 	sessionStorage.setItem('triggerFB',true);
@@ -90,6 +94,14 @@ function onCallAnswered(){
 		timer = timer +1;
 		$('#callDuration').html(timer.calltimer());
 	},1000);
+	// audio Visualizer
+	var pcObj = plivoWebSdk.client.getPeerConnection();
+	var mic_visualizer = document.getElementById('micVisualizer');
+	if(pcObj.pc && mic_visualizer.checked){
+		var stream = pcObj.pc.getLocalStreams()[0];
+		window._localContext? window._localContext.resume() : null;
+		typeof audioVisualize != "undefined" && audioVisualize(stream,'local');
+	}
 }
 function onCallTerminated(){
 	$('#callstatus').html('Call Ended');
@@ -132,7 +144,7 @@ function closeMetrics(e){
 
 function resetSettings(source){
 	// You can use all your default settings to go in as options during sdk init
-	var defaultSettings = {"debug":"DEBUG","permOnClick":true,"codecs":["OPUS","PCMU"],"enableIPV6":false,"audioConstraints":{"optional":[{"googAutoGainControl":false}]},"dscp":true,"enableTracking":false}
+	var defaultSettings = {"debug":"DEBUG","permOnClick":true,"codecs":["OPUS","PCMU"],"enableIPV6":false,"audioConstraints":{"optional":[{"googAutoGainControl":false}]},"dscp":true,"enableTracking":true}
 	var uiSettings = document.querySelector('#appSettings');
 	uiSettings.value = JSON.stringify(defaultSettings);
 	if(source == 'clickTrigger')
@@ -175,7 +187,10 @@ function callOff(){
 	window.calltimer? clearInterval(window.calltimer) : false;
 	setTimeout(function(){
 		$('#callstatus').html('Idle');
-		$('.callinfo').hide();		
+		$('.callinfo').hide();
+		// audio Visualizer
+		window._localContext? window._localContext.suspend():null;
+		window.reqAniFram ? window.cancelAnimationFrame(window.reqAniFram):null;		
 	},3000);
 }
 
@@ -219,7 +234,7 @@ $('#Hangup').click(function(){
 * This is will prevent the other end still listening for dead call
 */
 window.onbeforeunload = function () {
-    plivoWebSdk.client.hangup();
+    plivoWebSdk.client && plivoWebSdk.client.logout();
 };
 
 $('#tmute').click(function(e){
@@ -283,7 +298,7 @@ $('#sendFeedback').click(function(){
 $('#clickLogin').click(function(e){
 	var userName = $('#loginUser').val();
 	var password = $('#loginPwd').val();
-	startPhone(userName, password);
+	login(userName, password);
 });
 
 $('.num').click(function () {
@@ -300,9 +315,9 @@ $('.num').click(function () {
 
 var plivoWebSdk; // this will be retrived from settings in UI
 
-function startPhone(username, password){
-		if(!username) return;
+function initPhone(username, password){
 		var options = refreshSettings();
+		// options['appSecret'] = 's/6c6KfEuAGv:ybDVbpGia6gCNPUgSO0je0QRetcTgKN0fRwmohbJudc=';
         plivoWebSdk = new window.Plivo(options);
 		plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
 		plivoWebSdk.client.on('onLogin', onLogin);
@@ -317,10 +332,8 @@ function startPhone(username, password){
 		plivoWebSdk.client.on('onIncomingCall', onIncomingCall);
 		plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
 		plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
-
-		//Show screen loader and other UI stuffs
-		kickStartNow();
         plivoWebSdk.client.setRingTone(true);
         plivoWebSdk.client.setRingToneBack(true);
-        login(username, password);
+        console.log('initPhone ready!')
+		//Show screen loader and other UI stuffs
 }
