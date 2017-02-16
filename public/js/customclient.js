@@ -317,8 +317,7 @@ var plivoWebSdk; // this will be retrived from settings in UI
 
 function initPhone(username, password){
 		var options = refreshSettings();
-		// options['appSecret'] = 's/6c6KfEuAGv:ybDVbpGia6gCNPUgSO0je0QRetcTgKN0fRwmohbJudc=';
-        plivoWebSdk = new window.Plivo(options);
+    plivoWebSdk = new window.Plivo(options);
 		plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
 		plivoWebSdk.client.on('onLogin', onLogin);
 		plivoWebSdk.client.on('onLogout', onLogout);
@@ -332,8 +331,8 @@ function initPhone(username, password){
 		plivoWebSdk.client.on('onIncomingCall', onIncomingCall);
 		plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
 		plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
-        plivoWebSdk.client.setRingTone(true);
-        plivoWebSdk.client.setRingToneBack(true);
-        console.log('initPhone ready!')
+    plivoWebSdk.client.setRingTone(true);
+    plivoWebSdk.client.setRingToneBack(true);
+    console.log('initPhone ready!')
 		//Show screen loader and other UI stuffs
 }
