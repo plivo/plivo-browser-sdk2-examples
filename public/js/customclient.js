@@ -94,14 +94,6 @@ function onCallAnswered(){
 		timer = timer +1;
 		$('#callDuration').html(timer.calltimer());
 	},1000);
-	// audio Visualizer
-	var pcObj = plivoWebSdk.client.getPeerConnection();
-	var mic_visualizer = document.getElementById('micVisualizer');
-	if(pcObj.pc && mic_visualizer.checked){
-		var stream = pcObj.pc.getLocalStreams()[0];
-		window._localContext? window._localContext.resume() : null;
-		typeof audioVisualize != "undefined" && audioVisualize(stream,'local');
-	}
 }
 function onCallTerminated(){
 	$('#callstatus').html('Call Ended');
@@ -187,10 +179,7 @@ function callOff(){
 	window.calltimer? clearInterval(window.calltimer) : false;
 	setTimeout(function(){
 		$('#callstatus').html('Idle');
-		$('.callinfo').hide();
-		// audio Visualizer
-		window._localContext? window._localContext.suspend():null;
-		window.reqAniFram ? window.cancelAnimationFrame(window.reqAniFram):null;		
+		$('.callinfo').hide();		
 	},3000);
 }
 
