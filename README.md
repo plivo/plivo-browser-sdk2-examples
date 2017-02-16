@@ -29,8 +29,8 @@ This is where we initialise a new Plivo object by passing `options` as `plivoWeb
 
 ```js
     var plivoWebSdk; 
-function initPhone(username, password){
-    var options = refreshSettings();
+    function initPhone(username, password){
+        var options = refreshSettings();
         plivoWebSdk = new window.Plivo(options);
         plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
         plivoWebSdk.client.on('onLogin', onLogin);
@@ -48,7 +48,7 @@ function initPhone(username, password){
         plivoWebSdk.client.setRingTone(true);
         plivoWebSdk.client.setRingToneBack(true);
         console.log('initPhone ready!')
-    }
+        }
 ```
 In the demo, `options` can be set from UI in the SETTINGS menu. Once the SETTINGS is updated clicking on LOGIN will boot the phone again.
 
