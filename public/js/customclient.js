@@ -316,22 +316,22 @@ $('.num').click(function () {
 var plivoWebSdk; // this will be retrived from settings in UI
 
 function initPhone(username, password){
-		var options = refreshSettings();
-    plivoWebSdk = new window.Plivo(options);
-		plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
-		plivoWebSdk.client.on('onLogin', onLogin);
-		plivoWebSdk.client.on('onLogout', onLogout);
-		plivoWebSdk.client.on('onLoginFailed', onLoginFailed);
-		plivoWebSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
-		plivoWebSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
-		plivoWebSdk.client.on('onCallFailed', onCallFailed);
-		plivoWebSdk.client.on('onCallAnswered', onCallAnswered);
-		plivoWebSdk.client.on('onCallTerminated', onCallTerminated);
-		plivoWebSdk.client.on('onCalling', onCalling);
-		plivoWebSdk.client.on('onIncomingCall', onIncomingCall);
-		plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
-		plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
-    plivoWebSdk.client.setRingTone(true);
-    plivoWebSdk.client.setRingToneBack(true);
-    console.log('initPhone ready!')
+	var options = refreshSettings();
+	plivoWebSdk = new window.Plivo(options);
+	plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
+	plivoWebSdk.client.on('onLogin', onLogin);
+	plivoWebSdk.client.on('onLogout', onLogout);
+	plivoWebSdk.client.on('onLoginFailed', onLoginFailed);
+	plivoWebSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
+	plivoWebSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
+	plivoWebSdk.client.on('onCallFailed', onCallFailed);
+	plivoWebSdk.client.on('onCallAnswered', onCallAnswered);
+	plivoWebSdk.client.on('onCallTerminated', onCallTerminated);
+	plivoWebSdk.client.on('onCalling', onCalling);
+	plivoWebSdk.client.on('onIncomingCall', onIncomingCall);
+	plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
+	plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
+	plivoWebSdk.client.setRingTone(true);
+	plivoWebSdk.client.setRingToneBack(true);
+	console.log('initPhone ready!')
 }
