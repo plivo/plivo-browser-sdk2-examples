@@ -1,303 +1,348 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Plivo webphone</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="icon" type="image/png" href="//s3.amazonaws.com/plivowebrtc/assets/favicon.png">
-	<script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+    <title>plivo webphone</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="//www.plivo.com/assets/dist/img/favicon-white-png.png">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <style type="text/css">
-	@import url(//fonts.googleapis.com/css?family=Lato:300);
-	@import url(//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css);
-	body{ 
-	background: url(//s3.amazonaws.com/plivowebrtc/assets/despic.png) no-repeat center center fixed; 
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
-	}
-	body
-	{
-	    margin: 0;
-	    padding: 0;
-	    font-family: 'Lato' , sans-serif;
-	    color: #333;
-	    background-size: 100%;
-	    -webkit-font-smoothing: antialiased;
-	    -webkit-text-size-adjust: none;
-	    background-color: black;
-	}
-	p
-	{
-	    margin: 0;
-	    padding: 0 0 10px 0;
-	    line-height: 20px;
-	}
-	.phone-panel{
-	  margin-bottom: 20px;
-	  border: 1px solid transparent;
-	  border-radius: 4px;
-	  -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
-	  box-shadow: 0 1px 1px rgba(0,0,0,.05);
-	  border-color: white;  
-	}
-	.span4
-	{
-	    width: 80px;
-	    float: left;
-	    margin: 0 8px 10px 8px;
-	}
+		@import url(https://fonts.googleapis.com/css?family=Lato:300);
+		@import url(https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css);
+		body{ 
+		background: black; 
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+		}
+		body
+		{
+		    margin: 0;
+		    padding: 0;
+		    font-family: 'Lato' , sans-serif;
+		    color: #333;
+		    background-size: 100%;
+		    -webkit-font-smoothing: antialiased;
+		    -webkit-text-size-adjust: none;
+		    background-color: black;
+		}
+		p
+		{
+		    margin: 0;
+		    padding: 0 0 10px 0;
+		    line-height: 20px;
+		}
+		.phone-panel{
+		  margin-bottom: 20px;
+		  border: 1px solid transparent;
+		  border-radius: 4px;
+		  -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+		  box-shadow: 0 1px 1px rgba(0,0,0,.05);
+		  border-color: white;  
+		}
+		.span4
+		{
+		    width: 80px;
+		    float: left;
+		    margin: 0 8px 10px 8px;
+		}
 
-	.phone
-	{
-	    margin-top: 15px;
-	    background: rgba(150, 209, 150, 0.09);
-	}
-	.tel
-	{
-	  margin-bottom: 10px;
-	  margin-top: 10px;
-	  background-color: rgba(0, 0, 0, 0);
-	  color: white;
-	  font-weight: 600;
-	}
-	.num-pad
-	{
-	    padding-left: 15px;
-	}
+		.phone
+		{
+		    margin-top: 15px;
+		    background: rgba(150, 209, 150, 0.09);
+		}
+		.tel
+		{
+		  margin-bottom: 10px;
+		  margin-top: 10px;
+		  background-color: rgba(0, 0, 0, 0);
+		  color: white;
+		  font-weight: 600;
+		}
+		.num-pad
+		{
+		    padding-left: 15px;
+		}
 
 
-	.num
-	{
-	    /*border: 1px solid #9e9e9e;*/
-	    -webkit-border-radius: 999px;
-	    border-radius: 999px;
-	    -moz-border-radius: 999px;
-	    height: 80px;
-	    /*background-color: #fff;*/
-	    cursor: pointer;
-	}
-	.num:hover
-	{
-	    background-color: #5cb85c;
-	    color: #fff;
-	    transition-property: background-color .2s linear 0s;
-	    -moz-transition: background-color .2s linear 0s;
-	    -webkit-transition: background-color .2s linear 0s;
-	    -o-transition: background-color .2s linear 0s;
-	}
-	.txt
-	{
-	    font-size: 30px;
-	    text-align: center;
-	    /*margin-top: 15px;*/
-	    font-family: 'Lato' , sans-serif;
-	    line-height: 30px;
-	    color: white;
-	}
-	.small
-	{
-	    font-size: 15px;
-	}
+		.num
+		{
+		    /*border: 1px solid #9e9e9e;*/
+		    -webkit-border-radius: 999px;
+		    border-radius: 999px;
+		    -moz-border-radius: 999px;
+		    height: 80px;
+		    /*background-color: #fff;*/
+		    cursor: pointer;
+		}
+		.num:hover
+		{
+		    background-color: #5cb85c;
+		    color: #fff;
+		    transition-property: background-color .2s linear 0s;
+		    -moz-transition: background-color .2s linear 0s;
+		    -webkit-transition: background-color .2s linear 0s;
+		    -o-transition: background-color .2s linear 0s;
+		}
+		.txt
+		{
+		    font-size: 30px;
+		    text-align: center;
+		    /*margin-top: 15px;*/
+		    font-family: 'Lato' , sans-serif;
+		    line-height: 30px;
+		    color: white;
+		}
+		.small
+		{
+		    font-size: 15px;
+		}
 
-	.btn
-	{
-	    font-weight: bold;
-	    -webkit-transition: .1s ease-in background-color;
-	    -webkit-font-smoothing: antialiased;
-	    letter-spacing: 1px;
-	}
-	.btn:hover
-	{
-	    transition-property: background-color .2s linear 0s;
-	    -moz-transition: background-color .2s linear 0s;
-	    -webkit-transition: background-color .2s linear 0s;
-	    -o-transition: background-color .2s linear 0s;
-	}
-	.spanicons
-	{
-	    width: 72px;
-	    float: left;
-	    text-align: center;
-	    margin-top: 40px;
-	    color: #9e9e9e;
-	    font-size: 30px;
-	    cursor: pointer;
-	}
-	.spanicons:hover
-	{
-	    color: #3498db;
-	    transition-property: color .2s linear 0s;
-	    -moz-transition: color .2s linear 0s;
-	    -webkit-transition: color .2s linear 0s;
-	    -o-transition: color .2s linear 0s;
-	}
-	.active
-	{
-	    color: #3498db;
-	}
-	.metrics{
-	    margin-bottom: 10px;
-	    padding: 10px;
-	    /*z-index: 10000;*/
-	    /*display: inline-block;*/
-	    background: rgba(0,153,204,0.93);
-	    border: 1px solid #006b8f;
-	    color: #fff;
-	    font-size: 13px;
-	    text-align: center;
-	    border-radius: 3px;
-	    padding-top: 8px;
-	    padding-bottom: 8px;
-	    outline: 0;
-	    /*position: fixed;*/
-	    top: 0;
-	    /*left: 0;*/
-	    right:0;
-	    font-family: monospace; 
-	}
-	.alertmsg{
-	    position: fixed;
-	    top: 10px;
-	    right: 10px;
-	    /*width: 20%;*/
-	    z-index: 100000;
-	}
-	.inboundBeforeAnswer, .outboundBeforeAnswer, .AfterAnswer, .callinfo, #uiLogout, .lowQualityRadios, .feedback, .loader, .fadein-effect{
-	    display: none;
-	}
+		.btn
+		{
+		    font-weight: bold;
+		    -webkit-transition: .1s ease-in background-color;
+		    -webkit-font-smoothing: antialiased;
+		    letter-spacing: 1px;
+		}
+		.btn:hover
+		{
+		    transition-property: background-color .2s linear 0s;
+		    -moz-transition: background-color .2s linear 0s;
+		    -webkit-transition: background-color .2s linear 0s;
+		    -o-transition: background-color .2s linear 0s;
+		}
+		.spanicons
+		{
+		    width: 72px;
+		    float: left;
+		    text-align: center;
+		    margin-top: 40px;
+		    color: #9e9e9e;
+		    font-size: 30px;
+		    cursor: pointer;
+		}
+		.spanicons:hover
+		{
+		    color: #3498db;
+		    transition-property: color .2s linear 0s;
+		    -moz-transition: color .2s linear 0s;
+		    -webkit-transition: color .2s linear 0s;
+		    -o-transition: color .2s linear 0s;
+		}
+		.active
+		{
+		    color: #3498db;
+		}
+		.metrics{
+		    margin-bottom: 10px;
+		    padding: 10px;
+		    /*z-index: 10000;*/
+		    /*display: inline-block;*/
+		    /*background: rgba(0,153,204,0.93);*/
+		    background: rgba(244, 67, 54, 0.75);
+		    /*border: 1px solid #006b8f;*/
+		    color: #fff;
+		    font-size: 13px;
+		    text-align: center;
+		    border-radius: 3px;
+		    padding-top: 8px;
+		    padding-bottom: 8px;
+		    outline: 0;
+		    /*position: fixed;*/
+		    top: 0;
+		    /*left: 0;*/
+		    right:0;
+		    font-family: monospace; 
+		}
+		.alertmsg{
+		    position: fixed;
+		    top: 10px;
+		    right: 10px;
+		    /*width: 20%;*/
+		    z-index: 100000;
+		}
+		#recPlayerLayout, .hangup,.inboundBeforeAnswer, .outboundBeforeAnswer, .AfterAnswer, .callinfo, #uiLogout, .lowQualityRadios, .feedback, .loader, .fadein-effect{
+		    display: none;
+		}
 
-	.customAlert{
-	    margin-bottom: 10px;
-	    padding: 10px;
-	    z-index: 10000;
-	    background: rgb(14, 14, 14);
-	    border: 1px solid #03A9F4;
-	    font-size: 13px;
-	    text-align: center;
-	    border-radius: 3px;
-	    padding-top: 8px;
-	    padding-bottom: 8px;
-	    outline: 0;
-	    top: 0;
-	    right: 0;
-	    font-family: monospace;
-	    color: red;    
-	}
+		.customAlert{
+		    margin-bottom: 10px;
+		    padding: 10px;
+		    z-index: 10000;
+		    background: rgb(14, 14, 14);
+		    border: 1px solid #03A9F4;
+		    font-size: 13px;
+		    text-align: center;
+		    border-radius: 3px;
+		    padding-top: 8px;
+		    padding-bottom: 8px;
+		    outline: 0;
+		    top: 0;
+		    right: 0;
+		    font-family: monospace;
+		    color: red;    
+		}
 
-	.white{
-	  color: white;
-	  font-size: 20px;
-	  font-weight: 600;
-	}
+		.white{
+		  color: white;
+		  font-size: 20px;
+		  font-weight: 600;
+		}
+		.white-icon {
+		  color: white;
+		  font-size: 20px;
+		  font-weight: 600;
+		  margin-left: 20px;
+		  cursor: pointer;
+		}
+		.feedback{
+		    transform: rotate(90deg);
+		    position: absolute;
+		    top: 50%;
+		    left: -2%;    
+		}
+		.audioDevices{
+		    position: absolute;
+		    top: 20%;
+		    right: 0%;    
+		}
+		.monospace{
+		    font-family: monospace;
+		}
+		.keypad {
+		    background-color: deepskyblue;
+		    border-radius: 0%;
+		    color: #fff;
+		    display: inline-block;
+		    font-size: 12px;
+		    height: 20px;
+		    line-height: 20px;
+		    padding: 5px;
+		    margin: 1px;
+		    text-align: center;
+		    width: 20px;
+		    opacity: .8;
+		    cursor:pointer;
+		}
+		.dialpad {
+		      margin-left: 2%;
+		}
+		.googleLogin {
+		  background: url(signin_button.png) no-repeat 6px center;
+		  /*width: 100px;*/
+		  height: 100px;
+		  display: block;
+		}
+		.center-div
+		{
+		  position: absolute;
+		  margin: auto;
+		  top: 0;
+		  right: 0;
+		  bottom: 0;
+		  left: 0;
+		  width: 15%;
+		  height: 100px;
+		  border-radius: 3px;
+		}
+		.white-shadow{
+		    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);    
+		}
+		.client-name{
+		  margin-left: 28%;
+		  position: absolute;
+		  /*font-size: 30px;*/
+		  /*font-weight: 600;*/
+		  color: gray;
+		}
+		.lead{
+		  font-weight: 600;
+		}
+		.loader {
+		  position: absolute;
+		  left: 50%;
+		  top: 50%;
+		  z-index: 1;
+		  width: 150px;
+		  height: 150px;
+		  margin: -75px 0 0 -75px;
+		  border: 16px solid #f3f3f3;
+		  border-radius: 50%;
+		  border-top: 16px solid #00a848;
+		  width: 120px;
+		  height: 120px;
+		  -webkit-animation: spin 2s linear infinite;
+		  animation: spin 2s linear infinite;
+		}
 
-	.feedback{
-	    transform: rotate(90deg);
-	    position: absolute;
-	    top: 50%;
-	    left: -2%;    
-	}
-	.monospace{
-	    font-family: monospace;
-	}
-	.keypad {
-	    background-color: deepskyblue;
-	    border-radius: 0%;
-	    color: #fff;
-	    display: inline-block;
-	    font-size: 12px;
-	    height: 20px;
-	    line-height: 20px;
-	    padding: 5px;
-	    margin: 1px;
-	    text-align: center;
-	    width: 20px;
-	    opacity: .8;
-	    cursor:pointer;
-	}
-	.dialpad {
-	      margin-left: 2%;
-	}
-	.googleLogin {
-	  background: url(signin_button.png) no-repeat 6px center;
-	  /*width: 100px;*/
-	  height: 100px;
-	  display: block;
-	}
-	.center-div
-	{
-	  position: absolute;
-	  margin: auto;
-	  top: 0;
-	  right: 0;
-	  bottom: 0;
-	  left: 0;
-	  width: 15%;
-	  height: 100px;
-	  border-radius: 3px;
-	}
-	.white-shadow{
-	    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);    
-	}
-	.client-name{
-	  margin-left: 20%;
-	  position: absolute;
-	  font-size: 30px;
-	  font-weight: 600;
-	  color: gray;
-	}
-	.lead{
-	  font-weight: 600;
-	}
-	.loader {
-	  position: absolute;
-	  left: 50%;
-	  top: 50%;
-	  z-index: 1;
-	  width: 150px;
-	  height: 150px;
-	  margin: -75px 0 0 -75px;
-	  border: 16px solid #f3f3f3;
-	  border-radius: 50%;
-	  border-top: 16px solid #8BC34A;
-	  width: 120px;
-	  height: 120px;
-	  -webkit-animation: spin 2s linear infinite;
-	  animation: spin 2s linear infinite;
-	}
+		@-webkit-keyframes spin {
+		  0% { -webkit-transform: rotate(0deg); }
+		  100% { -webkit-transform: rotate(360deg); }
+		}
 
-	@-webkit-keyframes spin {
-	  0% { -webkit-transform: rotate(0deg); }
-	  100% { -webkit-transform: rotate(360deg); }
-	}
-
-	@keyframes spin {
-	  0% { transform: rotate(0deg); }
-	  100% { transform: rotate(360deg); }
-	}
-  </style>	
+		@keyframes spin {
+		  0% { transform: rotate(0deg); }
+		  100% { transform: rotate(360deg); }
+		}
+		.btn-success{
+		  background-color: #00a848;
+		  border-color: rgba(0,0,0,.0001);  
+		}
+		.dropdown{
+		  margin-top: 6%;
+		}
+		.log-out{
+		  font-size: 25px;
+		  color: orange;
+		}
+		.log-in{
+		  font-size: 25px;
+		  color: green;
+		}
+		.log-missed{
+		  font-size: 25px;
+		  color: red;
+		}
+		.log-call{
+		  font-size: 25px;
+		  color: green;  
+		}
+		.log-call:hover{
+		  text-shadow: 7px 2px 10px;
+		  cursor: pointer; 
+		}  	
+  </style>
 </head>
 <body>
 <div class="container">
-		<img src="//www.plivo.com/assets/dist/img/logo.png">
 	<div class="page-header">
-		<button type="button" class="btn btn-success" data-toggle="modal" data-target="#mysettings">Settings</button>
-		<button type="button" class="btn btn-default" id=uiLogin data-toggle="modal" data-target="#login">Login</button>
-		<button type="button" class="btn btn-default" id=uiLogout onclick="window.location.reload()">logout</button>	
-		<span class="lead white client-name">Plivo web client</span>
-		<span class="lead pull-right white" id=sipUserName >Not ready...</span>
-
+		<img src="https://www.plivo.com/assets/dist/img/logo.png" style="position:absolute;top:1%;">
+		<div class="dropdown">
+			<span class="white-icon glyphicon glyphicon-cog dropdown-toggle" data-toggle="dropdown"></span>
+			<ul class="dropdown-menu">
+			  <li><a class="btn" data-toggle="modal" data-target="#mysettings">Setup options</a></li>
+			  <li><a class="btn" data-toggle="modal" data-target="#popAudioDevices">Audio devices</a></li>		  			  
+			</ul>
+			<span class="white-icon glyphicon glyphicon-log-in" id=uiLogin data-toggle="modal" data-target="#login"></span>
+			<span class="white-icon glyphicon glyphicon-off" id=uiLogout onclick='window.location.href=window.location.origin + window.location.pathname + "?logout"'></span>
+			<span class="white-icon glyphicon glyphicon-transfer" data-toggle="modal" data-target="#callHistory"></span>
+			<span class="lead white client-name">Plivo web client</span>
+			<span class="lead pull-right white" id=sipUserName >Not ready...</span>
+		</div>
 	</div>
-	<div class="phone-panel">
+	<div class="">
 		<div class="loader"></div>
-		<div class="container">
-			<span class="lead text-success"> phone status: </span>
+		<div>
+			<span class="lead text-success"> - phone status: </span>
 			<span class="white" id=phonestatus>Not ready...</span>
 		</div>
-		<div class="container">
-			<span class="lead text-success"> call status: </span>
+		<div>
+			<span class="lead text-success"> - call status: </span>
 			<span class="white" id=callstatus>idle</span>
 		</div>	
 		<div class="panel-body">
@@ -306,8 +351,8 @@
 			        <div class="col-md-4 phone">
 			            <div class="row1">
 			                <div class="col-md-12 white-shadow">
-			                <input type="text" name="name" onmouseout="trimSpace(this)" id="toNumber" class="form-control tel" placeholder="sip:plivoendpoint@phone.plivo.com || + Phone#" value="" />
-			                    <div class="num-pad">
+			                <input type="text" name="name" onkeyup="trimSpace(this)" onblur="trimSpace(this)" id="toNumber" class="form-control tel" placeholder="+91801XXXXXXX" value="" />
+			                    <div class="num-pad">			                    
 			                    <div class="span4">
 			                        <div class="num">
 			                            <div class="txt">
@@ -423,6 +468,7 @@
 			                    <div class="clearfix">
 			                    </div>
 			                        <button id=makecall class="btn btn-success btn-block flatbtn">CALL</button>
+			                        <button class="hangup btn btn-danger btn-block flatbtn">HANGUP</button>
 			                </div>
 			            </div>				            
 			            <div class="clearfix">
@@ -449,7 +495,7 @@
 			                                    Reject</p>
 			                            </span>
 			                        </div>			                        
-			                        <div id=Hangup class="spanicons AfterAnswer">
+			                        <div class="hangup spanicons AfterAnswer">
 			                            <span class="glyphicon glyphicon-phone-alt "></span><span class="small">
 			                                <p>
 			                                    Hangup</p>
@@ -471,13 +517,19 @@
 			                </div>
 				        	<div class="col-md-6">
 				        		<canvas id="audio-local"></canvas>
+				        		<div id=recPlayerLayout>
+				        			<audio id=recPlayer></audio>
+				        			<a class="btn btn-info btn-sm" id=audioDownload>Download</a>
+				        			<a class="btn btn-default btn-sm" id="clearRecPlayer"> Ignore</a>
+				        		</div>
 				        	</div>			                
-			            </div>		            			        	
+			            </div>	            			        	
 			        </div>
 			    </div>
 			</div>
 		</div>
 	</div>
+	<!-- settings div -->
 	<div class="modal fade" id="mysettings" role="dialog">
 		<div class="modal-dialog modal-lg">
 		  <div class="modal-content">
@@ -488,7 +540,7 @@
 		    <div class="modal-body">
 			    <div class="form-group">
 			      <textarea class="form-control monospace" rows="5" id="appSettings"></textarea>
-			    </div>
+			    </div>			    
 		    </div>
 		    <div class="modal-footer">
 				<button type="button" id="resetSettings" class="btn btn-info" data-dismiss="modal" data-toggle="tooltip" title="Please reload the page to reflect changes">reset</button>		    
@@ -497,6 +549,9 @@
 		  </div>
 		</div>
 	</div>
+
+
+	<!-- login div -->
 	<div class="modal fade" id="login" role="dialog">
 		<div class="modal-dialog modal-lg">
 		  <div class="modal-content">
@@ -509,11 +564,14 @@
 				  <form>
 				    <div class="form-group col-xs-4">
 				      <label for="loginUser">Username</label>
-				      <input type="text" onkeyup="trimSpace(this)" onblur="trimSpace(this)" class="form-control " id="loginUser" placeholder="plivo userId">
+				      <input type="text" onkeyup="trimSpace(this)" onblur="trimSpace(this)" class="form-control " id="loginUser" name="loginUser" placeholder="plivo userId">
 				    </div>
 				    <div class="form-group col-xs-4">
 				      <label for="loginPwd">Password</label>
-				      <input type="password" class="form-control" id="loginPwd" placeholder="password">
+				      <input type="password" class="form-control" id="loginPwd" placeholder="password" name="loginPwd">
+					<div class="checkbox" id=showPass>
+					  <label><input type="checkbox">Show password</label>
+					</div>
 				    </div class="form-group">
 				  </form>
 				</div>
@@ -521,6 +579,99 @@
 		    <div class="modal-footer">
 		   		<button type="submit" class="btn btn-success" id=clickLogin data-dismiss="modal">Login</button>
 		    </div>
+		  </div>
+		</div>
+	</div>
+
+	<!-- audiodevices div -->
+	<div class="modal fade" id="popAudioDevices" role="dialog">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      <h4 class="modal-title">Audio device collection</h4>
+		    </div>
+		    <div class="modal-body">
+				  <form>
+				    <div class="form-group">
+				      <label for="micDev">Select Microphone device => Voice input device</label>
+					  <select class="form-control" id="micDev">
+					  </select>
+				    </div>
+				    <div class="form-group">
+				      <label for="ringtoneDev">Select Ringtone device => Speaker for incoming ringtone</label>
+					  <select class="form-control" id="ringtoneDev">
+					  </select>
+					  <button type=button class="btn btn-info btn-sm" id=ringtoneDevTest>Test</button>
+				    </div>
+				    <div class="form-group">
+				      <label for="speakerDev">Select Output Speaker device => Remote audio and DTMF sound</label>
+						  <select class="form-control" id="speakerDev">
+						  </select>
+						  <button type=button class="btn btn-info btn-sm" id=speakerDevTest>Test</button>
+				    </div>
+				    <div>
+				    	<h2>Reload audio devices</h2>
+				    	<button type=button class="btn btn-success btn-sm" id=allowAudioDevices>refresh</button>
+			    		<h3 class="text-center text-success">USB headsets works better in reducing background noise and echo.</h3>					    	
+				    </div>
+				  </form>
+		    </div>
+		  </div>
+		</div>
+	</div>
+
+	<!-- media not allowed div -->
+	<div class="modal fade" id="mediaAccessBlock" role="dialog">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      <h4 class="modal-title">Audio device access is blocked Please allow!</h4>
+		    </div>
+		    <div class="modal-body">
+				<div class="container">
+				</div>
+		    </div>
+		    <div class="modal-footer">
+		   		<h4 class="text-center lead">Have a look at your right hand side of your address bar</h4>
+		    </div>		    
+		  </div>
+		</div>
+	</div>
+	<!-- Mic blocked after perm -->
+	<div class="modal fade" id="micAccessBlock" role="dialog">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      <h4 class="modal-title">Mic input access is blocked</h4>
+		    </div>
+		    <div class="modal-body">
+				<h4>
+					Your browser has some issues in accessing your microphone in the hardware. Please restart or close and open back your browser to fix it.
+				</h4>
+		    </div>	    
+		  </div>
+		</div>
+	</div>
+	<!-- call history -->
+	<div class="modal fade" id="callHistory" role="dialog">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      <span>Last 50 calls</span>
+		      <button id=clearLogs class="btn btn-default btn-sm pull-right" style="margin-right:20px;">Clear logs</button>
+		    </div>
+		    <div class="modal-body">
+		    	<div class="pre-scrollable">
+					<table class="table table-bordered">
+					    <tbody id="callHistoryTable">   						      						      						      
+					    </tbody>
+					  </table>			    		
+		    	</div>
+		    </div>	    
 		  </div>
 		</div>
 	</div>
@@ -571,21 +722,31 @@
 	</div>
 
 	<div class="footer">
-	    <p class="white">© Plivo Inc. 2017</p>
+	    <p style="color:white">© Plivo Inc. 2017</p>
 	</div>		
 </div>
 <div class="feedback">
-	<button type="button" class="btn btn-success" id="clickFeedback" data-toggle="modal" data-target="#sendQualityFeedback">Feedback</button>	
+	<button type="button" class="btn btn-success btn-sm" id="clickFeedback" data-toggle="modal" data-target="#sendQualityFeedback">Feedback</button>	
 </div>
 <div class="alertmsg">
 	<!-- media metrics message comes here -->
 </div>
-<script type="text/javascript" src="//s3.amazonaws.com/plivosdk/web/plivowebsdk-2.0.1-beta.min.js"></script>
+<script src="https://s3.amazonaws.com/plivosdk/web/plivowebsdk-2.0.2-beta.min.js"></script>
 <script type="text/javascript">
-
+	$( document ).ready(function() {
+	    console.log( "HTML ready!" );
+	    $('[data-toggle="tooltip"]').tooltip();
+	    resetSettings();
+	    initPhone();
+	});	
+</script>
+<script type="text/javascript">var callStorage = {}, timer = "00:00:00";
 	// UI tweaks
 	$('#makecall').attr('class', 'btn btn-success btn-block flatbtn disabled');
 
+	function date(){
+		return (new Date()).toISOString().substring(0, 10)+" "+Date().split(" ")[4];
+	}
 	function kickStartNow(){
 			$('.callScreen').hide();
 			$('.loader').show();
@@ -604,10 +765,10 @@
 	}
 	function onWebrtcNotSupported() {
 		console.warn('no webRTC support');
-		alert('No webRTC');
+		alert('Webrtc is not supported in this broswer, Please use latest version of chrome/firefox/opera/IE Edge');
 	}
 	function mediaMetrics(obj){
-		/** 
+		/**
 		* Set a trigger for Quality FB popup when there is an warning druing call using sessionStorage
 		* During `onCallTerminated` event check for `triggerFB` flag
 		*/
@@ -637,6 +798,10 @@
 		}
 		if(!obj.active && classExist){
 			document.querySelector('.-'+obj.type).remove();
+		}
+		// Handle no mic input even after mic access
+		if(obj.desc == "no access to your microphone"){
+			$('#micAccessBlock').modal({ show: true })
 		}
 	}
 	function onReady(){
@@ -673,10 +838,11 @@
 	function onCallAnswered(){
 		console.info('onCallAnswered');
 		$('#callstatus').html('Answered');
-		var timer = 0;
+		$('.hangup').show();
+		timer = 0;
 		window.calltimer = setInterval(function(){
 			timer = timer +1;
-			$('#callDuration').html(timer.calltimer());
+			$('#callDuration').html(timer.toString().calltimer());
 		},1000);
 	}
 	function onCallTerminated(){
@@ -692,35 +858,72 @@
 	function onCallFailed(reason){
 		$('#callstatus').html('call failed');
 		console.info('onCallFailed',reason);
+		if(reason && /Denied Media/i.test(reason)){
+			$('#mediaAccessBlock').modal('show');
+		};
 		callOff();
 	}
 	function onMediaPermission(evt){
 		console.info('onMediaPermission',evt);
 		if(evt.error){
 			customAlert('Media permission error',evt.error);
+			$('#mediaAccessBlock').modal('show');
 		}
 	}
 	function onIncomingCall(callerName, extraHeaders){
 		console.info(callerName, extraHeaders);
+		callStorage.startTime = date();
+		callStorage.mode = 'in';
+		callStorage.num = callerName;
 		$('#boundType').html('Incomming :');
 		$('#callNum').html(callerName);
 		$('#callDuration').html('00:00:00');
 		$('.callinfo').show();
 		$('.callScreen').show();
 		$('.inboundBeforeAnswer').show();
+		$('#makecall').hide();
 	}
 	function onIncomingCallCanceled(){
 		console.info('onIncomingCallCanceled');
 		callOff();
 	}
 
+	function callOff(){
+		$('.callScreen').hide();
+		$('.inboundBeforeAnswer').hide();
+		$('.AfterAnswer').hide();
+		$('.outboundBeforeAnswer').hide();
+		$('.hangup').hide();
+		$('#makecall').show();
+		window.calltimer? clearInterval(window.calltimer) : false;
+		callStorage.dur = timer.toString().calltimer();
+		if(timer == "00:00:00" && callStorage.mode == "in"){
+			callStorage.mode = "missed";
+		}
+		saveCallLog(callStorage);
+		$('#callstatus').html('Idle');
+		$('.callinfo').hide();
+		callStorage={}; // reset callStorage
+		timer = "00:00:00"; //reset the timer
+	}
+
+	String.prototype.calltimer = function () {
+	    var sec_num = parseInt(this, 10);
+	    var hours   = Math.floor(sec_num / 3600);
+	    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+	    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+	    if (hours   < 10) {hours   = "0"+hours;}
+	    if (minutes < 10) {minutes = "0"+minutes;}
+	    if (seconds < 10) {seconds = "0"+seconds;}
+	    return hours+':'+minutes+':'+seconds;
+	}
 	function closeMetrics(e){
 		e.parentElement.remove();
 	}
 
 	function resetSettings(source){
 		// You can use all your default settings to go in as options during sdk init
-		var defaultSettings = {"debug":"DEBUG","permOnClick":true,"codecs":["OPUS","PCMU"],"enableIPV6":false,"audioConstraints":{"optional":[{"googAutoGainControl":false}]},"dscp":true,"enableTracking":true}
+		var defaultSettings = {"debug":"INFO","permOnClick":true,"codecs":["OPUS","PCMU"],"enableIPV6":false,"audioConstraints":{"optional":[{"googAutoGainControl":false}]},"dscp":true,"enableTracking":true}
 		var uiSettings = document.querySelector('#appSettings');
 		uiSettings.value = JSON.stringify(defaultSettings);
 		if(source == 'clickTrigger')
@@ -751,34 +954,105 @@
 		);
 	}
 
+	function updateAudioDevices(){
+		// Remove existing options if any
+		document.querySelectorAll('#micDev option').forEach(e=>e.remove())
+		document.querySelectorAll('#ringtoneDev option').forEach(e=>e.remove())
+
+		plivoWebSdk.client.audio.availableDevices()
+		.then(function(e){
+			e.forEach(function(dev){
+				if(dev.label && dev.kind == "audioinput")
+					$('#micDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
+				if(dev.label && dev.kind == "audiooutput"){
+					$('#ringtoneDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>');
+					$('#speakerDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')		
+				}
+			});
+		})
+		.catch(function(error){
+			console.error(error);
+		})
+	}
+
+	function checkBrowserComplaince(client){
+		if(client.browserDetails.browser != "chrome"){
+			document.querySelector('[data-target="#popAudioDevices"]').remove();
+		}
+	}
+
 	function trimSpace(e){
-		 e.value = e.value.replace(' ','');
+		 e.value = e.value.replace(/[- ()]/g,'');
 	}
 
-	function callOff(){
-		$('.callScreen').hide();
-		$('.inboundBeforeAnswer').hide();
-		$('.AfterAnswer').hide();
-		$('.outboundBeforeAnswer').hide();
-		window.calltimer? clearInterval(window.calltimer) : false;
-		setTimeout(function(){
-			$('#callstatus').html('Idle');
-			$('.callinfo').hide();		
-		},3000);
+	/* 
+		Call History
+	*/
+
+	function callLogDiv(e){
+		var mapper = {
+			"in" : "arrow-down log-in",
+			"out"	: "share-alt log-out",
+			"missed": "arrow-down log-missed"
+		}
+		$('#callHistoryTable').prepend(
+			'<tr>'+
+				'<td><span class="glyphicon glyphicon-'+mapper[e.mode]+'"></span></td>'+
+				'<td>'+e.num+'</td>'+
+				'<td>'+e.dur+'</td>'+
+				'<td>'+e.startTime+'</td>'+
+				'<td><span class="glyphicon glyphicon-earphone log-call" data-dismiss="modal" onclick="makecallCallLog(this)"></span></button></td>'+
+			'</tr>'
+		);
+		return;
 	}
 
-	Number.prototype.calltimer = function () {
-	    var sec_num = parseInt(this, 10);
-	    var hours   = Math.floor(sec_num / 3600);
-	    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-	    var seconds = sec_num - (hours * 3600) - (minutes * 60);
-	    if (hours   < 10) {hours   = "0"+hours;}
-	    if (minutes < 10) {minutes = "0"+minutes;}
-	    if (seconds < 10) {seconds = "0"+seconds;}
-	    return hours+':'+minutes+':'+seconds;
+	function saveCallLog(e){
+		var callLog = localStorage.getItem('pli_callHis');
+		var formatCallLog = JSON.parse(callLog);
+		var callLogStr;
+		callLogDiv(e);
+		if(formatCallLog.length > 50){
+			formatCallLog.shift();// Pops first element
+			console.info('Call log exceeded 50 rows, removing oldest log')
+		}	
+		formatCallLog.push({"mode":e.mode,"num":e.num,"dur":e.dur,"startTime":e.startTime});
+		callLogStr = JSON.stringify(formatCallLog);
+		localStorage.setItem('pli_callHis',callLogStr);
 	}
-	// UI functions
 
+	function displayCallHistory(){
+		var callLog = localStorage.getItem('pli_callHis');
+		if(callLog){
+			var formatCallLog = JSON.parse(callLog);
+			var mapper = {
+				"in" : "right log-in",
+				"out"	: "left log-out",
+				"missed": "down log-missed"
+			}		
+			for(var i=0; i < formatCallLog.length; i++){
+				callLogDiv(formatCallLog[i]);
+			}
+		}else{
+			localStorage.setItem('pli_callHis','[]');
+		}
+	}
+	function makecallCallLog(e){
+		var to = e.parentNode.parentNode.childNodes[1].innerHTML;
+		toNumber.value = to; // update the dial input 
+		makecall.click(); // trigger call	
+	}
+	/** 
+	* Hangup calls on page reload / close
+	* This is will prevent the other end still listening for dead call
+	*/
+	window.onbeforeunload = function () {
+	    plivoWebSdk.client && plivoWebSdk.client.logout();
+	};
+
+	/*
+		Capture UI onclick triggers 
+	*/
 	$('#inboundAccept').click(function(){
 		console.info('Call accept clicked');
 		plivoWebSdk.client.answer();
@@ -793,7 +1067,7 @@
 		console.info('outboundHangup');
 		plivoWebSdk.client.hangup();
 	});
-	$('#Hangup').click(function(){
+	$('.hangup').click(function(){
 		console.info('Hangup');
 		if(plivoWebSdk.client.callSession){
 			plivoWebSdk.client.hangup();
@@ -801,14 +1075,6 @@
 			callOff();
 		}
 	});
-
-	/** 
-	* Hangup calls on page reload / close
-	* This is will prevent the other end still listening for dead call
-	*/
-	window.onbeforeunload = function () {
-	    plivoWebSdk.client && plivoWebSdk.client.logout();
-	};
 
 	$('#tmute').click(function(e){
 		var event = e.currentTarget.getAttribute('data-toggle');
@@ -823,19 +1089,29 @@
 		}
 	});
 	$('#makecall').click(function(e){
-		var to = $('#toNumber').val().replace(" ","");
-		var extraHeaders = {'X-PH-header1': 'test1', 'X-PH-header2': 'test2'};
+		var to = $('#toNumber').val().replace(" ",""), 
+			extraHeaders, 
+			customCallerId= localStorage.getItem('setCallerId'),
+			customCallerIdEnabled = localStorage.getItem('setCallerIdCheck');
+		if(customCallerIdEnabled && customCallerId){
+			customCallerId = customCallerId.replace("+","");
+			extraHeaders = {'X-PH-callerId': customCallerId};		
+		}
 		var callEnabled = $('#makecall').attr('class').match('disabled');
 		if(!to || !plivoWebSdk || !!callEnabled){return};
 		plivoWebSdk.client.call(to,extraHeaders);	
 		console.info('Click make call : ',to);
-
+		callStorage.mode = "out";
+		callStorage.startTime = date();
+		callStorage.num = to;
 		$('.callScreen').show();
 		$('.AfterAnswer').show();
 		$('#boundType').html('Outgoing :');
 		$('#callNum').html(to);
 		$('#callDuration').html('00:00:00');
 		$('.callinfo').show();
+		$('.hangup').show();
+		$('#makecall').hide();
 	});
 
 	$('#updateSettings').click(function(e){
@@ -874,6 +1150,61 @@
 		login(userName, password);
 	});
 
+	// Audio device selection
+	$('#micDev').change(function(){
+		var selectDev = $('#micDev').val();
+		plivoWebSdk.client.audio.microphoneDevices.set(selectDev);
+		console.debug('Microphone device set to : ',selectDev);
+	});
+	$('#speakerDev').change(function(){
+		var selectDev = $('#speakerDev').val();
+		plivoWebSdk.client.audio.speakerDevices.set(selectDev);
+		console.debug('Speaker device set to : ',selectDev);
+	});
+	$('#ringtoneDev').change(function(){
+		var selectDev = $('#ringtoneDev').val();
+		plivoWebSdk.client.audio.ringtoneDevices.set(selectDev);
+		console.debug('Ringtone dev set to : ',selectDev);
+	});
+
+	// Ringtone device test
+	$('#ringtoneDevTest').click(function(){
+		var ringAudio = plivoWebSdk.client.audio.ringtoneDevices.media();
+		// Toggle play
+		if(ringAudio.paused){
+			ringAudio.play();
+			$('#ringtoneDevTest').html('Pause');
+		}else{
+			ringAudio.pause();
+			$('#ringtoneDevTest').html('Play');
+		}
+	});
+	// Speaker device test 
+	$('#speakerDevTest').click(function(){
+		var speakerAudio = plivoWebSdk.client.audio.speakerDevices.media();
+		// Toggle play
+		if(speakerAudio.paused){
+			speakerAudio.play();
+			$('#speakerDevTest').html('Pause');
+		}else{
+			speakerAudio.pause();
+			$('#speakerDevTest').html('Play');
+		}
+	});
+	//revealAudioDevices	
+	$('#allowAudioDevices').click(function(){
+		document.querySelectorAll('#popAudioDevices option').forEach(e=>e.remove());
+		plivoWebSdk.client.audio.revealAudioDevices()
+		.then(function(e){
+			updateAudioDevices();
+			console.log('Media permission ',e)
+		})
+		.catch(function(error){
+			console.error('media permission error :',error);
+			$('#mediaAccessBlock').modal('show');
+		})
+	});
+
 	$('.num').click(function () {
 	    var num = $(this);
 	    var text = $.trim(num.find('.txt').clone().children().remove().end().text());
@@ -884,6 +1215,18 @@
 	    }
 	});
 
+	clearLogs.onclick = function(){
+		localStorage.setItem('pli_callHis','[]');
+		callHistoryTable.innerHTML=""
+	}
+
+	showPass.onclick = function(){
+		if($('#showPass input').prop("checked")){
+			loginPwd.type="text";
+		}else{
+			loginPwd.type="password";
+		}
+	}
 	// variables to declare 
 
 	var plivoWebSdk; // this will be retrived from settings in UI
@@ -906,16 +1249,15 @@
 		plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
 		plivoWebSdk.client.setRingTone(true);
 		plivoWebSdk.client.setRingToneBack(true);
+		/** Handle browser issues
+		* Sound devices won't work in firefox
+		*/
+		checkBrowserComplaince(plivoWebSdk.client);	
+		updateAudioDevices();
+		displayCallHistory();
 		console.log('initPhone ready!')
 	}
-</script>
-<script type="text/javascript">
-	$( document ).ready(function() {
-	    console.log( "HTML ready!" );
-	    $('[data-toggle="tooltip"]').tooltip();
-	    resetSettings();
-	    initPhone();
-	});	
+	
 </script>
 </body>
 </html>
