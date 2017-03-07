@@ -255,6 +255,7 @@ function mediaMetrics(obj){
 
 ### Audio Device API
 This provides input and output audio device control over API
+#![plivo-websdk-2.0-example](img/audiodevice.png)
 
 Handling device selection from UI
 ```js

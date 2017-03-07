@@ -437,7 +437,7 @@ $('#ringtoneDevTest').click(function(){
 		$('#ringtoneDevTest').html('Play');
 	}
 });
-// Speaker device test
+// Speaker device test 
 $('#speakerDevTest').click(function(){
 	var speakerAudio = plivoWebSdk.client.audio.speakerDevices.media();
 	// Toggle play
