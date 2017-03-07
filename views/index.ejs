@@ -1,34 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>plivo webphone</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="icon" type="image/png" href="//s3.amazonaws.com/plivowebrtc/assets/favicon.png">
-	<script src="lib/jquery.min.js"></script>
+    <title>plivo webphone</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <script src="lib/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="css/newstyle.css">	
+  <link rel="stylesheet" type="text/css" href="css/newstyle.css"> 
 </head>
 <body>
 <div class="container">
-		<img src="//s3.amazonaws.com/plivowebrtc/assets/logo.png">
 	<div class="page-header">
-		<button type="button" class="btn btn-success" data-toggle="modal" data-target="#mysettings">Settings</button>
-		<button type="button" class="btn btn-default" id=uiLogin data-toggle="modal" data-target="#login">Login</button>
-		<button type="button" class="btn btn-default" id=uiLogout onclick="window.location.reload()">logout</button>	
-		<span class="lead white client-name">Plivo web client</span>
-		<span class="lead pull-right white" id=sipUserName >Not ready...</span>
-
+		<img src="img/plivo-logo.png" style="position:absolute;top:1%;">
+		<div class="dropdown">
+			<span class="white-icon glyphicon glyphicon-cog dropdown-toggle" data-toggle="dropdown"></span>
+			<ul class="dropdown-menu">
+			  <li><a class="btn" data-toggle="modal" data-target="#mysettings">Setup options</a></li>
+			  <li><a class="btn" data-toggle="modal" data-target="#popAudioDevices">Audio devices</a></li>		  			  
+			</ul>
+			<span class="white-icon glyphicon glyphicon-log-in" id=uiLogin data-toggle="modal" data-target="#login"></span>
+			<span class="white-icon glyphicon glyphicon-off" id=uiLogout onclick='window.location.href=window.location.origin + window.location.pathname + "?logout"'></span>
+			<span class="white-icon glyphicon glyphicon-transfer" data-toggle="modal" data-target="#callHistory"></span>
+			<span class="lead white client-name">Plivo web client</span>
+			<span class="lead pull-right white" id=sipUserName >Not ready...</span>
+		</div>
 	</div>
-	<div class="phone-panel">
+	<div class="">
 		<div class="loader"></div>
-		<div class="container">
-			<span class="lead text-success"> phone status: </span>
+		<div>
+			<span class="lead text-success"> - phone status: </span>
 			<span class="white" id=phonestatus>Not ready...</span>
 		</div>
-		<div class="container">
-			<span class="lead text-success"> call status: </span>
+		<div>
+			<span class="lead text-success"> - call status: </span>
 			<span class="white" id=callstatus>idle</span>
 		</div>	
 		<div class="panel-body">
@@ -37,8 +43,8 @@
 			        <div class="col-md-4 phone">
 			            <div class="row1">
 			                <div class="col-md-12 white-shadow">
-			                <input type="text" name="name" onmouseout="trimSpace(this)" id="toNumber" class="form-control tel" placeholder="sip:plivoendpoint@phone.plivo.com || + Phone#" value="" />
-			                    <div class="num-pad">
+			                <input type="text" name="name" onkeyup="trimSpace(this)" onblur="trimSpace(this)" id="toNumber" class="form-control tel" placeholder="+91801XXXXXXX" value="" />
+			                    <div class="num-pad">			                    
 			                    <div class="span4">
 			                        <div class="num">
 			                            <div class="txt">
@@ -154,6 +160,7 @@
 			                    <div class="clearfix">
 			                    </div>
 			                        <button id=makecall class="btn btn-success btn-block flatbtn">CALL</button>
+			                        <button class="hangup btn btn-danger btn-block flatbtn">HANGUP</button>
 			                </div>
 			            </div>				            
 			            <div class="clearfix">
@@ -180,7 +187,7 @@
 			                                    Reject</p>
 			                            </span>
 			                        </div>			                        
-			                        <div id=Hangup class="spanicons AfterAnswer">
+			                        <div class="hangup spanicons AfterAnswer">
 			                            <span class="glyphicon glyphicon-phone-alt "></span><span class="small">
 			                                <p>
 			                                    Hangup</p>
@@ -202,13 +209,19 @@
 			                </div>
 				        	<div class="col-md-6">
 				        		<canvas id="audio-local"></canvas>
+				        		<div id=recPlayerLayout>
+				        			<audio id=recPlayer></audio>
+				        			<a class="btn btn-info btn-sm" id=audioDownload>Download</a>
+				        			<a class="btn btn-default btn-sm" id="clearRecPlayer"> Ignore</a>
+				        		</div>
 				        	</div>			                
-			            </div>		            			        	
+			            </div>	            			        	
 			        </div>
 			    </div>
 			</div>
 		</div>
 	</div>
+	<!-- settings div -->
 	<div class="modal fade" id="mysettings" role="dialog">
 		<div class="modal-dialog modal-lg">
 		  <div class="modal-content">
@@ -219,7 +232,7 @@
 		    <div class="modal-body">
 			    <div class="form-group">
 			      <textarea class="form-control monospace" rows="5" id="appSettings"></textarea>
-			    </div>
+			    </div>			    
 		    </div>
 		    <div class="modal-footer">
 				<button type="button" id="resetSettings" class="btn btn-info" data-dismiss="modal" data-toggle="tooltip" title="Please reload the page to reflect changes">reset</button>		    
@@ -228,6 +241,9 @@
 		  </div>
 		</div>
 	</div>
+
+
+	<!-- login div -->
 	<div class="modal fade" id="login" role="dialog">
 		<div class="modal-dialog modal-lg">
 		  <div class="modal-content">
@@ -240,11 +256,14 @@
 				  <form>
 				    <div class="form-group col-xs-4">
 				      <label for="loginUser">Username</label>
-				      <input type="text" onkeyup="trimSpace(this)" onblur="trimSpace(this)" class="form-control " id="loginUser" placeholder="plivo userId">
+				      <input type="text" onkeyup="trimSpace(this)" onblur="trimSpace(this)" class="form-control " id="loginUser" name="loginUser" placeholder="plivo userId">
 				    </div>
 				    <div class="form-group col-xs-4">
 				      <label for="loginPwd">Password</label>
-				      <input type="password" class="form-control" id="loginPwd" placeholder="password">
+				      <input type="password" class="form-control" id="loginPwd" placeholder="password" name="loginPwd">
+					<div class="checkbox" id=showPass>
+					  <label><input type="checkbox">Show password</label>
+					</div>
 				    </div class="form-group">
 				  </form>
 				</div>
@@ -252,6 +271,100 @@
 		    <div class="modal-footer">
 		   		<button type="submit" class="btn btn-success" id=clickLogin data-dismiss="modal">Login</button>
 		    </div>
+		  </div>
+		</div>
+	</div>
+
+	<!-- audiodevices div -->
+	<div class="modal fade" id="popAudioDevices" role="dialog">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      <h4 class="modal-title">Audio device collection</h4>
+		    </div>
+		    <div class="modal-body">
+				  <form>
+				    <div class="form-group">
+				      <label for="micDev">Select Microphone device => Voice input device</label>
+					  <select class="form-control" id="micDev">
+					  </select>
+				    </div>
+				    <div class="form-group">
+				      <label for="ringtoneDev">Select Ringtone device => Speaker for incoming ringtone</label>
+					  <select class="form-control" id="ringtoneDev">
+					  </select>
+					  <button type=button class="btn btn-info btn-sm" id=ringtoneDevTest>Test</button>
+				    </div>
+				    <div class="form-group">
+				      <label for="speakerDev">Select Output Speaker device => Remote audio and DTMF sound</label>
+						  <select class="form-control" id="speakerDev">
+						  </select>
+						  <button type=button class="btn btn-info btn-sm" id=speakerDevTest>Test</button>
+				    </div>
+				    <div>
+				    	<h2>Reload audio devices</h2>
+				    	<button type=button class="btn btn-success btn-sm" id=allowAudioDevices>refresh</button>
+			    		<h3 class="text-center text-success">USB headsets works better in reducing background noise and echo.</h3>					    	
+				    </div>
+				  </form>
+		    </div>
+		  </div>
+		</div>
+	</div>
+
+	<!-- media not allowed div -->
+	<div class="modal fade" id="mediaAccessBlock" role="dialog">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      <h4 class="modal-title">Audio device access is blocked Please allow!</h4>
+		    </div>
+		    <div class="modal-body">
+				<div class="container">          
+				  <img src="img/micdenied.png" class="img-rounded" width="304" height="236"> 
+				</div>
+		    </div>
+		    <div class="modal-footer">
+		   		<h4 class="text-center lead">Have a look at your right hand side of your address bar</h4>
+		    </div>		    
+		  </div>
+		</div>
+	</div>
+	<!-- Mic blocked after perm -->
+	<div class="modal fade" id="micAccessBlock" role="dialog">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      <h4 class="modal-title">Mic input access is blocked</h4>
+		    </div>
+		    <div class="modal-body">
+				<h4>
+					Your browser has some issues in accessing your microphone in the hardware. Please restart or close and open back your browser to fix it.
+				</h4>
+		    </div>	    
+		  </div>
+		</div>
+	</div>
+	<!-- call history -->
+	<div class="modal fade" id="callHistory" role="dialog">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      <span>Last 50 calls</span>
+		      <button id=clearLogs class="btn btn-default btn-sm pull-right" style="margin-right:20px;">Clear logs</button>
+		    </div>
+		    <div class="modal-body">
+		    	<div class="pre-scrollable">
+					<table class="table table-bordered">
+					    <tbody id="callHistoryTable">   						      						      						      
+					    </tbody>
+					  </table>			    		
+		    	</div>
+		    </div>	    
 		  </div>
 		</div>
 	</div>
@@ -302,16 +415,16 @@
 	</div>
 
 	<div class="footer">
-	    <p class="white">© Plivo Inc. 2017</p>
+	    <p style="color:white">© Plivo Inc. 2017</p>
 	</div>		
 </div>
 <div class="feedback">
-	<button type="button" class="btn btn-success" id="clickFeedback" data-toggle="modal" data-target="#sendQualityFeedback">Feedback</button>	
+	<button type="button" class="btn btn-success btn-sm" id="clickFeedback" data-toggle="modal" data-target="#sendQualityFeedback">Feedback</button>	
 </div>
 <div class="alertmsg">
 	<!-- media metrics message comes here -->
 </div>
-<script src="lib/plivowebsdk.js"></script>
+<script src="lib/plivowebsdk.min.js"></script>
 <script src="js/customclient.js"></script>
 <script type="text/javascript">
 	$( document ).ready(function() {

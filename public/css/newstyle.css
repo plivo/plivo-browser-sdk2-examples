@@ -132,8 +132,9 @@ p
     padding: 10px;
     /*z-index: 10000;*/
     /*display: inline-block;*/
-    background: rgba(0,153,204,0.93);
-    border: 1px solid #006b8f;
+    /*background: rgba(0,153,204,0.93);*/
+    background: rgba(244, 67, 54, 0.75);
+    /*border: 1px solid #006b8f;*/
     color: #fff;
     font-size: 13px;
     text-align: center;
@@ -154,7 +155,7 @@ p
     /*width: 20%;*/
     z-index: 100000;
 }
-.inboundBeforeAnswer, .outboundBeforeAnswer, .AfterAnswer, .callinfo, #uiLogout, .lowQualityRadios, .feedback, .loader, .fadein-effect{
+#recPlayerLayout, .hangup,.inboundBeforeAnswer, .outboundBeforeAnswer, .AfterAnswer, .callinfo, #uiLogout, .lowQualityRadios, .feedback, .loader, .fadein-effect{
     display: none;
 }
 
@@ -181,12 +182,23 @@ p
   font-size: 20px;
   font-weight: 600;
 }
-
+.white-icon {
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+  margin-left: 20px;
+  cursor: pointer;
+}
 .feedback{
     transform: rotate(90deg);
     position: absolute;
     top: 50%;
     left: -2%;    
+}
+.audioDevices{
+    position: absolute;
+    top: 20%;
+    right: 0%;    
 }
 .monospace{
     font-family: monospace;
@@ -231,10 +243,10 @@ p
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);    
 }
 .client-name{
-  margin-left: 20%;
+  margin-left: 28%;
   position: absolute;
-  font-size: 30px;
-  font-weight: 600;
+  /*font-size: 30px;*/
+  /*font-weight: 600;*/
   color: gray;
 }
 .lead{
@@ -250,7 +262,7 @@ p
   margin: -75px 0 0 -75px;
   border: 16px solid #f3f3f3;
   border-radius: 50%;
-  border-top: 16px solid #8BC34A;
+  border-top: 16px solid #00a848;
   width: 120px;
   height: 120px;
   -webkit-animation: spin 2s linear infinite;
@@ -265,4 +277,31 @@ p
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+.btn-success{
+  background-color: #00a848;
+  border-color: rgba(0,0,0,.0001);  
+}
+.dropdown{
+  margin-top: 6%;
+}
+.log-out{
+  font-size: 25px;
+  color: orange;
+}
+.log-in{
+  font-size: 25px;
+  color: green;
+}
+.log-missed{
+  font-size: 25px;
+  color: red;
+}
+.log-call{
+  font-size: 25px;
+  color: green;  
+}
+.log-call:hover{
+  text-shadow: 7px 2px 10px;
+  cursor: pointer; 
 }

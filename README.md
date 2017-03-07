@@ -252,6 +252,96 @@ function mediaMetrics(obj){
   }
 }
 ```
+
+### Audio Device API
+This provides input and output audio device control over API
+
+Handling device selection from UI
+```js
+// Audio device selection
+$('#micDev').change(function(){
+  var selectDev = $('#micDev').val();
+  plivoWebSdk.client.audio.microphoneDevices.set(selectDev);
+  console.debug('Microphone device set to : ',selectDev);
+});
+$('#speakerDev').change(function(){
+  var selectDev = $('#speakerDev').val();
+  plivoWebSdk.client.audio.speakerDevices.set(selectDev);
+  console.debug('Speaker device set to : ',selectDev);
+});
+$('#ringtoneDev').change(function(){
+  var selectDev = $('#ringtoneDev').val();
+  plivoWebSdk.client.audio.ringtoneDevices.set(selectDev);
+  console.debug('Ringtone dev set to : ',selectDev);
+});
+```
+
+Test audio output devices
+
+```js
+// Ringtone device test
+$('#ringtoneDevTest').click(function(){
+  var ringAudio = plivoWebSdk.client.audio.ringtoneDevices.media();
+  // Toggle play
+  if(ringAudio.paused){
+    ringAudio.play();
+    $('#ringtoneDevTest').html('Pause');
+  }else{
+    ringAudio.pause();
+    $('#ringtoneDevTest').html('Play');
+  }
+});
+// Speaker device test 
+$('#speakerDevTest').click(function(){
+  var speakerAudio = plivoWebSdk.client.audio.speakerDevices.media();
+  // Toggle play
+  if(speakerAudio.paused){
+    speakerAudio.play();
+    $('#speakerDevTest').html('Pause');
+  }else{
+    speakerAudio.pause();
+    $('#speakerDevTest').html('Play');
+  }
+});
+```
+Populate audio devices on UI
+
+```js
+function updateAudioDevices(){
+  // Remove existing options if any
+  document.querySelectorAll('#micDev option').forEach(e=>e.remove())
+  document.querySelectorAll('#ringtoneDev option').forEach(e=>e.remove())
+
+  plivoWebSdk.client.audio.availableDevices()
+  .then(function(e){
+    e.forEach(function(dev){
+      if(dev.label && dev.kind == "audioinput")
+        $('#micDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
+      if(dev.label && dev.kind == "audiooutput"){
+        $('#ringtoneDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>');
+        $('#speakerDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')    
+      }
+    });
+  })
+  .catch(function(error){
+    console.error(error);
+  })
+}
+//revealAudioDevices - to force ask for permission
+$('#allowAudioDevices').click(function(){
+  document.querySelectorAll('#popAudioDevices option').forEach(e=>e.remove());
+  plivoWebSdk.client.audio.revealAudioDevices()
+  .then(function(e){
+    updateAudioDevices();
+    console.log('Media permission ',e)
+  })
+  .catch(function(error){
+    console.error('media permission error :',error);
+    $('#mediaAccessBlock').modal('show');
+  })
+});
+```
+
 ### Sending Feedback
 The following snippet shows how to collect feedback using the SDK. There is a predefined list of feedback comments that users can select for the score range from 1-3. In this application we are taking “good” and “perfect” as feedback for scores 4 and 5.
 #![plivo-websdk-2.0-example](img/feedback.png)
