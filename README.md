@@ -254,10 +254,12 @@ function mediaMetrics(obj){
 ```
 
 ### Audio Device API
-This provides input and output audio device control over API
+
+The Audio Device API in this SDK allows developers to select input, output and ring devices for the calls.
 #![plivo-websdk-2.0-example](img/audiodevice.png)
 
-Handling device selection from UI
+The following snippet uses this API to demonstrate how to handle device selection from the UI 
+
 ```js
 // Audio device selection
 $('#micDev').change(function(){
@@ -277,7 +279,7 @@ $('#ringtoneDev').change(function(){
 });
 ```
 
-Test audio output devices
+The following snippet uses this API and demonstrates the use case of testing audio devices
 
 ```js
 // Ringtone device test
@@ -305,7 +307,8 @@ $('#speakerDevTest').click(function(){
   }
 });
 ```
-Populate audio devices on UI
+
+The following snippet uses this API to retrieve available devices and populate them in UI
 
 ```js
 function updateAudioDevices(){
