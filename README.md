@@ -16,7 +16,7 @@
 ### Deploying the application
 
 ```
-git checkout https://github.com/plivo/plivo-websdk-2.0-example.git
+git clone https://github.com/plivo/plivo-websdk-2.0-example.git
 npm install
 npm start
 ```
