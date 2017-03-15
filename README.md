@@ -92,7 +92,7 @@ Login accepts Plivo Endpoint Credentials.
 
 ```js
 function resetSettings(source){
-  var defaultSettings = { "debug": "DEBUG", "permOnClick": true, "codecs": ["OPUS","PCMU"], "enableIPV6": false, "audioConstraints": { "optional": [ { "googAutoGainControl": false } ] }, "enableTracking": true}
+  var defaultSettings = { "debug": "DEBUG", "permOnClick": true, "codecs": ["OPUS","PCMU"], "enableIPV6": false, "audioConstraints": { "optional": [ { "googAutoGainControl": false }, {"googEchoCancellation":false} ] }, "enableTracking": true}
   var uiSettings = document.querySelector('#appSettings');
   uiSettings.value = JSON.stringify(defaultSettings);
   if(source == 'clickTrigger')
