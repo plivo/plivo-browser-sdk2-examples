@@ -1,0 +1,12 @@
+{
+  "manifest_version": 2,
+  "name": "plivo",
+  "description": "plivo websdk",
+  "version": "2.0",
+  "app": {
+    "background": {
+      "scripts": [ "background.js" ]
+    }
+  },
+  "permissions": [ "storage", "notifications", "<all_urls>", "videoCapture", "audioCapture" ]
+}

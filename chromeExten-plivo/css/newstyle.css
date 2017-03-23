@@ -1,0 +1,304 @@
+body{ 
+background: url() no-repeat center center fixed; 
+-webkit-background-size: cover;
+-moz-background-size: cover;
+-o-background-size: cover;
+background-size: cover;
+}
+body
+{
+    margin: 0;
+    padding: 0;
+    font-family: 'Lato' , sans-serif;
+    color: #333;
+    background-size: 100%;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: none;
+    background-color: black;
+}
+p
+{
+    margin: 0;
+    padding: 0 0 10px 0;
+    line-height: 20px;
+}
+.phone-panel{
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+  box-shadow: 0 1px 1px rgba(0,0,0,.05);
+  border-color: white;  
+}
+.span4
+{
+    width: 80px;
+    float: left;
+    margin: 0 8px 10px 8px;
+}
+
+.phone
+{
+    margin-top: 15px;
+    background: rgba(150, 209, 150, 0.09);
+}
+.tel
+{
+  margin-bottom: 10px;
+  margin-top: 10px;
+  background-color: rgba(0, 0, 0, 0);
+  color: white;
+  font-weight: 600;
+}
+.num-pad
+{
+    padding-left: 15px;
+}
+
+
+.num
+{
+    /*border: 1px solid #9e9e9e;*/
+    -webkit-border-radius: 999px;
+    border-radius: 999px;
+    -moz-border-radius: 999px;
+    height: 80px;
+    /*background-color: #fff;*/
+    cursor: pointer;
+}
+.num:hover
+{
+    background-color: #5cb85c;
+    color: #fff;
+    transition-property: background-color .2s linear 0s;
+    -moz-transition: background-color .2s linear 0s;
+    -webkit-transition: background-color .2s linear 0s;
+    -o-transition: background-color .2s linear 0s;
+}
+.txt
+{
+    font-size: 30px;
+    text-align: center;
+    /*margin-top: 15px;*/
+    font-family: 'Lato' , sans-serif;
+    line-height: 30px;
+    color: white;
+}
+.small
+{
+    font-size: 15px;
+}
+
+.btn
+{
+    font-weight: bold;
+    -webkit-transition: .1s ease-in background-color;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: 1px;
+}
+.btn:hover
+{
+    transition-property: background-color .2s linear 0s;
+    -moz-transition: background-color .2s linear 0s;
+    -webkit-transition: background-color .2s linear 0s;
+    -o-transition: background-color .2s linear 0s;
+}
+.spanicons
+{
+    width: 72px;
+    float: left;
+    text-align: center;
+    margin-top: 40px;
+    font-size: 30px;
+    cursor: pointer;
+}
+.spanicons:hover
+{
+    color: #3498db;
+    transition-property: color .2s linear 0s;
+    -moz-transition: color .2s linear 0s;
+    -webkit-transition: color .2s linear 0s;
+    -o-transition: color .2s linear 0s;
+}
+.active
+{
+    color: #3498db;
+}
+.metrics{
+    margin-bottom: 10px;
+    padding: 10px;
+    /*z-index: 10000;*/
+    /*display: inline-block;*/
+    /*background: rgba(0,153,204,0.93);*/
+    background: rgba(244, 67, 54, 0.75);
+    /*border: 1px solid #006b8f;*/
+    color: #fff;
+    font-size: 13px;
+    text-align: center;
+    border-radius: 3px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    outline: 0;
+    /*position: fixed;*/
+    top: 0;
+    /*left: 0;*/
+    right:0;
+    font-family: monospace; 
+}
+.alertmsg{
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    /*width: 20%;*/
+    z-index: 100000;
+}
+#recPlayerLayout, .hangup,.inboundBeforeAnswer, .outboundBeforeAnswer, .AfterAnswer, .callinfo, #uiLogout, .lowQualityRadios, .feedback, .loader, .fadein-effect{
+    display: none;
+}
+
+.customAlert{
+    margin-bottom: 10px;
+    padding: 10px;
+    z-index: 10000;
+    background: rgb(14, 14, 14);
+    border: 1px solid #03A9F4;
+    font-size: 13px;
+    text-align: center;
+    border-radius: 3px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    outline: 0;
+    top: 0;
+    right: 0;
+    font-family: monospace;
+    color: red;    
+}
+
+.white{
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+}
+.white-icon {
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+  margin-left: 20px;
+  cursor: pointer;
+}
+.feedback{
+    transform: rotate(90deg);
+    position: absolute;
+    top: 50%;
+    left: -2%;    
+}
+.audioDevices{
+    position: absolute;
+    top: 20%;
+    right: 0%;    
+}
+.monospace{
+    font-family: monospace;
+}
+.keypad {
+    background-color: deepskyblue;
+    border-radius: 0%;
+    color: #fff;
+    display: inline-block;
+    font-size: 12px;
+    height: 20px;
+    line-height: 20px;
+    padding: 5px;
+    margin: 1px;
+    text-align: center;
+    width: 20px;
+    opacity: .8;
+    cursor:pointer;
+}
+.dialpad {
+      margin-left: 2%;
+}
+.googleLogin {
+  background: url(signin_button.png) no-repeat 6px center;
+  /*width: 100px;*/
+  height: 100px;
+  display: block;
+}
+.center-div
+{
+  position: absolute;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 15%;
+  height: 100px;
+  border-radius: 3px;
+}
+.white-shadow{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);    
+}
+.client-name{
+  margin-left: 28%;
+  position: absolute;
+  /*font-size: 30px;*/
+  /*font-weight: 600;*/
+  color: gray;
+}
+.lead{
+  font-weight: 600;
+}
+.loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #00a848;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.btn-success{
+  background-color: #00a848;
+  border-color: rgba(0,0,0,.0001);  
+}
+.dropdown{
+  margin-top: 6%;
+}
+.log-out{
+  font-size: 25px;
+  color: orange;
+}
+.log-in{
+  font-size: 25px;
+  color: green;
+}
+.log-missed{
+  font-size: 25px;
+  color: red;
+}
+.log-call{
+  font-size: 25px;
+  color: green;  
+}
+.log-call:hover{
+  text-shadow: 7px 2px 10px;
+  cursor: pointer; 
+}

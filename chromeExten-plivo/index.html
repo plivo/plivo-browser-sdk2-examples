@@ -1,0 +1,372 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>plivo webphone</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="lib/jquery.min.js"></script>
+  <script src="lib/bootstrap.min.js"></script>   
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/newstyle.css">  
+</head>
+<body>
+<div class="container">
+  <div class="page-header">
+    <img src="img/plivo-logo.png" style="position:absolute;top:1%;">
+    <div class="dropdown">
+      <span class="white-icon dropdown-toggle" data-toggle="dropdown">Settings</span>
+      <ul class="dropdown-menu">
+        <li><a class="btn" data-toggle="modal" data-target="#mysettings">Setup options</a></li>
+        <li><a class="btn" data-toggle="modal" data-target="#popAudioDevices">Audio devices</a></li>
+      </ul>
+      <span class="white-icon" id=uiLogin data-toggle="modal" data-target="#login">login</span>
+      <span class="lead white client-name">Plivo web client</span>
+      <span class="lead pull-right white" id=sipUserName >Not ready...</span>
+    </div>
+  </div>
+  <div class="">
+    <div class="loader"></div>
+    <div>
+      <span class="lead text-success"> - phone status: </span>
+      <span class="white" id=phonestatus>Not ready...</span>
+    </div>
+    <div>
+      <span class="lead text-success"> - call status: </span>
+      <span class="white" id=callstatus>idle</span>
+    </div>  
+    <div class="panel-body">
+      <div class="container">
+          <div class=""> 
+              <div class="col-md-4 phone">
+                  <div class="row1">
+                      <div class="col-md-12 white-shadow">
+                      <input type="text" name="name" id="toNumber" class="form-control tel" placeholder="+1800XXXXXXX" value="" />
+                          <div class="num-pad">                         
+                          <div class="span4">
+                              <div class="num">
+                                  <div class="txt">
+                                      1
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="span4">
+                              <div class="num">
+                                  <div class="txt">
+                                      2 <span class="small">
+                                          <p>
+                                              ABC</p>
+                                      </span>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="span4">
+                              <div class="num">
+                                  <div class="txt">
+                                      3 <span class="small">
+                                          <p>
+                                              DEF</p>
+                                      </span>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="span4">
+                              <div class="num">
+                                  <div class="txt">
+                                      4 <span class="small">
+                                          <p>
+                                              GHI</p>
+                                      </span>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="span4">
+                              <div class="num">
+                                  <div class="txt">
+                                      5 <span class="small">
+                                          <p>
+                                              JKL</p>
+                                      </span>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="span4">
+                              <div class="num">
+                                  <div class="txt">
+                                      6 <span class="small">
+                                          <p>
+                                              MNO</p>
+                                      </span>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="span4">
+                              <div class="num">
+                                  <div class="txt">
+                                      7 <span class="small">
+                                          <p>
+                                              PQRS</p>
+                                      </span>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="span4">
+                              <div class="num">
+                                  <div class="txt">
+                                      8 <span class="small">
+                                          <p>
+                                              TUV</p>
+                                      </span>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="span4">
+                              <div class="num">
+                                  <div class="txt">
+                                      9 <span class="small">
+                                          <p>
+                                              WXYZ</p>
+                                      </span>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="span4">
+                              <div class="num">
+                                  <div class="txt">
+                                      *
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="span4">
+                              <div class="num">
+                                  <div class="txt">
+                                      0 <span class="small">
+                                          <p>
+                                              +</p>
+                                      </span>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="span4">
+                              <div class="num">
+                                  <div class="txt">
+                                      #
+                                  </div>
+                              </div>
+                          </div>
+                          </div>
+                          <div class="clearfix">
+                          </div>
+                              <button id=makecall class="btn btn-success btn-block flatbtn">CALL</button>
+                              <button class="hangup btn btn-danger btn-block flatbtn">HANGUP</button>
+                      </div>
+                  </div>                    
+                  <div class="clearfix">
+                  </div>
+              </div>
+              <div class="col-md col-md-offset-6 white">
+                <div class="callinfo">
+                  <h4 id="boundType">Fetching...</h4>
+                  <h4 id="callNum">Fetching...</h4>
+                  <h2 id="callDuration">00:00</h2>
+                </div>
+                  <div class="row">
+                      <div class="col-md-12">
+                          <div>
+                              <div id=inboundAccept class="inboundBeforeAnswer" style="cursor:pointer;">
+                                  <span class="small">
+                                      <p>
+                                          Answer</p>
+                                  </span>
+                              </div>
+                              <div id=inboundReject class="inboundBeforeAnswer" style="cursor:pointer;">
+                                  <span class="small">
+                                      <p>
+                                          Reject</p>
+                                  </span>
+                              </div>                              
+                              <div class="hangup  AfterAnswer" style="cursor:pointer;">
+                                  </span><span class="small">
+                                      <p>
+                                          Hangup</p>
+                                  </span>
+                              </div>
+                              <div id=outboundHangup class="outboundBeforeAnswer" style="cursor:pointer;">
+                                  <span class="small">
+                                      <p>
+                                          Hangup</p>
+                                  </span>
+                              </div>                              
+                              <div id=tmute data-toggle="mute" class="AfterAnswer" style="cursor:pointer;">
+                                  <span class="small">
+                                      <p>
+                                          Microphone</p>
+                                  </span>
+                              </div>
+                          </div>
+                      </div>
+                  <div class="col-md-6">
+                    <canvas id="audio-local"></canvas>
+                    <div id=recPlayerLayout>
+                      <audio id=recPlayer></audio>
+                      <a class="btn btn-info btn-sm" id=audioDownload>Download</a>
+                      <a class="btn btn-default btn-sm" id="clearRecPlayer"> Ignore</a>
+                    </div>
+                  </div>                      
+                  </div>                              
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  <!-- settings div -->
+  <div class="modal fade" id="mysettings" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Options for initializing the plivoWebSdk object.</h4> <a href="https://jsonformatter.curiousconcept.com/" target="_blank">Please follow RFC 4627 JSON standard</a>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <textarea class="form-control monospace" rows="5" id="appSettings"></textarea>
+          </div>          
+        </div>
+        <div class="modal-footer">
+        <button type="button" id="resetSettings" class="btn btn-info" data-dismiss="modal" data-toggle="tooltip" title="Please reload the page to reflect changes">reset</button>       
+            <button type="button" id="updateSettings" class="btn btn-success" data-dismiss="modal" data-toggle="tooltip" title="Please reload the page to reflect changes">update</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- login div -->
+  <div class="modal fade" id="login" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Please enter your plivo credentials</h4>
+        </div>
+        <div class="modal-body">
+        <div class="container">
+          <form>
+            <div class="form-group col-xs-4">
+              <label for="loginUser">Username</label>
+              <input type="text" class="form-control " id="loginUser" name="loginUser" placeholder="plivo userId">
+            </div>
+            <div class="form-group col-xs-4">
+              <label for="loginPwd">Password</label>
+              <input type="password" class="form-control" id="loginPwd" placeholder="password" name="loginPwd">
+              <div class="checkbox" id=showPass>
+                <label><input type="checkbox">Show password</label>
+              </div>
+            </div class="form-group">
+          </form>
+        </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success" id=clickLogin data-dismiss="modal">Login</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- audiodevices div -->
+  <div class="modal fade" id="popAudioDevices" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Audio device collection</h4>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="micDev">Select Microphone device => Voice input device</label>
+            <select class="form-control" id="micDev">
+            </select>
+            </div>
+            <div class="form-group">
+              <label for="ringtoneDev">Select Ringtone device => Speaker for incoming ringtone</label>
+            <select class="form-control" id="ringtoneDev">
+            </select>
+            <button type=button class="btn btn-info btn-sm" id=ringtoneDevTest>Test</button>
+            </div>
+            <div class="form-group">
+              <label for="speakerDev">Select Output Speaker device => Remote audio and DTMF sound</label>
+              <select class="form-control" id="speakerDev">
+              </select>
+              <button type=button class="btn btn-info btn-sm" id=speakerDevTest>Test</button>
+            </div>
+            <div>
+              <h2>Reload audio devices</h2>
+              <button type=button class="btn btn-success btn-sm" id=allowAudioDevices>refresh</button>
+              <h3 class="text-center text-success">USB headsets works better in reducing background noise and echo.</h3>                
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>  
+
+  <div class="modal fade" id="sendQualityFeedback" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Please rate the quality of last call.</h4>
+        </div>
+        <div class="modal-body">      
+        <div class="container">
+            <div class="form-group col-xs-2">
+              <input id="qualityRange" style="cursor:pointer;" class="form-control" type="range" min="1" max="5" step="1" value="5"/>
+              <h4 id=qualityNumber>Rating: 5</h4>
+            </div>
+            <div class="form-group col-xs-2 lowQualityRadios">
+              <div class="radio">
+                <label><input type="radio" name="callqualityradio" value="bad-audio">Bad audio</label>
+              </div>
+              <div class="radio">
+                <label><input type="radio" name="callqualityradio" value="call-dropped">Call dropped</label>
+              </div>
+              <div class="radio">
+                <label><input type="radio" name="callqualityradio" value="wrong-callerid">Wrong callerid</label>
+              </div>
+              <div class="radio">
+                <label><input type="radio" name="callqualityradio" value="dtmf-not-captured">DTMF is not working</label>
+              </div>
+              <div class="radio">
+                <label><input type="radio" name="callqualityradio" value="audio-latency">Audio latency</label>
+              </div>  
+              <div class="radio">
+                <label><input type="radio" name="callqualityradio" value="one-way-audio">One way audio</label>
+              </div>
+              <div class="radio">
+                <label><input type="radio" name="callqualityradio" value="no-audio">No audio</label>
+              </div>                                      
+            </div>            
+        </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success" id=sendFeedback data-dismiss="modal">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+      <p style="color:white">© Plivo Inc. 2017</p>
+  </div>    
+</div>
+<div class="feedback">
+  <button type="button" class="btn btn-success btn-sm" id="clickFeedback" data-toggle="modal" data-target="#sendQualityFeedback">Feedback</button>  
+</div>
+<div class="alertmsg">
+  <!-- media metrics message comes here -->
+</div>
+<!-- <script src="lib/plivowebsdk.min.js"></script> -->
+<script src="js/customclient.js"></script>
+</body>
+</html>
