@@ -348,13 +348,7 @@ $('#tmute').click(function(e){
 });
 $('#makecall').click(function(e){
 	var to = $('#toNumber').val().replace(" ",""), 
-		extraHeaders, 
-		customCallerId= localStorage.getItem('setCallerId'),
-		customCallerIdEnabled = localStorage.getItem('setCallerIdCheck');
-	if(customCallerIdEnabled && customCallerId){
-		customCallerId = customCallerId.replace("+","");
-		extraHeaders = {'X-PH-callerId': customCallerId};		
-	}
+		extraHeaders;
 	var callEnabled = $('#makecall').attr('class').match('disabled');
 	if(!to || !plivoWebSdk || !!callEnabled){return};
 	plivoWebSdk.client.call(to,extraHeaders);	
