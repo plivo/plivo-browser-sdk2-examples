@@ -531,10 +531,9 @@ showPass.onclick = function(){
 }
 
 function starFeedback(){
-  //Visualizing things on Hover - See next part for action on click */
   $('#stars li').on('mouseover', function(){
-    var onStar = parseInt($(this).data('value'), 10); // The star currently mouse on
-    // Now highlight all the stars that's not after the current hovered star
+    var onStar = parseInt($(this).data('value'), 10);
+
     $(this).parent().children('li.star').each(function(e){
       if (e < onStar) {
         $(this).addClass('hover');
@@ -551,7 +550,7 @@ function starFeedback(){
   
   //Action to perform on click */
   $('#stars li').on('click', function(){
-    var onStar = parseInt($(this).data('value'), 10); // The star currently selected
+    var onStar = parseInt($(this).data('value'), 10);
     var stars = $(this).parent().children('li.star');
     
     for (i = 0; i < stars.length; i++) {
