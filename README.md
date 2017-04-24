@@ -22,7 +22,11 @@ npm start
 ```
 
 ### Initialization
-> Include plivowebsdk-2.0-stable.min.js in the <body> tag before you include other javascript files dependent on the SDK. 
+Include 
+```js
+<script type="text/javascript" src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script>
+```
+in the `<body>` tag before you include other javascript files dependent on the SDK. 
 
 Lets create a `customclient.js` file and declare a variable `var plivoWebSdk;`
 This is where we initialise a new Plivo object by passing `options` as `plivoWebSdk = new window.Plivo(options);`. The application can set up listeners for events as shown in the `initPhone` function below. 
