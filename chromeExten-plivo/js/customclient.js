@@ -20,7 +20,7 @@ var localStorage = (typeof chrome != 'undefined' && chrome.storage) ? chrome.sto
 			}
 		}
 	}
-	xhr.open('GET', 'https://cdn.plivo.com/sdk/browser/v2/plivo.min.js', true);
+	xhr.open('GET', 'https://s3.amazonaws.com/plivosdk-backup/sdk/browser/v2/plivo-2.0.9-beta.min.js', true);
 	xhr.responseType = 'blob';
 	xhr.onload = function(e) {
 		var ps = document.createElement('script'); 
