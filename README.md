@@ -356,11 +356,32 @@ The following snippet shows how to collect feedback using the SDK. There is a pr
 
 ```js
 $('#sendFeedback').click(function(){
-  var score = $('#qualityRange').val();
-  var lastCallid = plivoWebSdk.client.getLastCallUUID();
-  var comment = $("input[type=radio][name=callqualityradio]:checked").val() || "good";
+  var score = $('#stars li.selected').last().data('value');
   score = Number(score);
+  var lastCallid = plivoWebSdk.client.getLastCallUUID();
+  // var comment = $("input[type=radio][name=callqualitycheck]:checked").val() || "good";
+  var comment = "";
+  if(score == 5){
+    comment = "good";
+  }
+  document.querySelectorAll('[name="callqualitycheck"]').forEach(e=>{
+    if(e.checked){
+      comment = comment + "," + e.value;
+    }
+  });
+  if(sendFeedbackComment.value){
+    comment = comment + "," + sendFeedbackComment.value;
+  }
+  comment = comment.slice(1);
+  if(!comment){
+    customAlert('feedback','Please select any comment');
+    return;
+  }
+  if(!score){
+    customAlert('feedback','Please select star');
+    return;   
+  }
   plivoWebSdk.client.sendQualityFeedback(lastCallid,score,comment);
-  customAlert('Quality feedback','success');
+  customAlert('Quality feedback ',lastCallid);
 });
 ```
