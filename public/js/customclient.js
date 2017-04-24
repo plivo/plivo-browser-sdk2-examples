@@ -13,13 +13,25 @@ function kickStartNow(){
 function login(username, password) {
 		if(username && password){
 			//start UI load spinner
-			kickStartNow();			
+			kickStartNow();
 			plivoWebSdk.client.login(username, password);
-			$('#sipUserName').html('sip:'+username+'@'+plivoWebSdk.client.phone.configuration.hostport_params);
+			$('#sipUserName').html(username);
 			document.querySelector('title').innerHTML=username;
 		}else{
 			console.error('username/password missing!')
 		}
+}
+function audioDeviceChange(e){
+	console.log('audioDeviceChange',e);
+	if(e.change){
+		if(e.change == "added"){
+			customAlert(e.change,e.device.kind +" - "+e.device.label,'info');		
+		}else{
+			customAlert(e.change,e.device.kind +" - "+e.device.label,'warn');
+		}
+	}else{
+		customAlert('info','There is an audioDeviceChange but mediaPermission is not allowed yet');
+	}
 }
 function onWebrtcNotSupported() {
 	console.warn('no webRTC support');
@@ -32,9 +44,8 @@ function mediaMetrics(obj){
 	*/
 	sessionStorage.setItem('triggerFB',true);
 	console.table([obj]);
-	var message = obj.type;
 	var classExist = document.querySelector('.-'+obj.type);
-
+	var message = obj.type;
 	/**
 	* If there is a same audio level for 3 samples then we will get a trigger
 	* If audio level is greater than 30 then it could be some continuous echo or user is not speaking
@@ -49,7 +60,7 @@ function mediaMetrics(obj){
 	  '<div class="metrics -'+obj.type+'">' +
 	  '<span style="margin-left:20px;">'+obj.level+' | </span>' +
 	  '<span style="margin-left:20px;">'+obj.group+' | </span>' +
-	  '<span style="margin-left:20px;">'+message+' - '+obj.desc+' : </span><span >'+obj.value+'</span>'+
+	  '<span style="margin-left:20px;">'+message+' - '+obj.value+' : </span><span >'+obj.desc+'</span>'+
 	  '<span aria-hidden="true" onclick="closeMetrics(this)" style="margin-left:25px;cursor:pointer;">X</span>' +
 	  '</div>'
 	);
@@ -62,6 +73,7 @@ function mediaMetrics(obj){
 		$('#micAccessBlock').modal({ show: true })
 	}
 }
+
 function onReady(){
 	$('#phonestatus').html('trying to login...');
 	console.info('Ready');
@@ -97,21 +109,24 @@ function onCallAnswered(){
 	console.info('onCallAnswered');
 	$('#callstatus').html('Answered');
 	$('.hangup').show();
+	// plivoWebSdk.client.logout();
 	timer = 0;
 	window.calltimer = setInterval(function(){
 		timer = timer +1;
 		$('#callDuration').html(timer.toString().calltimer());
 	},1000);
+	
 }
-function onCallTerminated(){
+function onCallTerminated(evt){
 	$('#callstatus').html('Call Ended');
 	console.info('onCallTerminated');
 	if(sessionStorage.getItem('triggerFB')){
+		clearStars();
 		$('#clickFeedback').trigger('click');
 		// clear at end of every call
 		sessionStorage.removeItem('triggerFB');
 	}
-	callOff();
+	callOff(evt);
 }
 function onCallFailed(reason){
 	$('#callstatus').html('call failed');
@@ -119,7 +134,7 @@ function onCallFailed(reason){
 	if(reason && /Denied Media/i.test(reason)){
 		$('#mediaAccessBlock').modal('show');
 	};
-	callOff();
+	callOff(reason);
 }
 function onMediaPermission(evt){
 	console.info('onMediaPermission',evt);
@@ -129,7 +144,8 @@ function onMediaPermission(evt){
 	}
 }
 function onIncomingCall(callerName, extraHeaders){
-	console.info(callerName, extraHeaders);
+
+	console.info('onIncomingCall : ', callerName, extraHeaders);
 	callStorage.startTime = date();
 	callStorage.mode = 'in';
 	callStorage.num = callerName;
@@ -146,7 +162,12 @@ function onIncomingCallCanceled(){
 	callOff();
 }
 
-function callOff(){
+function callOff(reason){
+	if(typeof reason == "object"){
+		customAlert('Hangup',JSON.stringify(reason) );
+	}else if(typeof reason == "string"){
+		customAlert('Hangup',reason);
+	}
 	$('.callScreen').hide();
 	$('.inboundBeforeAnswer').hide();
 	$('.AfterAnswer').hide();
@@ -181,7 +202,7 @@ function closeMetrics(e){
 
 function resetSettings(source){
 	// You can use all your default settings to go in as options during sdk init
-	var defaultSettings = {"debug":"INFO","permOnClick":true,"codecs":["OPUS","PCMU"],"enableIPV6":false,"audioConstraints":{"optional":[{"googAutoGainControl":false},{"googEchoCancellation":false}]},"dscp":true,"enableTracking":true}
+	var defaultSettings = {"debug":"ALL","permOnClick":true,"codecs":["OPUS","PCMU"],"enableIPV6":false,"audioConstraints":{"optional":[{"googAutoGainControl":false}]},"dscp":true,"enableTracking":true}
 	var uiSettings = document.querySelector('#appSettings');
 	uiSettings.value = JSON.stringify(defaultSettings);
 	if(source == 'clickTrigger')
@@ -202,10 +223,16 @@ function updateSettings(val){
 	localStorage.setItem('plivosettings',val);
 	console.log('plivosettings updated!')
 }
-function customAlert(alertType,alertMessage){
+function customAlert(header,alertMessage,type){
+	var typeClass="";
+	if(type == "info"){
+		typeClass = "alertinfo";
+	}else if(type == "warn"){
+		typeClass = "alertwarn";
+	}
 	$(".alertmsg").prepend(
-	  '<div class="customAlert">' +
-	  '<span style="margin-left:20px;">'+alertType+' | </span>' +
+	  '<div class="customAlert'+' '+typeClass+'">' +
+	  '<span style="margin-left:20px;">'+header+' | </span>' +
 	  '<span style="margin-left:20px;">'+alertMessage+' </span>'+
 	  '<span aria-hidden="true" onclick="closeMetrics(this)" style="margin-left:25px;cursor:pointer;">X</span>' +
 	  '</div>'
@@ -233,6 +260,17 @@ function updateAudioDevices(){
 	})
 }
 
+function clearStars(){
+	var stars = document.querySelectorAll('.star');
+    for (i = 0; i < stars.length; i++) {
+      $(stars[i]).removeClass('selected');
+    }
+    document.querySelectorAll('[name="callqualitycheck"]').forEach(e=>{
+    	e.checked? (e.checked=false): null;
+    });
+    sendFeedbackComment.value="";
+}
+
 function checkBrowserComplaince(client){
 	if(client.browserDetails.browser != "chrome"){
 		document.querySelector('[data-target="#popAudioDevices"]').remove();
@@ -242,10 +280,6 @@ function checkBrowserComplaince(client){
 function trimSpace(e){
 	 e.value = e.value.replace(/[- ()]/g,'');
 }
-
-/* 
-	Call History
-*/
 
 function callLogDiv(e){
 	var mapper = {
@@ -348,10 +382,17 @@ $('#tmute').click(function(e){
 });
 $('#makecall').click(function(e){
 	var to = $('#toNumber').val().replace(" ",""), 
-		extraHeaders;
+		extraHeaders, 
+		customCallerId= localStorage.getItem('setCallerId'),
+		customCallerIdEnabled = localStorage.getItem('setCallerIdCheck');
+	if(customCallerIdEnabled && customCallerId){
+		customCallerId = customCallerId.replace("+","");
+		extraHeaders = {'X-PH-callerId': customCallerId};		
+	}
 	var callEnabled = $('#makecall').attr('class').match('disabled');
 	if(!to || !plivoWebSdk || !!callEnabled){return};
-	plivoWebSdk.client.call(to,extraHeaders);	
+	if(!plivoWebSdk.client.isLoggedIn){alert('You\'re not Logged in!')}
+	plivoWebSdk.client.call(to,extraHeaders);
 	console.info('Click make call : ',to);
 	callStorage.mode = "out";
 	callStorage.startTime = date();
@@ -376,24 +417,34 @@ $('#resetSettings').click(function(e){
 	resetSettings('clickTrigger');
 });
 
-$('#qualityRange').click(function(e){
-	var value = e.currentTarget.value;
-	$('#qualityNumber').html('Rating: '+value);
-	// Show quality issue reasons only if rating is less then 4
-	if(value < 4){
-		$('.lowQualityRadios').show();
-	}else{
-		$('.lowQualityRadios').hide();
-	}
-});
-
 $('#sendFeedback').click(function(){
-	var score = $('#qualityRange').val();
-	var lastCallid = plivoWebSdk.client.getLastCallUUID();
-	var comment = $("input[type=radio][name=callqualityradio]:checked").val() || "good";
+	var score = $('#stars li.selected').last().data('value');
 	score = Number(score);
+	var lastCallid = plivoWebSdk.client.getLastCallUUID();
+	// var comment = $("input[type=radio][name=callqualitycheck]:checked").val() || "good";
+	var comment = "";
+	if(score == 5){
+		comment = "good";
+	}
+	document.querySelectorAll('[name="callqualitycheck"]').forEach(e=>{
+		if(e.checked){
+			comment = comment + "," + e.value;
+		}
+	});
+	if(sendFeedbackComment.value){
+		comment = comment + "," + sendFeedbackComment.value;
+	}
+	comment = comment.slice(1);
+	if(!comment){
+		customAlert('feedback','Please select any comment');
+		return;
+	}
+	if(!score){
+		customAlert('feedback','Please select star');
+		return;		
+	}
 	plivoWebSdk.client.sendQualityFeedback(lastCallid,score,comment);
-	customAlert('Quality feedback','success');
+	customAlert('Quality feedback ',lastCallid);
 });
 
 $('#clickLogin').click(function(e){
@@ -431,7 +482,7 @@ $('#ringtoneDevTest').click(function(){
 		$('#ringtoneDevTest').html('Play');
 	}
 });
-// Speaker device test 
+// Speaker device test
 $('#speakerDevTest').click(function(){
 	var speakerAudio = plivoWebSdk.client.audio.speakerDevices.media();
 	// Toggle play
@@ -471,13 +522,52 @@ clearLogs.onclick = function(){
 	localStorage.setItem('pli_callHis','[]');
 	callHistoryTable.innerHTML=""
 }
-
 showPass.onclick = function(){
 	if($('#showPass input').prop("checked")){
 		loginPwd.type="text";
 	}else{
 		loginPwd.type="password";
 	}
+}
+
+function starFeedback(){
+  $('#stars li').on('mouseover', function(){
+    var onStar = parseInt($(this).data('value'), 10);
+    $(this).parent().children('li.star').each(function(e){
+      if (e < onStar) {
+        $(this).addClass('hover');
+      }
+      else {
+        $(this).removeClass('hover');
+      }
+    });
+  }).on('mouseout', function(){
+    $(this).parent().children('li.star').each(function(e){
+      $(this).removeClass('hover');
+    });
+  });
+  
+  //Action to perform on click */
+  $('#stars li').on('click', function(){
+    var onStar = parseInt($(this).data('value'), 10); // The star currently selected
+    var stars = $(this).parent().children('li.star');
+    
+    for (i = 0; i < stars.length; i++) {
+      $(stars[i]).removeClass('selected');
+    }
+    
+    for (i = 0; i < onStar; i++) {
+      $(stars[i]).addClass('selected');
+    }
+    
+    var value = parseInt($('#stars li.selected').last().data('value'), 10);
+	if(value < 5){
+		$('.lowQualityRadios').show();
+	}else{
+		$('.lowQualityRadios').hide();
+	}
+    
+  });	
 }
 // variables to declare 
 
@@ -499,13 +589,16 @@ function initPhone(username, password){
 	plivoWebSdk.client.on('onIncomingCall', onIncomingCall);
 	plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
 	plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
+	plivoWebSdk.client.on('audioDeviceChange',audioDeviceChange);
 	plivoWebSdk.client.setRingTone(true);
 	plivoWebSdk.client.setRingToneBack(true);
+	// plivoWebSdk.client.setConnectTone(false);
 	/** Handle browser issues
 	* Sound devices won't work in firefox
 	*/
 	checkBrowserComplaince(plivoWebSdk.client);	
 	updateAudioDevices();
 	displayCallHistory();
+	starFeedback();
 	console.log('initPhone ready!')
 }

@@ -43,7 +43,7 @@
 			        <div class="col-md-4 phone">
 			            <div class="row1">
 			                <div class="col-md-12 white-shadow">
-			                <input type="text" name="name" onkeyup="trimSpace(this)" onblur="trimSpace(this)" id="toNumber" class="form-control tel" placeholder="+91801XXXXXXX" value="" />
+			                <input type="text" name="name" onblur="trimSpace(this)" id="toNumber" class="form-control tel" placeholder="+91801XXXXXXX" value="" />
 			                    <div class="num-pad">			                    
 			                    <div class="span4">
 			                        <div class="num">
@@ -256,14 +256,14 @@
 				  <form>
 				    <div class="form-group col-xs-4">
 				      <label for="loginUser">Username</label>
-				      <input type="text" onkeyup="trimSpace(this)" onblur="trimSpace(this)" class="form-control " id="loginUser" name="loginUser" placeholder="plivo userId">
+				      <input type="text" onblur="trimSpace(this)" class="form-control " id="loginUser" name="loginUser" placeholder="plivo userId">
 				    </div>
 				    <div class="form-group col-xs-4">
 				      <label for="loginPwd">Password</label>
 				      <input type="password" class="form-control" id="loginPwd" placeholder="password" name="loginPwd">
 					<div class="checkbox" id=showPass>
 					  <label><input type="checkbox">Show password</label>
-					</div>
+					</div>				      
 				    </div class="form-group">
 				  </form>
 				</div>
@@ -342,7 +342,7 @@
 		    </div>
 		    <div class="modal-body">
 				<h4>
-					Your browser has some issues in accessing your microphone in the hardware. Please restart or close and open back your browser to fix it.
+					Your browser has some issues in accessing your microphone in the hardware. Please close all running chrome and open back your browser to fix it.
 				</h4>
 		    </div>	    
 		  </div>
@@ -378,37 +378,60 @@
 		    </div>
 		    <div class="modal-body">	    
 				<div class="container">
-				    <div class="form-group col-xs-2">
-				      <input id="qualityRange" style="cursor:pointer;" class="form-control" type="range" min="1" max="5" step="1" value="5"/>
-				      <h4 id=qualityNumber>Rating: 5</h4>
+				    <div class="form-group col-xs-4">
+						<section class='rating-widget'>
+						  <div class='rating-stars'>
+						    <ul id='stars'>
+						      <li class='star' data-value='1'>
+						        <i class='fa fa-star fa-fw'></i>
+						      </li>
+						      <li class='star' data-value='2'>
+						        <i class='fa fa-star fa-fw'></i>
+						      </li>
+						      <li class='star' data-value='3'>
+						        <i class='fa fa-star fa-fw'></i>
+						      </li>
+						      <li class='star' data-value='4'>
+						        <i class='fa fa-star fa-fw'></i>
+						      </li>
+						      <li class='star' data-value='5'>
+						        <i class='fa fa-star fa-fw'></i>
+						      </li>
+						    </ul>
+						  </div>
+					    <div class="form-group lowQualityRadios">
+					      <textarea rows="4" cols="40" id="sendFeedbackComment" placeholder="Optional comments"></textarea>
+					    </div>						  
+						</section>
 				    </div>
 				    <div class="form-group col-xs-2 lowQualityRadios">
-					    <div class="radio">
-					      <label><input type="radio" name="callqualityradio" value="bad-audio">Bad audio</label>
+					    <div class="checkbox">
+					      <label><input type="checkbox" name="callqualitycheck" value="bad-audio">Bad audio</label>
 					    </div>
-					    <div class="radio">
-					      <label><input type="radio" name="callqualityradio" value="call-dropped">Call dropped</label>
+					    <div class="checkbox">
+					      <label><input type="checkbox" name="callqualitycheck" value="call-dropped">Call dropped</label>
 					    </div>
-					    <div class="radio">
-					      <label><input type="radio" name="callqualityradio" value="wrong-callerid">Wrong callerid</label>
+					    <div class="checkbox">
+					      <label><input type="checkbox" name="callqualitycheck" value="wrong-callerid">Wrong callerid</label>
 					    </div>
-					    <div class="radio">
-					      <label><input type="radio" name="callqualityradio" value="dtmf-not-captured">DTMF is not working</label>
+					    <div class="checkbox">
+					      <label><input type="checkbox" name="callqualitycheck" value="dtmf-not-captured">DTMF is not working</label>
 					    </div>
-					    <div class="radio">
-					      <label><input type="radio" name="callqualityradio" value="audio-latency">Audio latency</label>
+					    <div class="checkbox">
+					      <label><input type="checkbox" name="callqualitycheck" value="audio-latency">Audio latency</label>
 					    </div>	
-					    <div class="radio">
-					      <label><input type="radio" name="callqualityradio" value="one-way-audio">One way audio</label>
+					    <div class="checkbox">
+					      <label><input type="checkbox" name="callqualitycheck" value="one-way-audio">One way audio</label>
 					    </div>
-					    <div class="radio">
-					      <label><input type="radio" name="callqualityradio" value="no-audio">No audio</label>
-					    </div>				    					    			    	
+					    <div class="checkbox">
+					      <label><input type="checkbox" name="callqualitycheck" value="no-audio">No audio</label>
+					    </div>					    				    					    			    	
 				    </div>				    
 				</div>
 		    </div>
 		    <div class="modal-footer">
 		   		<button type="submit" class="btn btn-success" id=sendFeedback data-dismiss="modal">Send</button>
+		   		<button class="btn btn-danger" data-dismiss="modal">Ignore</button>
 		    </div>
 		  </div>
 		</div>
@@ -424,15 +447,17 @@
 <div class="alertmsg">
 	<!-- media metrics message comes here -->
 </div>
-<script src="//cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script>
+<!-- <script src="lib/plivowebsdk.min.js"></script> -->
+<!-- <script src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script> -->
+<script src="https://s3.amazonaws.com/plivosdk-backup/sdk/browser/v2/plivo-2.0.9-beta.min.js"></script>
 <script src="js/customclient.js"></script>
 <script type="text/javascript">
-	$( document ).ready(function() {
+	$( document ).ready(function() {	
 	    console.log( "HTML ready!" );
 	    $('[data-toggle="tooltip"]').tooltip();
 	    resetSettings();
 	    initPhone();
-	});	
+	});
 </script>
 </body>
 </html>
