@@ -1,7 +1,7 @@
 ## Plivo Web SDK v2.0 Example
 *This Plivo example shows how to use all the features in Plivo WebSDK 2.0 using a simple webphone demo. This demo helps in making phone calls from web browser to both sip addresses and PSTN phone numbers without installing any plugins.*
 
-#![plivo-websdk-2.0-example](img/callscreen.png)
+![plivo-websdk-2.0-example](img/callscreen.png)
 
 ---
 *To use the [live web phone demo](https://s3.amazonaws.com/plivowebrtc/v2-0.html)*
@@ -72,7 +72,7 @@ In the demo, `options` can be set from UI in the SETTINGS menu. Once the SETTING
 ```
 ### Login 
 Login accepts Plivo Endpoint Credentials. 
-#![plivo-websdk-2.0-example](img/login.png)
+![plivo-websdk-2.0-example](img/login.png)
 ```js
     function login(username, password) {
         if(username && password){
@@ -93,7 +93,7 @@ Login accepts Plivo Endpoint Credentials.
 ```    
 ### Options
 *Options allow to disable tracking, setting codec type, enabling and disabling AEC/AGC etc. The list of all the settings can be found in the documentation page.*
-#![plivo-websdk-2.0-example](img/settings.png)
+![plivo-websdk-2.0-example](img/settings.png)
 
 ```js
 function resetSettings(source){
@@ -229,7 +229,7 @@ window.onbeforeunload = function () {
 
 This snippet shows how to handle network or media related events from the SDK. A simple dynamic UI to show notifications when some warning events get emitted from Plivo SDK
 
-#![plivo-websdk-2.0-example](img/metrics.png)
+![plivo-websdk-2.0-example](img/metrics.png)
 
 Please check Chrome or Firefox console to see the complete info of the event. 
 ```js
@@ -261,7 +261,7 @@ function mediaMetrics(obj){
 ### Audio Device API
 
 The Audio Device API in this SDK allows developers to select input, output and ring devices for the calls.
-#![plivo-websdk-2.0-example](img/audiodevice.png)
+![plivo-websdk-2.0-example](img/audiodevice.png)
 
 The following snippet uses this API to demonstrate how to handle device selection from the UI 
 
@@ -375,7 +375,7 @@ function audioDeviceChange(e){
 
 ### Sending Feedback
 The following snippet shows how to collect feedback using the SDK. There is a predefined list of feedback comments that users can select for the score range from 1-3. In this application we are taking “good” and “perfect” as feedback for scores 4 and 5.
-#![plivo-websdk-2.0-example](img/feedback.png)
+![plivo-websdk-2.0-example](img/feedback.png)
 
 ```js
 $('#sendFeedback').click(function(){
