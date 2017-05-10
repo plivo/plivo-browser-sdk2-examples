@@ -49,7 +49,7 @@ This is where we initialise a new Plivo object by passing `options` as `plivoWeb
         plivoWebSdk.client.on('onIncomingCall', onIncomingCall);
         plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
         plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
-   plivoWebSdk.client.on('audioDeviceChange',audioDeviceChange);
+        plivoWebSdk.client.on('audioDeviceChange',audioDeviceChange);
         plivoWebSdk.client.setRingTone(true);
         plivoWebSdk.client.setRingToneBack(true);
         console.log('initPhone ready!')
@@ -353,6 +353,7 @@ $('#allowAudioDevices').click(function(){
 ### Audio Device change
 Show users about change in audio device, either added or removed.
 When a new device gets added they can select the device for either input or output audio.
+
 #![plivo-websdk-2.0-example](img/audiodevicechange.png)
 
 ```js
