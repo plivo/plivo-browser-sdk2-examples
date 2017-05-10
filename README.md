@@ -49,6 +49,7 @@ This is where we initialise a new Plivo object by passing `options` as `plivoWeb
         plivoWebSdk.client.on('onIncomingCall', onIncomingCall);
         plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
         plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
+   plivoWebSdk.client.on('audioDeviceChange',audioDeviceChange);
         plivoWebSdk.client.setRingTone(true);
         plivoWebSdk.client.setRingToneBack(true);
         console.log('initPhone ready!')
@@ -349,6 +350,27 @@ $('#allowAudioDevices').click(function(){
   })
 });
 ```
+### Audio Device change
+Show users about change in audio device, either added or removed.
+When a new device gets added they can select the device for either input or output audio.
+#![plivo-websdk-2.0-example](img/audiodevicechange.png)
+
+```js
+function audioDeviceChange(e){
+  console.log('audioDeviceChange',e);
+  if(e.change){
+    if(e.change == "added"){
+      customAlert(e.change,e.device.kind +" - "+e.device.label,'info');   
+    }else{
+      customAlert(e.change,e.device.kind +" - "+e.device.label,'warn');
+    }
+  }else{
+    customAlert('info','There is an audioDeviceChange but mediaPermission is not allowed yet');
+  }
+}
+```
+
+
 
 ### Sending Feedback
 The following snippet shows how to collect feedback using the SDK. There is a predefined list of feedback comments that users can select for the score range from 1-3. In this application we are taking “good” and “perfect” as feedback for scores 4 and 5.
