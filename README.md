@@ -354,7 +354,7 @@ $('#allowAudioDevices').click(function(){
 Show users about change in audio device, either added or removed.
 When a new device gets added they can select the device for either input or output audio.
 
-#![plivo-websdk-2.0-example](img/audiodevicechange.png)
+![plivo-websdk-2.0-example](img/audiodevicechange.png)
 
 ```js
 function audioDeviceChange(e){
