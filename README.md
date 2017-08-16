@@ -171,6 +171,31 @@ $('#makecall').click(function(e){
   $('.callinfo').show();
 });
 ```
+#### Outgoing call with dynamic caller ID
+There are cases where you need to set different caller ID for each campaign or some different reasons, then you can start using extraHeaders in   `.call()` method
+```js
+$('#makecall').click(function(e){
+  var to = $('#toNumber').val().replace(" ","");
+  // pass caller Id
+  var extraHeaders={}, customCallerId=$('#callerId').val();
+  if(customCallerId){
+   extraHeaders = {'X-PH-callerId': customCallerId};
+  }
+  var callEnabled = $('#makecall').attr('class').match('disabled');
+  if(!to || !plivoWebSdk || !!callEnabled){return};
+  console.info('Click make call : ',to);
+  $('.callScreen').show();
+  $('.AfterAnswer').show();
+  plivoWebSdk.client.call(to, extraHeaders);
+  $('#boundType').html('Outgoing :');
+  $('#callNum').html(to);
+  $('#callDuration').html('00:00:00');
+  $('.callinfo').show();
+});
+```
+Capture this extraHeader in application side and use `callerId` attribute to set the callerId in [Dial](https://www.plivo.com/docs/xml/dial/) Element
+
+
 ### Handling Incoming calls
 By creating the `onIncomingCall` listener, the `plivoWebSdk` object can handle incoming calls to the Plivo Endpoint.
 
