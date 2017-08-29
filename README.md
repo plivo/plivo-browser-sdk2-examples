@@ -177,12 +177,12 @@ There are cases where you need to set different caller ID for each campaign or s
 $('#makecall').click(function(e){
   var to = $('#toNumber').val().replace(" ","");
   // pass caller Id
-  var extraHeaders={}, customCallerId=$('#callerId').val();
+  var extraHeaders={},
+      customCallerId=$('#callerId').val(); // get the dynamic caller id
   if(customCallerId){
-   extraHeaders = {'X-PH-callerId': customCallerId};
+   extraHeaders = {'X-PH-callerId:'+ customCallerId};
   }
-  var callEnabled = $('#makecall').attr('class').match('disabled');
-  if(!to || !plivoWebSdk || !!callEnabled){return};
+  if(!to || !plivoWebSdk){return};
   console.info('Click make call : ',to);
   $('.callScreen').show();
   $('.AfterAnswer').show();
