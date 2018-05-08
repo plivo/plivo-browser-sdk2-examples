@@ -1,0 +1,47 @@
+<hml>
+<head>
+<script type="text/javascript" src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"/>
+</head>
+<body>
+
+<h1> test plivo webrtc sdk </h1>
+
+<script>
+
+var options = {
+    "debug":"DEBUG",
+    "permOnClick":true,
+    "audioConstraints":{
+	"optional":[
+		{"googAutoGainControl":false},
+		{"googEchoCancellation":false}
+	]},
+    "enableTracking":true
+};
+var plivoBrowserSdk = new window.Plivo(options);
+
+plivoBrowserSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
+plivoBrowserSdk.client.on('onLogin', onLogin);
+plivoBrowserSdk.client.on('onLogout', onLogout);
+plivoBrowserSdk.client.on('onLoginFailed', onLoginFailed);
+plivoBrowserSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
+plivoBrowserSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
+plivoBrowserSdk.client.on('onCallFailed', onCallFailed);
+plivoBrowserSdk.client.on('onCallAnswered', onCallAnswered);
+plivoBrowserSdk.client.on('onCallTerminated', onCallTerminated);
+plivoBrowserSdk.client.on('onCalling', onCalling);
+plivoBrowserSdk.client.on('onIncomingCall', onIncomingCall);
+plivoBrowserSdk.client.on('onMediaPermission', onMediaPermission);
+plivoBrowserSdk.client.on('mediaMetrics',mediaMetrics);
+
+
+var username = 'johndoe12345';
+var pass = 'XXXXXXXX';
+plivoBrowserSdk.client.login(username, password);
+
+
+
+</script>
+
+</body>
+</html>
