@@ -886,16 +886,8 @@ function initPhone(username, password){
 	plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
 	plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
 	plivoWebSdk.client.on('audioDeviceChange',audioDeviceChange);
-	plivoWebSdk.client.on('onPermissionNeeded', onPermissionNeeded);
-	plivoWebSdk.client.on('onConnectionChange', onConnectionChange);
-	
-	// Configuration parameters 
-	/*plivoWebSdk.client.permOnClick(true); // mic permission before call
-	plivoWebSdk.client.audioConstraints(true);	// audio conatrsnts passed to getusermedia googEchoCancellation, googAutoGainControl, googNoiseSuppression, googHighpassFilter
-	plivoWebSdk.client.enableTracking(true);  // mediaMetrics events and enable call quality tracking.
-	plivoWebSdk.client.dscp(true); //enable QoS in voice traffic. 
-	plivoWebSdk.client.preDetectOwa(true); // Detect one way audio before answering/sending the call.
-	*/
+	plivoWebSdk.client.on('onPermissionNeeded', onPermissionNeeded); 
+	plivoWebSdk.client.on('onConnectionChange', onConnectionChange); // To show connection change events
 
 	// Methods 
 	plivoWebSdk.client.setRingTone(true);

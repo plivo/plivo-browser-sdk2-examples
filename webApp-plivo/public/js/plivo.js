@@ -225,7 +225,7 @@ function Client(options) {
       that.statsSocket.send(streams);
 
       if (window._PlivoDevLogging) {
-        console.log(streams);
+        Plivo.log.info(streams);
       }
     }
   }
@@ -396,16 +396,29 @@ Client.prototype.login = function (userName, password) {
   Plivo.log.info('Ready to login');
 
   var that = this;
-
+  var connectionChangeCounter = 0;
   //connected event fired by UA.js
   this.phone.on('connected', function (evt) {
     Plivo.log.info('websocket connection established', evt);
+    // clear the counter for connection change to reset for next network disruption
+    clearTimeout(connectionChangeCounter);
   });
 
-  // diconnected event fired by UA.js
+  // disconnected event fired by UA.js
   this.phone.on('disconnected', function (evt) {
     Plivo.log.info('websocket connection closed' , evt);
-    onConnectionChange({ "state": evt.code, "status": evt.reason });
+    var eventData = { "state": evt.code, "status": evt.reason || "Websocket Disconnected"};
+    //Adding a timeout for notifying connection change event every 5 seconds
+    if(!connectionChangeCounter){
+      // First Time Event , dont wait to show notification 
+      this.emit('onConnectionChange', eventData);
+      connectionChangeCounter = 1;
+    }else{
+      connectionChangeCounter = setTimeout(function(){ 
+        // Wait 5 seconds to emit the connection change event
+        this.emit('onConnectionChange', eventData);
+      }, 5000);
+    }
   });
 
   this.phone.on('registered', function () {
@@ -419,19 +432,19 @@ Client.prototype.login = function (userName, password) {
       var propertiesObject = { 'username': "bhuvanachandra170523184238", 'password': "plivo123", 'domain': 'phone.plivo.com' };
       request({ url: 'http://d3a8e7b1.ngrok.io/statsservice/v1/account/validation/', qs: propertiesObject }, function (err, response, body) {
         if (err) {
-          console.log(err);
+          Plivo.log.error(err);
           that.callstatskey = null;
           return;
         }
-        console.log("Get response: " + response.statusCode);
+        Plivo.log.info("Get response: " + response.statusCode);
         that.callstatskey = "n0uvtndv7cif1vdpj2nq";
 
-        console.log("Err is1:",err);
-        console.log("response is1:",response);
-        console.log("Body is1:",body);
+        Plivo.log.info("Err is1:",err); 
+        Plivo.log.info("response is1:",response);
+        Plivo.log.info("Body is1:",body); // What is the point of printing this here and below ?
 
         if(response.statusCode == 200){
-          console.log("Body is2:",body);
+          Plivo.log.info("Body is2:",body);
         }
       });
       
@@ -458,7 +471,7 @@ Client.prototype.login = function (userName, password) {
           var streams = stats.streams;
           processSteams.call(that, _emitter, streams);
           if (window._PlivoDevLogging) {
-            console.log(streams);
+            Plivo.log.debug(streams);
           }
         }
         // callstats initialize
@@ -666,6 +679,7 @@ Client.prototype.login = function (userName, password) {
         //Plivo.sendEvents({ "msg": "ON_CALL_TERMINATED", "originator": evt.originator, "reason": evt.cause });
         hangupClearance(that);
       });
+
       that.callSession.on('getusermediafailed', function (err) {
         Plivo.log.error('getusermediafailed: ' + err);
         if (that.userName && that.callStats) {
@@ -675,8 +689,9 @@ Client.prototype.login = function (userName, password) {
             that.statsSocket.onMediaFailure(that, err);
           }
         }
-        console.log("getusermediafailed",err);
+        Plivo.log.warn("getusermediafailed",err);
       });
+      
       that.callSession.on('peerconnection:createofferfailed', function (err) {
         Plivo.log.error('peerconnection:createofferfailed: ', err);
         if (that.userName && that.callStats) {
@@ -686,8 +701,9 @@ Client.prototype.login = function (userName, password) {
             that.statsSocket.onSDPfailure(that, "createofferfailed");
           }
         }
-        console.log("SDP Failure - createofferfailed",err);
+        Plivo.log.warn("SDP Failure - createofferfailed",err);
       });
+
       that.callSession.on('peerconnection:createanswerfailed', function (err) {
         Plivo.log.error('peerconnection:createanswerfailed: ', err);
         if (that.userName && that.callStats) {
@@ -697,8 +713,9 @@ Client.prototype.login = function (userName, password) {
             that.statsSocket.onSDPfailure(that, "createanswerfailed");
           }
         }
-        console.log("SDP Failure - createanswerfailed",err);
+        Plivo.log.warn("SDP Failure - createanswerfailed",err);
       });
+
       that.callSession.on('peerconnection:setlocaldescriptionfailed', function (err) {
         Plivo.log.error('peerconnection:setlocaldescriptionfailed: ', err);
         if (that.userName && that.callStats) {
@@ -708,8 +725,9 @@ Client.prototype.login = function (userName, password) {
             that.statsSocket.onSDPfailure(that, "setlocaldescriptionfailed");
           }
         }
-        console.log("SDP Failure - setlocaldescriptionfailed",err);
+        Plivo.log.warn("SDP Failure - setlocaldescriptionfailed",err);
       });
+
       that.callSession.on('peerconnection:setremotedescriptionfailed', function (err) {
         Plivo.log.error('peerconnection:setremotedescriptionfailed: ', err);
         if (err.message && !err.message == 'pranswer not yet implemented') {
@@ -720,7 +738,7 @@ Client.prototype.login = function (userName, password) {
             }
           }
         }
-        console.log("SDP Failure - setremotedescriptionfailed",err);
+        Plivo.log.warn("SDP Failure - setremotedescriptionfailed",err);
       });
 
       var request = evt.request;
@@ -1115,10 +1133,11 @@ Client.prototype.sendQualityFeedback = function (callUUID, score, comment , send
     Plivo.log.error('sendQualityFeedback() userName is null, isLoggedIn : ' + this.isLoggedIn);
     return;
   }
-  if (!callUUID) {
+  if (!callUUID && !this.lastCallUUID) {
     Plivo.log.error('sendQualityFeedback() callUUID is mandatory');
     return;
   }
+
   if (comment && comment.toString().length > 200) {
     Plivo.log.error('sendQualityFeedback() comment max length is 200 character');
     return;
@@ -1136,10 +1155,12 @@ Client.prototype.sendQualityFeedback = function (callUUID, score, comment , send
     var pcCallback = function (message) {
       Plivo.log.debug('Stats sendFeedback status: ' + message);
     };
-    Plivo.log.debug('Feedback sent for callUUID : ' + callUUID);
-    this.callStats.sendUserFeedback(callUUID, feedback, pcCallback);
-    this.statsSocket.qualityFeedback(this, { "score": score, "comment": comment });
-    consoleLogsCollector(callUUID);
+    Plivo.log.debug('Feedback sent for callUUID : ' + callUUID || this.lastCallUUID);
+    this.callStats.sendUserFeedback(callUUID||this.lastCallUUID , feedback, pcCallback);
+    this.statsSocket.qualityFeedback(this, { "score": score, "comment": comment });    
+    if(sendConsoleLogs){
+      this.statsSocket.send(consoleLogsCollector(callUUID || this.lastCallUUID));
+    } 
   } else {
     Plivo.log.error('sendQualityFeedback() score: ' + score + ' , score should be from 1-5 range');
   }
@@ -1158,7 +1179,7 @@ var owaNotification = function (connection, that) {
           _emitter(that, 'audio', 'warning', 'no_microphone_access', 0, true, "no access to your microphone");
         }
       });
-    }, pc.getLocalStreams()[0].getAudioTracks()[0], function (err) { console.log(err); });
+    }, pc.getLocalStreams()[0].getAudioTracks()[0], function (err) { Plivo.log.warn(err); });
   }
 };
 
@@ -1558,54 +1579,89 @@ var statsCollector = function () {
   var that = this;
   if (that.browserDetails.browser == "chrome") {
     that.stats = new chromeGetStats(that, that.statsCallback);
-    console.log('Chrome stats are: ', that.stats);
+    Plivo.log.info('Chrome stats are: ', that.stats);
   } else if (that.browserDetails.browser == "firefox") {
     that.stats = new firefoxGetStats(that, that.statsCallback);
-    console.log('Firefox stats are: ', that.stats);
+    Plivo.log.info('Firefox stats are: ', that.stats);
   } else {
-    Plivo.log.debug('ignoring webrtc stats collection for ' + main.browserDetails.browser);
+    Plivo.log.info('ignoring webrtc stats collection for ' + main.browserDetails.browser);
   }
   return true;
 };
 
 function consoleLogsCollector(callid){
-    try{
-        var zip = new JSZip(),
-        logs = $log.getAllLogsString(),
-        logFileName = "PlivoConsoleLogs"+callid;
+  try{
+      var zip = new JSZip(),
+      logFolderName = "PlivoConsoleLogsFolder"+callid,
+      logFileName = callid,
+      logs = Plivo.log.getAllLogs();
 
-        zip.folder(JS_ZIP.fileName).file(logFileName + ".txt", logs);
-        zip.generateAsync({type: "blob"}) // as currently we are dialing with \new browsers
-          .then(function (content, ttt) {
-            //saveAs(content, logFileName);          
-            AWS.config.update({
-                "accessKeyId": constants.s3accessKeyId ,
-                "secretAccessKey": constants.s3secretAccessKey ,
-                "region": constants.s3region
-            });
-            var s3 = new AWS.S3();
-            var params = {
-                Bucket: constants.s3bucket,
-                Key: logFileName,
-                ContentType: content.type,
-                Body: file,
-                ACL: 'public-read'
-            };        
-            s3.putObject(params, function (err, res) {
-                if (err) {
-                    console.log("Error uploading data: ", err);
-                } else {
-                    console.log("Successfully uploaded data");
-                }
-            });
+      zip.folder(logFolderName).file(logFileName + ".txt", logs.toString());
+      zip.generateAsync({type: "blob"}) // as currently we are dialing with \new browsers
+        .then(function (content, ttt) {        
 
-            var x = ttt;
-          }, function () {
-              console.error(" Failed to craete a ZIp file ");
+          //Upload file to S3 bucket from browser 
+          // AWS.config.update({
+          //     "accessKeyId": constants.s3accessKeyId ,
+          //     "secretAccessKey": constants.s3secretAccessKey ,
+          //     "region": constants.s3region
+          // });
+          // var s3 = new AWS.S3();
+          // var params = {
+          //     Bucket: constants.s3bucket,
+          //     Key: logFileName,
+          //     ContentType: content.type,
+          //     Body: content,
+          //     ACL: 'public-read'
+          // };        
+          // s3.putObject(params, function (err, res) {
+          //     if (err) {
+          //         console.log("Error uploading data: ", err);
+          //     } else {
+          //         console.log("Successfully uploaded data");
+          //     }
+          // });
+
+          // var x = ttt;
+
+          // Upload File on  API gateway and via Lamda server to S3 bucket 
+          // var fd = new FormData();
+          // fd.append('fileName', logFileName);
+          // fd.append('file', content);
+          // fd.append('mimeType', 'application/zip');
+          // // POST Ajax call
+          // $.ajax({
+          //     type: 'POST',
+          //     url: 'http://myurl/submit',
+          //     data: fd,
+          //     contentType: false,
+          //     processData: false,
+          // }).done(function() {
+          //     console.log('Ajax post successful.');
+          // }).fail(function(jqXHR, textStatus, errorThrown) {
+          //     console.log('Ajax post failed. Status:', textStatus);
+          //     console.log(jqXHR);
+          //     console.log(errorThrown);
+          // });
+
+          // Upload file to ws_stats_service over callstats websocket 
+          // instantiate a new FileReader object
+          var fr = new FileReader();
+          //loading files can be asyn activity
+          fr.addEventListener("loadend", function() {
+            // send the file over web sockets
+            return fr.result;
           });
-    }catch(e){
-        console.error( " Exception in consoleLogsCollector " , e)
-    }
+
+          // load the file into an array buffer
+          fr.readAsArrayBuffer(content);
+
+        }, function () {
+            console.error(" Failed to create a ZIp file ");
+        });
+  }catch(e){
+    Plivo.log.warn( " Exception in consoleLogsCollector " , e)
+  }
 }
 
 var iceConnectionCheck = function (iceState) {
@@ -1765,12 +1821,12 @@ var hangupClearance = function (that) {
   that.remoteView.pause();
   Plivo.AppError(calcConnStage(that.connStage), 'log');
 
-  console.log("Signalling Info:", that.signallingInfo);
+  Plivo.log.info("Signalling Info:", that.signallingInfo);
   that.signallingInfo.post_dial_delay_ms = getPostDialDelay(that);
   Plivo.sendEvents({ "msg": "CALL_SUMMARY", "signalling": that.signallingInfo });
   that.callSession = null;
   delete that.storage;
-  that.lastCallUUID = that.callUUID; // save the last call uuid for sending quality feedback
+  that.lastCallUUID = that.callUUID;  // save the last call uuid for sending quality feedback
   that.callUUID = null;
   that.corelationId = null;
   that.callDirection = null;
@@ -2963,10 +3019,10 @@ module.exports.SIP_ERROR_CODE = {
     500: "Internal Server Error",
     502: "There is an issue with the Carrier Gateway",
 };
-module.exports.accessKeyId = "";
-module.exports.secretAccessKey = "";
-module.exports.accessKeyId = "";
-module.exports.s3bucket = ""
+module.exports.s3accessKeyId = "AKIAILTYYPLH6E42MZUA";
+module.exports.s3secretAccessKey = "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";
+module.exports.s3region = "us-east-1";
+module.exports.s3bucket = "webrtccalllogs"
 
 var DEFAULT_OFFER_OPTIONS = {};
 if (typeof navigator !== 'undefined' && navigator.mozGetUserMedia) {
@@ -3025,15 +3081,23 @@ var logger = function (options) {
 		,enableDate = options.enableDate || false
 		,loggingName = options.loggingName || "";
 	var localStorage = (typeof chrome != 'undefined' && chrome.storage) ? chrome.storage.local : window.localStorage;		
+	var logData = [];
+	var checkAndUpdateLogArray = function(_logStatement){
+		console.log(" ================= checkAndUpdateLogArray " , _logStatement);
+		logData.push(_logStatement);
+	};
 	var logit = function(){
 		function logging(){
+			var logStatement;
 			if(enableDate){
 				var date = new Date();
 				var msdate = (date).toISOString().substring(0, 10)+" "+date.toString().split(" ")[4]+"."+date.getMilliseconds();
-				console.log("["+msdate+"]" + " ["+filter+"] "+loggingName+" :: ",arg1,arg2);
+				logStatement = "["+msdate+"]" + " ["+filter+"] "+loggingName+" :: ";
 			}else{
-				console.log("["+filter+"] "+loggingName+" :: ",arg1,arg2);
+				logStatement = "["+filter+"] "+loggingName+" :: ";
 			}
+			console.log(logStatement,arg1,arg2);
+			checkAndUpdateLogArray(logStatement+ arg1.toString() + arg2.toString());
 		}
 		var filter = arguments[0].toUpperCase() // will give info/debug/warn/error etc
 			,args = arguments[1]
@@ -3074,7 +3138,10 @@ var logger = function (options) {
 		},
 		level: function(){
 			return logMethod;
-		}
+		},
+		getAllLogs : function() {
+            return logData || [];
+        }
 	}
 }
 module.exports = logger;
@@ -76007,6 +76074,7 @@ module.exports={
   },
   "homepage": "https://github.com/gigster-eng/PlivoWebSDK#readme",
   "dependencies": {
+    "bower": "^1.8.4",
     "debug": "^2.6.3",
     "jszip": "^3.1.5",
     "request": "^2.85.0",
@@ -95070,8 +95138,6 @@ function onConnect() {
 
 function onDisconnect(error, code, reason) {
   this.status = C.STATUS_DISCONNECTED;
-
-  console.log(">>>>>>>>>>>>>> transport ondisconnect");
   this.ondisconnect({ socket:this.socket, error:error, code:code, reason:reason });
 
   if (this.close_requested) {
@@ -95234,7 +95300,6 @@ var sanityCheck = require('./sanityCheck');
  */
 function UA(configuration) {
   
-
   this.cache = {
     credentials: {}
   };
@@ -95884,7 +95949,7 @@ UA.prototype.loadConfig = function(configuration) {
 
     // Session parameters
     no_answer_timeout: 60,
-    session_timers: true,
+    session_timers: true
   };
 
   // Pre-Configuration
