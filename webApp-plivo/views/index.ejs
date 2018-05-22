@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>plivo webphone</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" href="img/favicon.png">
-    <script src="lib/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="css/newstyle.css"> 
+	<title>plivo webphone</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" type="image/png" href="img/favicon.png">
+	<script src="lib/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/newstyle.css"> 
 </head>
 <body>
 <div class="container">
@@ -18,7 +18,11 @@
 			<span class="white-icon glyphicon glyphicon-cog dropdown-toggle" data-toggle="dropdown"></span>
 			<ul class="dropdown-menu">
 			  <li><a class="btn" data-toggle="modal" data-target="#mysettings">Setup options</a></li>
-			  <li><a class="btn" data-toggle="modal" data-target="#popAudioDevices">Audio devices</a></li>		  			  
+			  <li><a class="btn" data-toggle="modal" data-target="#popAudioDevices">Audio devices</a></li>
+			  <li><a class="btn" data-toggle="modal" data-target="#popMicVisual">Mic Visualization</a></li>
+			  <li><a class="btn" data-toggle="modal" data-target="#popAudioFileRTC">audioFileRTC</a></li>			  
+			  <li><a class="btn" data-toggle="modal" data-target="#popCallRec">Call Rec</a></li>
+			  <li><a class="btn" data-toggle="modal" data-target="#setCallerId" id="setCallerIdMenu">Caller ID</a></li>			  			  
 			</ul>
 			<span class="white-icon glyphicon glyphicon-log-in" id=uiLogin data-toggle="modal" data-target="#login"></span>
 			<span class="white-icon glyphicon glyphicon-off" id=uiLogout onclick='window.location.href=window.location.origin + window.location.pathname + "?logout"'></span>
@@ -28,7 +32,7 @@
 		</div>
 	</div>
 	<div class="">
-		<div class="loader"></div>
+		<div class="loader"></div>		
 		<div>
 			<span class="lead text-success"> - phone status: </span>
 			<span class="white" id=phonestatus>Not ready...</span>
@@ -36,7 +40,7 @@
 		<div>
 			<span class="lead text-success"> - call status: </span>
 			<span class="white" id=callstatus>idle</span>
-		</div>	
+		</div>
 		<div class="panel-body">
 			<div class="container">
 			    <div class=""> 
@@ -254,17 +258,20 @@
 		    <div class="modal-body">
 				<div class="container">
 				  <form>
-				    <div class="form-group col-xs-4">
-				      <label for="loginUser">Username</label>
-				      <input type="text" onblur="trimSpace(this)" class="form-control " id="loginUser" name="loginUser" placeholder="plivo userId">
-				    </div>
-				    <div class="form-group col-xs-4">
-				      <label for="loginPwd">Password</label>
-				      <input type="password" class="form-control" id="loginPwd" placeholder="password" name="loginPwd">
-					<div class="checkbox" id=showPass>
-					  <label><input type="checkbox">Show password</label>
-					</div>				      
-				    </div class="form-group">
+				  	<div class="row">
+					    <div class="form-group col-xs-4">
+					      	<label for="loginUser">Username</label>
+					      	<input type="text" onblur="trimSpace(this)" class="form-control " id="loginUser" name="loginUser" placeholder="plivo userId" value="">
+					    </div>
+					    <div class="form-group col-xs-4">
+					      	<label for="loginPwd">Password</label>
+					      	<input type="password" class="form-control" id="loginPwd" placeholder="password" name="loginPwd">
+							<div class="checkbox" id=showPass>
+							  <label><input type="checkbox">Show password</label>
+							</div>
+					    </div>
+					</div>
+				    <label><input type="checkbox">Remember Me</label>
 				  </form>
 				</div>
 		    </div>
@@ -311,6 +318,46 @@
 		    </div>
 		  </div>
 		</div>
+	</div>	
+
+
+	<!-- mic visual div -->
+	<div class="modal fade" id="popMicVisual" role="dialog">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      <h4 class="modal-title">Mic Visualization Bars</h4>
+		    </div>
+		    <div class="modal-body">
+				  <form>
+				  	<h4>Your audio visualization bars starts to come on a call answer</h4>
+			    	<label class="checkbox-inline" data-toggle="tooltip"><input id=micVisualizer type="checkbox" value="">Enable Visuals</label>
+			    	<br><br>
+			    	<button type="button" id="micTest" class="btn btn-success btn-sm col">Test your microphone</button>
+			    	<canvas id="micTestCanvas"></canvas>
+				  </form>
+		    </div>
+		  </div>
+		</div>
+	</div>
+	<!-- Call rec div -->
+	<div class="modal fade" id="popCallRec" role="dialog">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      <h4 class="modal-title">Record calls in Browser</h4>
+		    </div>
+		    <div class="modal-body">
+				  <form>
+				    <h4>Audio player will start to show up, once the call ends</h4>
+			    	<label class="checkbox-inline" data-toggle="tooltip"><input id=recCallsRemote type="checkbox" value="">Record callee</label>
+			    	<label class="checkbox-inline" data-toggle="tooltip"><input id=recCallsBoth type="checkbox" value="">Record caller and callee</label>			    	
+				  </form>
+		    </div>
+		  </div>
+		</div>
 	</div>
 
 	<!-- media not allowed div -->
@@ -348,6 +395,33 @@
 		  </div>
 		</div>
 	</div>
+	<!-- dynamic callerID div -->
+	<div class="modal fade" id="setCallerId" role="dialog">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      <h4 class="modal-title">Set your own caller Id</h4>
+		    </div>
+		    <div class="modal-body">
+			    <div class="form-group col-xs-4">
+			      <input type="text" onblur="trimSpace(this)" class="form-control" id="setCallerIdInput" placeholder="+140XXXXXXX">
+			    </div>
+				<div>
+				  <button type="button" class="btn btn-success" data-dismiss="modal" onclick="saveCallerId()"> Save</button>
+				  <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="removeCallerId()"> Delete</button>
+				</div>			
+				<div>
+					<label class="checkbox-inline" data-toggle="tooltip"><input id=setCallerIdCheck type="checkbox" value="">Enable</label>
+				</div>
+		    </div>
+		    <div class="modal-footer">
+		   		<h4 class="text-center">* Please don't set the caller Id that you don't own. By setting this caller ID you accept to</h4>
+		   		<h4><a href="https://www.plivo.com/terms/" target="_blank"> Plivo Legal terms and conditions</a></h4>
+		    </div>		    
+		  </div>
+		</div>
+	</div>
 	<!-- call history -->
 	<div class="modal fade" id="callHistory" role="dialog">
 		<div class="modal-dialog modal-lg">
@@ -356,6 +430,7 @@
 		      <button type="button" class="close" data-dismiss="modal">&times;</button>
 		      <span>Last 50 calls</span>
 		      <button id=clearLogs class="btn btn-default btn-sm pull-right" style="margin-right:20px;">Clear logs</button>
+		      <a class="btn btn-info btn-sm pull-right" id="callrecLink" target="_blank">Call recordings</a>
 		    </div>
 		    <div class="modal-body">
 		    	<div class="pre-scrollable">
@@ -364,10 +439,29 @@
 					    </tbody>
 					  </table>			    		
 		    	</div>
-		    </div>	    
+		    </div>  
 		  </div>
 		</div>
 	</div>
+
+	<!-- audioFileRTC -->
+	<div class="modal fade" id="popAudioFileRTC" role="dialog">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      <h4 class="modal-title">Use audio file instead of Microphone</h4>
+		    </div>
+		    <div class="modal-body">
+		    	<div class="form-group">
+		    		<input type="file" id="streamAudioFile">
+		    		<br>
+		    		<button class="btn btn-sm btn-success" id=toggleStreamAudioFile>Pause</button>
+		    	</div>
+		    </div> 	    
+		  </div>
+		</div>
+	</div>	
 
 	<div class="modal fade" id="sendQualityFeedback" role="dialog">
 		<div class="modal-dialog modal-lg">
@@ -400,11 +494,12 @@
 						    </ul>
 						  </div>
 					    <div class="form-group lowQualityRadios">
-					      <textarea rows="4" cols="40" id="sendFeedbackComment" placeholder="Optional comments"></textarea>
+					      <textarea class="feedbackTextArea" rows="4" id="sendFeedbackComment" placeholder="Optional comments"></textarea>
+					      <label><input id=sendConsoleLogs type="checkbox">Send Console Logs</label>
 					    </div>						  
 						</section>
 				    </div>
-				    <div class="form-group col-xs-2 lowQualityRadios">
+				    <div class="form-group col-xs-4 lowQualityRadios">
 					    <div class="checkbox">
 					      <label><input type="checkbox" name="callqualitycheck" value="bad-audio">Bad audio</label>
 					    </div>
@@ -431,7 +526,7 @@
 		    </div>
 		    <div class="modal-footer">
 		   		<button type="submit" class="btn btn-success" id=sendFeedback data-dismiss="modal">Send</button>
-		   		<button class="btn btn-danger" data-dismiss="modal">Ignore</button>
+		   		<button class="btn btn-danger" data-dismiss="modal" id=ignoreFeedback>Ignore</button>
 		    </div>
 		  </div>
 		</div>
@@ -444,14 +539,18 @@
 <div class="feedback">
 	<button type="button" class="btn btn-success btn-sm" id="clickFeedback" data-toggle="modal" data-target="#sendQualityFeedback">Feedback</button>	
 </div>
+<div class="clearAlerts">
+	<button type="button" class="btn btn-success btn-sm" id="clickClearAlerts">Clear alerts</button>	
+</div>
 <div class="alertmsg">
 	<!-- media metrics message comes here -->
 </div>
-<!-- <script src="lib/plivowebsdk.min.js"></script> -->
+
 <script src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script>
+<script src="js/audiovisual.js"></script>
 <script src="js/customclient.js"></script>
 <script type="text/javascript">
-	$( document ).ready(function() {	
+	$( document ).ready(function() {
 	    console.log( "HTML ready!" );
 	    $('[data-toggle="tooltip"]').tooltip();
 	    resetSettings();
