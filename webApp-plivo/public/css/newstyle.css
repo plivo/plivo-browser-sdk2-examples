@@ -311,18 +311,19 @@ p
   cursor: pointer; 
 }
 
+.feedbackTextArea{
+  width: 100%;
+}
 
 /* Rating Star Widgets Style */
 .rating-stars ul {
   list-style-type:none;
   padding:0;
-  
   -moz-user-select:none;
   -webkit-user-select:none;
 }
 .rating-stars ul > li.star {
   display:inline-block;
-  
 }
 
 /* Idle State of the stars */
