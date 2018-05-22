@@ -891,7 +891,7 @@ function initPhone(username, password){
 
 	// Methods 
 	plivoWebSdk.client.setRingTone(true);
-	plivoWebSdk.client.setRingToneBack(true);
+	plivoWebSdk.client.setRingToneBack(false);
 	plivoWebSdk.client.setConnectTone(true); // Dial beep will play till we get alert response from network. 
 	plivoWebSdk.client.setDebug("ALL"); // Allowed values are OFF, ERROR, WARN, INFO, DEBUG, ALL
 

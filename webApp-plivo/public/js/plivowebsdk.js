@@ -64,7 +64,8 @@ function Client(options) {
     appSecret : null,
     registrationDomainSocket : null,
     clientRegion : null,
-    preDetectOwa: false
+    preDetectOwa: false,
+    disableRtpTimeOut: false
   }
   /* 
     Default instance flags
@@ -161,6 +162,12 @@ function Client(options) {
           }
           break;
 
+        case "disableRtpTimeOut" :
+          if(validateOptions.isBoolean(key, options[key])){
+            _options.disableRtpTimeOut = options[key];
+          }
+          break;
+
         default :
           Plivo.log.warn('Ignoring invalid option key '+ key);
       }
@@ -251,7 +258,7 @@ function Client(options) {
     that.ringBackToneView = document.getElementById(constants.RINGBACK_ELEMENT_ID);
     that.connectToneView = document.getElementById(constants.CONNECT_TONE_ELEMENT_ID);
 
-    Plivo.log.info('PlivoWebSdk initialized in ' + that.log.level() + ' mode, version: 2.0.12');
+    Plivo.log.info('PlivoWebSdk initialized in ' + that.log.level() + ' mode, version: 2.0.13');
     // Show the options passed by developer
     Plivo.log.debug('PlivoWebSdk initialized with ',that.str(options));
     Plivo.log.info(that.str(that.browserDetails));
@@ -302,7 +309,8 @@ Client.prototype.login = function(userName, password) {
     'password': password,
     'googIPv6': this.enableIPV6 || false,
     'connection_recovery_max_interval': constants.WS_RECOVERY_MAX_INTERVAL,
-    'connection_recovery_min_interval': constants.WS_RECOVERY_MIN_INTERVAL
+    'connection_recovery_min_interval': constants.WS_RECOVERY_MIN_INTERVAL,
+    'session_timers' : false
   };
 
   try {
@@ -316,30 +324,33 @@ Client.prototype.login = function(userName, password) {
 
   var that = this;
 
-  var connectionChangeCounter = 0;
+  var lastConnectionChangeTime = 0;
   //connected event fired by UA.js
   this.phone.on('connected', function (evt) {
     Plivo.log.info('websocket connection established', evt);
-    // clear the counter for connection change to reset for next network disruption
-    clearTimeout(connectionChangeCounter);
+    // clear the lastConnectionChangeTime, reset for next network disruption
+    lastConnectionChangeTime = 0 ;
   });
 
   // disconnected event fired by UA.js
   this.phone.on('disconnected', function (evt) {
     Plivo.log.info('websocket connection closed' , evt);
 
-    if(evt && evt.code >1000){
-      var eventData = { "state": evt.code, "status": evt.reason || "Websocket Disconnected"};
+    if(evt && evt.code>1000){ 
+    // 1000 is normal websocket closed event , others codes as 1003,1006,1011 etc are for abnormal termination
+      var eventData = { "state": evt.code , "status" :  evt.reason || "Websocket Disconnected"};
       //Adding a timeout for notifying connection change event every 5 seconds
-      if(!connectionChangeCounter){
+      if(lastConnectionChangeTime == 0 ){
         // First Time Event , dont wait to show notification 
-        this.emit('onConnectionChange', eventData);
-        connectionChangeCounter = 1;
+        that.emit('onConnectionChange', eventData);
+        lastConnectionChangeTime = new Date();
       }else{
-        connectionChangeCounter = setTimeout(function(){ 
-          // Wait 5 seconds to emit the connection change event
-          this.emit('onConnectionChange', eventData);
-        }, 5000);
+        var currentConnectionChangeTime = new Date();
+        // Wait 10 seconds to emit the connection change event
+        if( ( ( currentConnectionChangeTime - lastConnectionChangeTime )/1000) > 10 ){
+          that.emit('onConnectionChange', eventData);
+          lastConnectionChangeTime = new Date();
+        }
       }
     }
   });
@@ -359,7 +370,7 @@ Client.prototype.login = function(userName, password) {
         that.callStats = new callstats();
         var configParams = {
           disableBeforeUnloadHandler: false, // disables callstats.js's window.onbeforeunload parameter.
-          applicationVersion: '2.0.12' // Application version specified by the developer.
+          applicationVersion: '2.0.13' // Application version specified by the developer.
         };
         // callbacks for callstats
         var csInitCallback = function(err, msg) {
@@ -469,6 +480,8 @@ Client.prototype.login = function(userName, password) {
           var iceState = inboundConn.iceConnectionState;
           Plivo.log.debug('oniceconnectionstatechange:: '+iceState);
           that.connStage.push("iceConnectionState-"+iceState+"@"+dateMs());
+          //Notify network drops
+          iceConnectionCheck.call(that,iceState);
           if (that.callStats && that.callUUID &&  inboundConn) {
              if (iceState == 'failed' || iceState == 'disconnected') {
                 var errname = new DOMError(iceState, iceState);
@@ -481,6 +494,11 @@ Client.prototype.login = function(userName, password) {
       that.callSession.on('confirmed', function (evt) {
         Plivo.log.debug('Incoming call confirmed - '+that.callUUID);
         that.connStage.push("confirmed@"+dateMs());
+
+        // disableRtpTimeOut if enabled
+        if(that.options.disableRtpTimeOut){
+          that.callSession.connection.disableRtpTimeOut = true;
+        }
 
         var remoteStream = this.connection.getRemoteStreams()[0];
         if(!remoteStream){
@@ -616,7 +634,7 @@ Client.prototype.call = function(phoneNumber, extraHeaders) {
   var that = this;
   Plivo.log.info('<----- OUTGOING ----->');
   that.connStage = [];
-  Plivo.log.info('Outgoing call initialized');
+  Plivo.log.info('Outgoing call initialized to : '+ phoneNumber);
   if (!this.isLoggedIn) {
     Plivo.log.warn('Must be logged in before make a call');
     return false;
@@ -693,6 +711,7 @@ Client.prototype.answer = function() {
         window.localStream? true : Plivo.log.warn('no localStream attached for this call');     
       }
       opts.mediaStream = window.localStream || null;
+      opts.rtcConstraints = that.options.dscp? ({"optional":[{"googDscp":true}]}) : null;
       opts.sessionTimersExpires = constants.SESSION_TIMERS_EXPIRES;      
       try{
         if(that.callSession){
@@ -702,7 +721,7 @@ Client.prototype.answer = function() {
         Plivo.log.error('error in answering : ',err);
         that.emit('onIncomingCallCanceled',err);
       }
-      documentUtil.stopAudio(constants.RINGTONE_ELEMENT_ID);       
+      that.ringToneView.paused? null : documentUtil.stopAudio(constants.RINGTONE_ELEMENT_ID);       
       return true;    
     }
     /** 
@@ -747,11 +766,12 @@ Client.prototype.answer = function() {
 Client.prototype.hangup = function () {
   Plivo.log.debug('hangup - '+this.callUUID);
   if (this.callSession) {
-    if(this.callSession.direction != "outgoing" && !this.callSession.is_confirmed){
+    if(this.callSession.direction != "outgoing" && !isSessionConfirmed(this.callSession)){
       Plivo.log.warn('use of hangup() on unanswered call is deprecated. use reject() instead');
     }
     try{
       Plivo.log.info('hangup initialized');
+      Plivo.AppError({"name":"hangup","message":"hangup initialized","method":"hangup()"});
       this.callSession.terminate();
       this.ringBackToneView.paused? null: documentUtil.stopAudio(constants.RINGBACK_ELEMENT_ID);
     }catch(err){
@@ -772,7 +792,7 @@ Client.prototype.reject = function () {
     Plivo.log.warn('No call session exists to reject()');
     return false;    
   }
-  if(this.callSession.is_confirmed){
+  if(isSessionConfirmed(this.callSession)){
     Plivo.log.warn('call already answerd, please use hangup() method');
     return false;
   }
@@ -782,13 +802,14 @@ Client.prototype.reject = function () {
       'reason_phrase': 'Busy Here'
     };
     Plivo.log.info('rejecting call');
+    Plivo.AppError({"name":"reject","message":"reject initialized","method":"reject()"});
     try{
       this.callSession.terminate(opts);
     }catch(err){
       Plivo.log.error('error in rejecting call : ',err);
       Plivo.AppError({"name":err.name,"message":err.message,"method":"reject()"});
     }
-    documentUtil.stopAudio(constants.RINGTONE_ELEMENT_ID);
+    this.ringToneView.paused? null: documentUtil.stopAudio(constants.RINGTONE_ELEMENT_ID);
     return true;
   }
 }
@@ -938,17 +959,21 @@ Client.prototype.setDebug = function (debug) {
 };
 
 Client.prototype.getPeerConnection = function (){
-  if (this.callSession && this.callSession.is_confirmed){
+  if (this.callSession && isSessionConfirmed(this.callSession)){
     return {"status":"success", "pc":this.callSession.connection }; 
   }else{
     return {"status":"called in wrong state", "pc":null};
   }
 }
 
-Client.prototype.version = '2.0.12';
+Client.prototype.version = '2.0.13';
 
 Client.prototype.webRTC = function(){
   return window.RTCPeerConnection? true : false;
+}
+
+Client.prototype.supportedBrowsers = function(){
+  return "Chrome, Firefox";
 }
 
 Client.prototype.sendQualityFeedback = function (callUUID, score, comment) {
@@ -1090,10 +1115,17 @@ var _createSession = function(that, extraHeaders, phoneNumber) {
         Plivo.log.debug('Outgoing call received addStream');
         that.connStage.push("addStream-success@"+dateMs());
         if(evt.streams[0]){
-          that.remoteView.srcObject = evt.streams[0];
-          if(that.ringToneBackFlag && !that.callSession.is_confirmed){
-            that.remoteView.pause();
-          }else if(!that.ringToneBackFlag && !that.callSession.is_confirmed){
+          /// on direct 200 OK with out 18x, we get The play() request was interrupted by a new load request. 100 timeout sec is workaround
+          setTimeout(function(){
+            that.remoteView.srcObject = evt.streams[0];
+          },100);
+          if(that.ringToneBackFlag && !isSessionConfirmed(that.callSession)){
+            setTimeout(function(){
+              if (!isSessionConfirmed(that.callSession)) {
+                that.remoteView.pause();
+              }
+            },100)
+          }else if(!that.ringToneBackFlag && !isSessionConfirmed(that.callSession)){
             Plivo.log.debug('playAudio - MediaServer');
           }
         }else{
@@ -1105,6 +1137,8 @@ var _createSession = function(that, extraHeaders, phoneNumber) {
         var iceState = outboundConn.iceConnectionState;
         Plivo.log.debug('oniceconnectionstatechange:: '+iceState);
         that.connStage.push("iceConnectionState-"+iceState+"@"+dateMs());
+        //Notify network drops
+        iceConnectionCheck.call(that,iceState);
         if (that.callStats && that.callUUID &&  outboundConn) {
            if (iceState == 'failed' || iceState == 'disconnected') {
               Plivo.log.debug('iceState :: '+iceState)
@@ -1174,7 +1208,10 @@ var _createSession = function(that, extraHeaders, phoneNumber) {
       Plivo.log.debug('Outgoing call confirmed - '+ that.callUUID);
       that.connStage.push('confirmed@'+dateMs());
       that.remoteView.paused && that.remoteView.play();
-
+      //disableRtpTimeOut if enabled
+      if(that.options.disableRtpTimeOut){
+        that.callSession.connection.disableRtpTimeOut=true;
+      }
       that.ringToneView.paused? null : documentUtil.stopAudio(constants.RINGTONE_ELEMENT_ID);
       that.ringBackToneView.paused? null : documentUtil.stopAudio(constants.RINGBACK_ELEMENT_ID);
       that.connectToneView.paused? null : documentUtil.stopAudio(constants.CONNECT_TONE_ELEMENT_ID);
@@ -1219,6 +1256,7 @@ var _createSession = function(that, extraHeaders, phoneNumber) {
         that.callStats.sendFabricEvent(this.connection, that.callStats.fabricEvent.fabricTerminated, that.callUUID);
       }
       that.emit('onCallTerminated',{"originator":evt.originator, "reason":evt.cause});
+      Plivo.AppError({"name":"onCallTerminated","originator":evt.originator,"reason":evt.cause});
       hangupClearance(that);
     },
     'getusermediafailed': function(err){
@@ -1250,7 +1288,7 @@ var _createSession = function(that, extraHeaders, phoneNumber) {
       }
     },
     'peerconnection:setremotedescriptionfailed': function(err){
-      if(err.message && !err.message == 'pranswer not yet implemented'){
+      if(err.message && !/pranswer/.test(err.message)){
         Plivo.log.error('peerconnection:setremotedescriptionfailed: ',err);
         if (that.userName && that.callStats) {
           err.message = "peerconnection:setremotedescriptionfailed";
@@ -1298,7 +1336,8 @@ var applyStatsSettings = function(that){
     jitterRemoteMeasures : false,
     packetLossRemoteMeasures : false,
     packetLossLocalMeasures : false,
-    rtt: false
+    rtt : false,
+    ice_connection : false
   }
   storage.startAnalysis = false; // dont start mos immediately after call answer , wait for 5 secs  
   setTimeout(function(){
@@ -1340,6 +1379,20 @@ var callStatsTokenCb = function(that){
       'extraHeaders':['X-appID: '+that.options.appId,'X-userID: '+that.userName]
     }
     that.phone.sendMessage('admin', '-- Plivo web client --', options);          
+  }
+}
+
+var iceConnectionCheck = function(iceState){
+  // If iceState goes to disconnected or failed trigger media metrics event
+  if( ["disconnected","failed"].indexOf(iceState) != -1){
+    _emitter(this,'network','warning','ice_connection', iceState, true, "network drop");
+    if(this.storage){
+      this.storage.warning.ice_connection=true;
+    }
+  }
+  if(iceState == "connected" && this.storage && this.storage.warning.ice_connection === true){
+   _emitter(this,'network','warning','ice_connection', iceState, false); 
+   this.storage.warning.ice_connection=false;
   }
 }
 
@@ -1452,6 +1505,15 @@ var calcConnStage = function(obj){
   alinObj = alinObj.replace(/[[",\]]/g,'');
   alinObj = alinObj.replace(/#/g,'\n');
   return alinObj;
+}
+
+var isSessionConfirmed = function(session){
+  if(session){
+    return session.is_confirmed
+  }else{
+    Plivo.log.debug("session not available");
+    return false
+  }
 }
 
 var hangupClearance = function(that){
@@ -2066,9 +2128,8 @@ module.exports = codecPref
 
 //webrtc settings
 module.exports.DEFAULT_LOG_LEVEL = 'INFO';
-module.exports.DOMAIN = 'phone.plivo.com';
-// module.exports.WS_SERVERS = 'wss://phone.plivo.com:5063';
-module.exports.WS_SERVERS = 'wss://phone.voice.plivodev.com:5063';
+module.exports.DOMAIN = 'phone.plivo.com'; 
+module.exports.WS_SERVERS = 'wss://phone.plivo.com:5063';
 module.exports.REGISTER_EXPIRES_SECONDS = 120;
 module.exports.SESSION_TIMERS_EXPIRES = 300;
 module.exports.WS_RECOVERY_MAX_INTERVAL = 20;
@@ -7898,7 +7959,7 @@ module.exports = {
 module.exports={
   "name": "plivowebsdk",
   "title": "plivowebsdk",
-  "version": "2.0.12",
+  "version": "2.0.13",
   "description": "Plivo WebRTC sdk for use in chrome/firefox ",
   "main": "./lib/index.js",
   "directories": {
@@ -23035,7 +23096,8 @@ function createRTCConnection(pcConfig, rtcConstraints) {
     var state = self.connection.iceConnectionState;
 
     // TODO: Do more with different states.
-    if (state === 'failed') {
+    // Plivo patch for disable RTP timeout
+    if (state === 'failed' && !this.disableRtpTimeOut) {
       self.terminate({
         cause: JsSIP_C.causes.RTP_TIMEOUT,
         status_code: 200,
@@ -25630,7 +25692,7 @@ OutgoingRequest.prototype = {
     // Allow
     msg += 'Allow: '+ JsSIP_C.ALLOWED_METHODS +'\r\n';
     msg += 'Supported: ' +  supported +'\r\n';
-    msg += 'User-Agent: ' + 'PlivowebSDK 2.0.12' +'\r\n';
+    msg += 'User-Agent: ' + 'PlivowebSDK 2.0.13' +'\r\n';
 
     if (this.body) {
       length = Utils.str_utf8_length(this.body);
