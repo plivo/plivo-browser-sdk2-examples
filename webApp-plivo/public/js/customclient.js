@@ -133,6 +133,7 @@ function onLoginFailed(reason){
 function onLogout(){
 	$('#phonestatus').html('Offline');
 	console.info('onLogout');
+	window.location.href=window.location.origin + window.location.pathname + "?logout"
 }
 function onCalling(){
 	$('#callstatus').html('Progress...');	
@@ -500,7 +501,7 @@ function tokenGenFunc(){
 * This is will prevent the other end still listening for dead call
 */
 window.onbeforeunload = function () {
-    plivoWebSdk.client && plivoWebSdk.client.logout();
+    // plivoWebSdk.client && plivoWebSdk.client.logout();
 };
 
 /*
@@ -642,6 +643,10 @@ $('#clickLogin').click(function(e){
 	var userName = $('#loginUser').val();
 	var password = $('#loginPwd').val();
 	login(userName, password);
+	$('#uiLogout').click(function(e) {
+		plivoWebSdk.client && plivoWebSdk.client.logout();
+
+	});
 });
 
 // Audio device selection
