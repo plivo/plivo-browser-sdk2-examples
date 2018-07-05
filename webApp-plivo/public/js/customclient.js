@@ -62,7 +62,14 @@ function onPermissionNeeded(obj){
 }
 
 function onConnectionChange(obj){
-	customAlert( obj.state + " "+ obj.status  , "info");
+	console.log('onConnectionChange: ', obj);
+	if(obj.state === "connected" ){
+		customAlert( obj.state , "info");
+	}else if(obj.state === "disconnected"){
+		customAlert( obj.state + " "+ obj.eventCode +" "+ obj.eventReason  , "info");
+	}else{
+		console.log("unknown connection state ");
+	}
 }
 
 function onWebrtcNotSupported() {
@@ -633,7 +640,7 @@ $('#sendFeedback').click(function(){
 		return;		
 	}
 	var sendConsoleLogs = document.getElementById("sendConsoleLogs").checked;
-	plivoWebSdk.client.sendQualityFeedback(lastCallid,score,comment , sendConsoleLogs);
+	plivoWebSdk.client.sendQualityFeedback(lastCallid, score , comment , sendConsoleLogs);
 
 	customAlert('Quality feedback ',lastCallid);
 });
@@ -764,7 +771,7 @@ micTest.onclick = function(){
 clearRecPlayer.onclick = function(){
 	$('#recPlayerLayout').hide();
 }
-if(document.querySelector('streamAudioFile')){
+if(document.querySelector('#streamAudioFile')){
 	streamAudioFile.onchange = function(){
 		if(audioStreamContext){
 			audioStreamContext.close();

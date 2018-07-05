@@ -22,7 +22,7 @@
 			  <li><a class="btn" data-toggle="modal" data-target="#popMicVisual">Mic Visualization</a></li>
 			  <li><a class="btn" data-toggle="modal" data-target="#popAudioFileRTC">audioFileRTC</a></li>			  
 			  <li><a class="btn" data-toggle="modal" data-target="#popCallRec">Call Rec</a></li>
-			  <li><a class="btn" data-toggle="modal" data-target="#setCallerId" id="setCallerIdMenu">Caller ID</a></li>			  			  
+			  <li><a class="btn" data-toggle="modal" data-target="#setCallerId" id="setCallerIdMenu">Caller ID</a></li>  			  
 			</ul>
 			<span class="white-icon glyphicon glyphicon-log-in" id=uiLogin data-toggle="modal" data-target="#login"></span>
 			<span class="white-icon glyphicon glyphicon-off" id=uiLogout onclick='window.location.href=window.location.origin + window.location.pathname + "?logout"'></span>
@@ -546,7 +546,8 @@
 	<!-- media metrics message comes here -->
 </div>
 
-<script src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script>
+<!-- <script src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script> -->
+<script src="js/plivowebsdk.min.js"></script>
 <script src="js/audiovisual.js"></script>
 <script src="js/customclient.js"></script>
 <script type="text/javascript">
