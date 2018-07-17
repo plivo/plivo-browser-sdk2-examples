@@ -219,11 +219,11 @@ function onIncomingCallCanceled(){
 }
 
 function callOff(reason){
-	if(typeof reason == "object"){
-		customAlert('Hangup',JSON.stringify(reason) );
-	}else if(typeof reason == "string"){
-		customAlert('Hangup',reason);
-	}
+	// if(typeof reason == "object"){
+	// 	customAlert('Hangup',JSON.stringify(reason) );
+	// }else if(typeof reason == "string"){
+	// 	customAlert('Hangup',reason);
+	// }
 	$('.callScreen').hide();
 	$('.inboundBeforeAnswer').hide();
 	$('.AfterAnswer').hide();
