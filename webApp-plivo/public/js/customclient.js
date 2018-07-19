@@ -62,7 +62,14 @@ function onPermissionNeeded(obj){
 }
 
 function onConnectionChange(obj){
-	customAlert( obj.state + " "+ obj.status  , "info");
+	console.log('onConnectionChange: ', obj);
+	if(obj.state === "connected" ){
+		customAlert( obj.state , "info");
+	}else if(obj.state === "disconnected"){
+		customAlert( obj.state + " "+ obj.eventCode +" "+ obj.eventReason  , "info");
+	}else{
+		console.log("unknown connection state ");
+	}
 }
 
 function onWebrtcNotSupported() {
@@ -133,6 +140,7 @@ function onLoginFailed(reason){
 function onLogout(){
 	$('#phonestatus').html('Offline');
 	console.info('onLogout');
+	window.location.href=window.location.origin + window.location.pathname + "?logout"
 }
 function onCalling(){
 	$('#callstatus').html('Progress...');	
@@ -212,11 +220,11 @@ function onIncomingCallCanceled(){
 }
 
 function callOff(reason){
-	if(typeof reason == "object"){
-		customAlert('Hangup',JSON.stringify(reason) );
-	}else if(typeof reason == "string"){
-		customAlert('Hangup',reason);
-	}
+	// if(typeof reason == "object"){
+	// 	customAlert('Hangup',JSON.stringify(reason) );
+	// }else if(typeof reason == "string"){
+	// 	customAlert('Hangup',reason);
+	// }
 	$('.callScreen').hide();
 	$('.inboundBeforeAnswer').hide();
 	$('.AfterAnswer').hide();
@@ -500,7 +508,7 @@ function tokenGenFunc(){
 * This is will prevent the other end still listening for dead call
 */
 window.onbeforeunload = function () {
-    plivoWebSdk.client && plivoWebSdk.client.logout();
+    // plivoWebSdk.client && plivoWebSdk.client.logout();
 };
 
 /*
@@ -633,7 +641,7 @@ $('#sendFeedback').click(function(){
 		return;		
 	}
 	var sendConsoleLogs = document.getElementById("sendConsoleLogs").checked;
-	plivoWebSdk.client.sendQualityFeedback(lastCallid,score,comment , sendConsoleLogs);
+	plivoWebSdk.client.sendQualityFeedback(lastCallid, score , comment , sendConsoleLogs);
 
 	customAlert('Quality feedback ',lastCallid);
 });
@@ -642,6 +650,10 @@ $('#clickLogin').click(function(e){
 	var userName = $('#loginUser').val();
 	var password = $('#loginPwd').val();
 	login(userName, password);
+	$('#uiLogout').click(function(e) {
+		plivoWebSdk.client && plivoWebSdk.client.logout();
+
+	});
 });
 
 // Audio device selection
@@ -764,7 +776,7 @@ micTest.onclick = function(){
 clearRecPlayer.onclick = function(){
 	$('#recPlayerLayout').hide();
 }
-if(document.querySelector('streamAudioFile')){
+if(document.querySelector('#streamAudioFile')){
 	streamAudioFile.onchange = function(){
 		if(audioStreamContext){
 			audioStreamContext.close();
