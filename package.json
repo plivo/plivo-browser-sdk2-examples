@@ -10,7 +10,7 @@
     "beta-version-patch": "npm version $(semver $npm_package_version -i prepatch --preid beta)",
     "rc-version-patch": "npm version $(semver $npm_package_version -i prepatch --preid rc)",
     "rc-version-patch": "npm version $(semver $npm_package_version -i prepatch --preid rc)",
-    "rc-version-patch": "npm version $(semver $npm_package_version -i prepatch --preid rc)",
+    "rc-version-patch": "npm version $(semver $npm_package_version -i prepatch --preid rc)"
   },
   "dependencies": {
     "ejs": "~1.0.0",
