@@ -1,6 +1,7 @@
 {
   "name": "plivo-sample-app",
   "description": "Plivo SDK example app",
+  "version": "2.0.2",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
