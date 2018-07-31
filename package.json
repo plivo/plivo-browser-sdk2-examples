@@ -6,11 +6,11 @@
   "scripts": {
     "start": "node server.js",
     "beta-version-patch": "npm version $(semver $npm_package_version -i prepatch --preid beta)",
-    "beta-version-minor": "semver $npm_package_version -i minor --preid beta",
-    "beta-version-major": "semver $npm_package_version -i minor --preid beta",
-    "rc-version-patch": "semver $npm_package_version -i patch --preid rc",
-    "rc-version-minor": "semver $npm_package_version -i minor --preid rc",
-    "rc-version-major": "semver $npm_package_version -i minor --preid rc"
+    "beta-version-patch": "npm version $(semver $npm_package_version -i prepatch --preid beta)",
+    "beta-version-patch": "npm version $(semver $npm_package_version -i prepatch --preid beta)",
+    "rc-version-patch": "npm version $(semver $npm_package_version -i prepatch --preid beta)",
+    "rc-version-patch": "npm version $(semver $npm_package_version -i prepatch --preid beta)",
+    "rc-version-patch": "npm version $(semver $npm_package_version -i prepatch --preid beta)",
   },
   "dependencies": {
     "ejs": "~1.0.0",
