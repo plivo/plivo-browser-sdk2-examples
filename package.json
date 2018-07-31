@@ -1,15 +1,11 @@
 {
   "name": "plivo-sample-app",
   "description": "Plivo SDK example app",
-  "version": "2.0.5-beta.0",
+  "version": "2.0.6-rc.0",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "beta-version-patch": "npm version $(semver $npm_package_version -i prepatch --preid beta)",
-    "beta-version-patch": "npm version $(semver $npm_package_version -i prepatch --preid beta)",
-    "beta-version-patch": "npm version $(semver $npm_package_version -i prepatch --preid beta)",
-    "rc-version-patch": "npm version $(semver $npm_package_version -i prepatch --preid rc)",
-    "rc-version-patch": "npm version $(semver $npm_package_version -i prepatch --preid rc)",
     "rc-version-patch": "npm version $(semver $npm_package_version -i prepatch --preid rc)"
   },
   "dependencies": {
