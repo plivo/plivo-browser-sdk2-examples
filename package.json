@@ -5,8 +5,12 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "beta-version-patch": "npm version $(semver $npm_package_version -i prepatch --preid beta)",
-    "rc-version-patch": "npm version $(semver $npm_package_version -i prepatch --preid rc)"
+    "beta-version-patch": "npm version $(semver $npm_package_version -i prerelease --preid beta)",
+    "beta-version-minor": "npm version $(semver $npm_package_version -i preminor --preid beta)",
+    "beta-version-major": "npm version $(semver $npm_package_version -i premajor --preid beta)",
+    "rc-version": "npm version $(semver $npm_package_version -i prerelease --preid rc)",
+    "final-release": "npm version $(semver $npm_package_version -i)",
+    "semver": "npm version $(semver $npm_package_version -i $release --preid $preid)"
   },
   "dependencies": {
     "ejs": "~1.0.0",
