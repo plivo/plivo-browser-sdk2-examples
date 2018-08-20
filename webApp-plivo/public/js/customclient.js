@@ -3,6 +3,7 @@ localStorage = window.localStorage;
 var callStorage = {}, timer = "00:00:00";
 
 const incomingNotifications = new Map();
+let incomingNotificationAlert = null;
 
 String.prototype.calltimer = function () {
     var sec_num = parseInt(this, 10);
@@ -188,26 +189,38 @@ function onCallTerminated(evt, callInfo){
 		// clear at end of every call
 		sessionStorage.removeItem('triggerFB');
 	}
-  if (callInfo.callUUID === plivoWebSdk.client.getCallUUID()) {
+  if (callInfo && callInfo.callUUID === plivoWebSdk.client.getCallUUID()) {
+    callOff(evt);
+  } else if(!callInfo) {
     callOff(evt);
   }
 	
 }
 function onCallFailed(reason, callInfo){
-	console.info(`onCallFailed ${reason} ${callInfo.callUUID} ${callInfo.direction}`);
+  if (callInfo) {
+    console.info(`onCallFailed ${reason} ${callInfo.callUUID} ${callInfo.direction}`);
+  } else {
+    console.info(`onCallFailed ${reason}`);
+  }
+	
 	if(reason && /Denied Media/i.test(reason)){
     $('#callstatus').html('call failed');
 		$('#mediaAccessBlock').modal('show');
 	};
+  if (!callInfo) {
+    callOff(reason);
+    return;
+  }
+  
   if (incomingNotifications.has(callInfo.callUUID)) {
     const incomingCall = incomingNotifications.get(callInfo.callUUID)
     incomingCall.hide();
     incomingNotifications.delete(callInfo.callUUID);
   }
   if (incomingNotifications.size === 0  && !plivoWebSdk.client.getCallUUID()) {
-    callOff();
+    callOff(reason);
   } else if (incomingNotifications.size === 0 && callInfo.direction === 'outgoing') {
-    callOff();
+    callOff(reason);
   }
 }
 function onMediaPermission(evt){
@@ -232,27 +245,50 @@ function onIncomingCall(callerName, extraHeaders, callInfo){
   
 	$('#makecall').hide();
   const incomingNotification = Notify.success(`Incoming Call: ${callerName}`)
-    .button('Answer', () => {
-      console.info('Call accept clicked');
-    	plivoWebSdk.client.answer(callInfo.callUUID);
-    })
-    .button('Reject', () => {
-      const incomingCall = incomingNotifications.get(callInfo.callUUID);
+  .button('Answer', () => {
+    console.info('Call accept clicked');
+    if (callInfo) {
+      plivoWebSdk.client.answer(callInfo.callUUID);
+    } else {
+      plivoWebSdk.client.answer();
+    }
+  	
+  })
+  .button('Reject', () => {
+    console.info('callReject');
+    if (callInfo) {
       plivoWebSdk.client.reject(callInfo.callUUID);
-    })
-    .button('Ignore', () => {
+    } else {
+      plivoWebSdk.client.reject();
+    }  
+  })
+  .button('Ignore', () => {
+    console.info('call Ignored');
+    if (callInfo) {
       plivoWebSdk.client.ignore(callInfo.callUUID);
-    });
-    
-  incomingNotifications.set(callInfo.callUUID, incomingNotification);
+    } else {
+      plivoWebSdk.client.ignore();
+    }
+  });
+  if (callInfo) {
+    incomingNotifications.set(callInfo.callUUID, incomingNotification);
+  } else {
+    incomingNotificationAlert = incomingNotification;
+  }
+  
 }
 
 function onIncomingCallCanceled(callInfo){
 	console.info('onIncomingCallCanceled');
-  const incomingCall = incomingNotifications.get(callInfo.callUUID);
-  if (incomingCall) {
-    incomingCall.hide();
+  let incomingCallNotification;
+  if (callInfo) {
+    incomingCallNotification = incomingNotifications.get(callInfo.callUUID);
     incomingNotifications.delete(callInfo.callUUID);
+  } else if(incomingNotificationAlert) {
+    incomingCallNotification = incomingNotificationAlert;
+  }
+  if (incomingCallNotification) {
+    incomingCallNotification.hide();
   }
   if (incomingNotifications.size === 0 && !plivoWebSdk.client.getCallUUID()) {
     callOff();
