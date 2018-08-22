@@ -65,7 +65,7 @@ function onPermissionNeeded(obj){
 }
 
 function onConnectionChange(obj){
-	customAlert( obj.state + " "+ obj.status  , "info");
+	customAlert(obj.state, "info");
 }
 
 function onWebrtcNotSupported() {
@@ -141,7 +141,8 @@ function onCalling(){
 	$('#callstatus').html('Progress...');	
 	console.info('onCalling');
 }
-function onCallRemoteRinging(){
+function onCallRemoteRinging(callInfo){
+  	if (callInfo) console.log(JSON.stringify(callInfo));
 	$('#callstatus').html('Ringing...');
 	console.info('onCallRemoteRinging');
 }
@@ -151,6 +152,7 @@ function onCallAnswered(callInfo){
 	$('.hangup').show();
   $('#makecall').hide();
   if (callInfo && callInfo.direction === 'incoming') {
+    console.info(JSON.stringify(callInfo));
     $('.inboundBeforeAnswer').hide();
     $('.AfterAnswer').show();
     $('#boundType').html('Inbound :');
@@ -190,6 +192,7 @@ function onCallTerminated(evt, callInfo){
 		sessionStorage.removeItem('triggerFB');
 	}
   if (callInfo && callInfo.callUUID === plivoWebSdk.client.getCallUUID()) {
+    console.info(JSON.stringify(callInfo));
     callOff(evt);
   } else if(!callInfo) {
     callOff(evt);
@@ -198,6 +201,7 @@ function onCallTerminated(evt, callInfo){
 }
 function onCallFailed(reason, callInfo){
   if (callInfo) {
+    console.log(JSON.stringify(callInfo));
     console.info(`onCallFailed ${reason} ${callInfo.callUUID} ${callInfo.direction}`);
   } else {
     console.info(`onCallFailed ${reason}`);
@@ -271,6 +275,7 @@ function onIncomingCall(callerName, extraHeaders, callInfo){
     }
   });
   if (callInfo) {
+    console.info(JSON.stringify(callInfo));
     incomingNotifications.set(callInfo.callUUID, incomingNotification);
   } else {
     incomingNotificationAlert = incomingNotification;
@@ -279,7 +284,7 @@ function onIncomingCall(callerName, extraHeaders, callInfo){
 }
 
 function onIncomingCallCanceled(callInfo){
-	console.info('onIncomingCallCanceled');
+	if (callInfo) console.info(JSON.stringify(callInfo));
   let incomingCallNotification;
   if (callInfo) {
     incomingCallNotification = incomingNotifications.get(callInfo.callUUID);
