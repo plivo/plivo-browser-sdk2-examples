@@ -148,11 +148,11 @@ function onCallRemoteRinging(callInfo){
 }
 function onCallAnswered(callInfo){
 	console.info('onCallAnswered');
+  if (callInfo) console.info(JSON.stringify(callInfo));
 	$('#callstatus').html('Answered');
 	$('.hangup').show();
   $('#makecall').hide();
   if (callInfo && callInfo.direction === 'incoming') {
-    console.info(JSON.stringify(callInfo));
     $('.inboundBeforeAnswer').hide();
     $('.AfterAnswer').show();
     $('#boundType').html('Inbound :');
