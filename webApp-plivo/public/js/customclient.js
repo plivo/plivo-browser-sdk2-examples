@@ -164,7 +164,7 @@ function onCallAnswered(callInfo){
     $('.inboundBeforeAnswer').hide();
     $('.AfterAnswer').show();
     $('#boundType').html('Inbound :');
-    $('#callNum').html(callInfo.from);
+    $('#callNum').html(callInfo.src);
     $('#callDuration').html('00:00:00');
     $('.callinfo').show();
     if (incomingNotifications.has(callInfo.callUUID)) {
