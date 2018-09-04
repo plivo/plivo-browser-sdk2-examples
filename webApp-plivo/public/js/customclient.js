@@ -620,30 +620,24 @@ $('#sendFeedback').click(function(){
 	score = Number(score);
 	var lastCallid = plivoWebSdk.client.getLastCallUUID();
 	// var comment = $("input[type=radio][name=callqualitycheck]:checked").val() || "good";
-	var comment = "";
-	if(score == 5){
-		comment = "good";
-	}
+	var issues = "";
 	_forEach.call(document.querySelectorAll('[name="callqualitycheck"]'), e=>{
 		if(e.checked){
-			comment = comment? (comment + "," + e.value) : e.value;
+			issues = issues? (issues + "," + e.value) : e.value;
 		}
 	});
-	if(sendFeedbackComment.value){
-		comment = comment? (comment + "," + sendFeedbackComment.value) : sendFeedbackComment.value;
-	}
-	if(!comment){
-		customAlert('feedback','Please select any comment');
-		return;
-	}
-	if(!score){
-		customAlert('feedback','Please select star');
-		return;		
-	}
+	var note = sendFeedbackComment.value;
 	var sendConsoleLogs = document.getElementById("sendConsoleLogs").checked;
-	plivoWebSdk.client.sendQualityFeedback(lastCallid, score , comment , sendConsoleLogs);
 
-	customAlert('Quality feedback ',lastCallid);
+	// New submitCallQualityFeedback takes parameteres callUUId, starRating, issues, note, sendConsoleLogs
+	plivoWebSdk.client.submitCallQualityFeedback(lastCallid, score, issues, note, sendConsoleLogs)
+	.then((result) => {
+		customAlert('Feedback sent','','info');
+	})
+	.catch((error) => {
+		customAlert('Could not send feedback','','warn');
+	});
+
 });
 
 $('#clickLogin').click(function(e){
