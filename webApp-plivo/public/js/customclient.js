@@ -620,10 +620,10 @@ $('#sendFeedback').click(function(){
 	score = Number(score);
 	var lastCallid = plivoWebSdk.client.getLastCallUUID();
 	// var comment = $("input[type=radio][name=callqualitycheck]:checked").val() || "good";
-	var issues = "";
+	var issues=[];
 	_forEach.call(document.querySelectorAll('[name="callqualitycheck"]'), e=>{
 		if(e.checked){
-			issues = issues? (issues + "," + e.value) : e.value;
+			issues.push(e.value);
 		}
 	});
 	var note = sendFeedbackComment.value;
