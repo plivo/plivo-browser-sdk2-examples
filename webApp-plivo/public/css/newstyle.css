@@ -339,3 +339,8 @@ p
 .rating-stars ul > li.star.selected > i.fa {
   color:#FF912C;
 }
+.feedback-status{
+  color: #afaf00;
+  font-weight: 600;
+  font-family: sans-serif;
+}

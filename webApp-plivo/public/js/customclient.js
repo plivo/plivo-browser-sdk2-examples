@@ -639,7 +639,13 @@ $('#sendFeedback').click(function(){
 		$('#feedbackStatus').html(error);
 		customAlert('Could not send feedback','','warn');
 	});
+});
 
+$( "#ignoreFeedback" ).click(function() {		// Reset the feedback dialog for next time 
+	$('#stars li').removeClass("selected");
+	$('#sendFeedbackComment').empty();
+	$('.lowQualityRadios input').prop('checked', false);
+	$("#feedbackStatus").empty();
 });
 
 $('#clickLogin').click(function(e){
