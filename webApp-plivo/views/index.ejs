@@ -474,6 +474,7 @@
 		    </div>
 		    <div class="modal-body">	    
 				<div class="container">
+					<div class="form-group row feedback-status" id="feedbackStatus"></div>	
 				    <div class="form-group col-xs-4">
 						<section class='rating-widget'>
 						  <div class='rating-stars'>
@@ -501,33 +502,47 @@
 					    </div>						  
 						</section>
 				    </div>
+
 				    <div class="form-group col-xs-4 lowQualityRadios">
 					    <div class="checkbox">
-					      <label><input type="checkbox" name="callqualitycheck" value="bad-audio">Bad audio</label>
+					      <label><input type="checkbox" name="callqualitycheck" value="AUDIO_LAG">Audio Lag</label>
 					    </div>
 					    <div class="checkbox">
-					      <label><input type="checkbox" name="callqualitycheck" value="call-dropped">Call dropped</label>
+					      <label><input type="checkbox" name="callqualitycheck" value="BROKEN_AUDIO">Broken Audio</label>
 					    </div>
 					    <div class="checkbox">
-					      <label><input type="checkbox" name="callqualitycheck" value="wrong-callerid">Wrong callerid</label>
+					      <label><input type="checkbox" name="callqualitycheck" value="CALL_DROPPPED">Call Dropped</label>
 					    </div>
 					    <div class="checkbox">
-					      <label><input type="checkbox" name="callqualitycheck" value="dtmf-not-captured">DTMF is not working</label>
+					      <label><input type="checkbox" name="callqualitycheck" value="CALLERID_ISSUES">Callerid Issue</label>
 					    </div>
 					    <div class="checkbox">
-					      <label><input type="checkbox" name="callqualitycheck" value="audio-latency">Audio latency</label>
+					      <label><input type="checkbox" name="callqualitycheck" value="DIGITS_NOT_CAPTURED">Digits Not Captured</label>
 					    </div>	
 					    <div class="checkbox">
-					      <label><input type="checkbox" name="callqualitycheck" value="one-way-audio">One way audio</label>
+					      <label><input type="checkbox" name="callqualitycheck" value="ECHO">Echo</label>
 					    </div>
 					    <div class="checkbox">
-					      <label><input type="checkbox" name="callqualitycheck" value="no-audio">No audio</label>
-					    </div>					    				    					    			    	
-				    </div>				    
+					      <label><input type="checkbox" name="callqualitycheck" value="HIGH_CONNECT_TIME">High Connect Time</label>
+					    </div>
+					    <div class="checkbox">
+					      <label><input type="checkbox" name="callqualitycheck" value="LOW_AUDIO_LEVEL">Low Audio Level</label>
+					    </div>	
+					    <div class="checkbox">
+					      <label><input type="checkbox" name="callqualitycheck" value="ONE_WAY_AUDIO">One Way audio</label>
+					    </div>	
+					    <div class="checkbox">
+					      <label><input type="checkbox" name="callqualitycheck" value="ROBOTIC_AUDIO">Robotic Audio</label>
+					    </div>	
+					    <div class="checkbox">
+					      <label><input type="checkbox" name="callqualitycheck" value="OTHER">Other</label>
+					    </div>	
+					    <label>* Mandatory to select atleast one issue for feedback</label>					    				    					    			    	
+				    </div>			    
 				</div>
 		    </div>
 		    <div class="modal-footer">
-		   		<button type="submit" class="btn btn-success" id=sendFeedback data-dismiss="modal">Send</button>
+		   		<button type="button" class="btn btn-success" id=sendFeedback >Send</button>
 		   		<button class="btn btn-danger" data-dismiss="modal" id=ignoreFeedback>Ignore</button>
 		    </div>
 		  </div>
@@ -547,11 +562,13 @@
 <div class="alertmsg">
 	<!-- media metrics message comes here -->
 </div>
+
 <script src="https://cdn.plivo.com/sdk/browser/v2/plivobeta.min.js"></script>
+
 <script src="js/audiovisual.js"></script>
 <script src="js/customclient.js"></script>
 <script type="text/javascript">
-	$( document ).ready(function() {
+	$(document).ready(function() {
 	    console.log( "HTML ready!" );
 	    $('[data-toggle="tooltip"]').tooltip();
 	    resetSettings();
