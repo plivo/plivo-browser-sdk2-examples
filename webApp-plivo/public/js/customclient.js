@@ -141,9 +141,15 @@ function onLoginFailed(reason){
 	$('.loader').remove()	
 }
 function onLogout(){
-	$('#phonestatus').html('Offline');
 	console.info('onLogout');
-	window.location.href=window.location.origin + window.location.pathname + "?logout"
+	$('#phonestatus').html('Offline');
+	$('#makecall').attr('class', 'btn btn-success btn-block flatbtn disabled');
+	$('#uiLogin').show();
+	$('#uiLogout').hide();
+	$('.feedback').hide();
+	$('.loader').remove();
+	$('#sipUserName').html('Not ready...');
+	$('.alertmsg').html('');
 }
 function onCalling(){
 	$('#callstatus').html('Progress...');	
@@ -254,7 +260,6 @@ function onIncomingCall(callerName, extraHeaders, callInfo){
 	callStorage.num = callerName;
 	// $('.callScreen').show();
 	// $('.inboundBeforeAnswer').show();
-  
 	$('#makecall').hide();
   const incomingNotification = Notify.success(`Incoming Call: ${callerName}`)
   .button('Answer', () => {
@@ -993,10 +998,14 @@ function initPhone(username, password){
 	plivoWebSdk.client.on('onConnectionChange', onConnectionChange); // To show connection change events
 
 	// Methods 
-	plivoWebSdk.client.setRingTone(true);
+	// plivoWebSdk.client.setRingTone(true);
 	plivoWebSdk.client.setRingToneBack(false);
 	plivoWebSdk.client.setConnectTone(true); // Dial beep will play till we get alert response from network. 
-	plivoWebSdk.client.setDebug("ALL"); // Allowed values are OFF, ERROR, WARN, INFO, DEBUG, ALL
+	if (options.debug) {
+		plivoWebSdk.client.setDebug(options.debug); // Allowed values are OFF, ERROR, WARN, INFO, DEBUG, ALL
+	} else {
+		plivoWebSdk.client.setDebug("ALL");
+	}
 
 	// plivoWebSdk.client.setConnectTone(false);
 	/** Handle browser issues
