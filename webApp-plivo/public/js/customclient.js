@@ -982,7 +982,7 @@ function initPhone(username, password){
 	plivoWebSdk.client.on('onTokenEvent', onLoginFailed);
 	plivoWebSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
 	plivoWebSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
-  plivoWebSdk.client.on('onIncomingCallIgnored', onIncomingCallCanceled);
+    plivoWebSdk.client.on('onIncomingCallIgnored', onIncomingCallCanceled);
 	plivoWebSdk.client.on('onCallFailed', onCallFailed);
 	plivoWebSdk.client.on('onCallAnswered', onCallAnswered);
 	plivoWebSdk.client.on('onCallTerminated', onCallTerminated);
@@ -998,8 +998,12 @@ function initPhone(username, password){
 	plivoWebSdk.client.setRingTone(true);
 	plivoWebSdk.client.setRingToneBack(false);
 	plivoWebSdk.client.setConnectTone(true); // Dial beep will play till we get alert response from network. 
-	plivoWebSdk.client.setDebug("ALL"); // Allowed values are OFF, ERROR, WARN, INFO, DEBUG, ALL
-
+	if (options.debug) {
+		// Allowed values are OFF, ERROR, WARN, INFO, DEBUG, ALL
+		plivoWebSdk.client.setDebug(options.debug); 
+	} else {
+		plivoWebSdk.client.setDebug("ALL");
+	}
 	// plivoWebSdk.client.setConnectTone(false);
 	/** Handle browser issues
 	* Sound devices won't work in firefox
