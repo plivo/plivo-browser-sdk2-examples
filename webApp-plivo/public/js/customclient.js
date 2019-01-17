@@ -2,6 +2,9 @@ var audioChunks,rec, audioGraph, audioStreamContext, uioptions,
 localStorage = window.localStorage;
 var callStorage = {}, timer = "00:00:00";
 
+const incomingNotifications = new Map();
+let incomingNotificationAlert = null;
+
 String.prototype.calltimer = function () {
     var sec_num = parseInt(this, 10);
     var hours   = Math.floor(sec_num / 3600);
@@ -146,16 +149,33 @@ function onCalling(){
 	$('#callstatus').html('Progress...');	
 	console.info('onCalling');
 }
-function onCallRemoteRinging(){
+function onCallRemoteRinging(callInfo){
+  	if (callInfo) console.log(JSON.stringify(callInfo));
 	$('#callstatus').html('Ringing...');
 	console.info('onCallRemoteRinging');
 }
-function onCallAnswered(){
+function onCallAnswered(callInfo){
 	console.info('onCallAnswered');
+  if (callInfo) console.info(JSON.stringify(callInfo));
 	$('#callstatus').html('Answered');
 	$('.hangup').show();
+  $('#makecall').hide();
+  if (callInfo && callInfo.direction === 'incoming') {
+    $('.inboundBeforeAnswer').hide();
+    $('.AfterAnswer').show();
+    $('#boundType').html('Inbound :');
+    $('#callNum').html(callInfo.src);
+    $('#callDuration').html('00:00:00');
+    $('.callinfo').show();
+    if (incomingNotifications.has(callInfo.callUUID)) {
+      const incomingCall = incomingNotifications.get(callInfo.callUUID)
+      incomingCall.hide();
+      incomingNotifications.delete(callInfo.callUUID);
+    }
+  }
 	// plivoWebSdk.client.logout();
 	timer = 0;
+  if (window.calltimer) clearInterval(window.calltimer);
 	window.calltimer = setInterval(function(){
 		timer = timer +1;
 		$('#callDuration').html(timer.toString().calltimer());
@@ -170,24 +190,50 @@ function onCallAnswered(){
 	recAudioFun(pcObj);
 	
 }
-function onCallTerminated(evt){
+function onCallTerminated(evt, callInfo){
 	$('#callstatus').html('Call Ended');
-	console.info('onCallTerminated');
+	console.info(`onCallTerminated ${evt}`);
 	if(sessionStorage.getItem('triggerFB')){
 		clearStars();
 		$('#clickFeedback').trigger('click');
 		// clear at end of every call
 		sessionStorage.removeItem('triggerFB');
 	}
-	callOff(evt);
+  if (callInfo && callInfo.callUUID === plivoWebSdk.client.getCallUUID()) {
+    console.info(JSON.stringify(callInfo));
+    callOff(evt);
+  } else if(!callInfo) {
+    callOff(evt);
+  }
+	
 }
-function onCallFailed(reason){
-	$('#callstatus').html('call failed');
-	console.info('onCallFailed',reason);
+function onCallFailed(reason, callInfo){
+  if (callInfo) {
+    console.log(JSON.stringify(callInfo));
+    console.info(`onCallFailed ${reason} ${callInfo.callUUID} ${callInfo.direction}`);
+  } else {
+    console.info(`onCallFailed ${reason}`);
+  }
+	
 	if(reason && /Denied Media/i.test(reason)){
+    $('#callstatus').html('call failed');
 		$('#mediaAccessBlock').modal('show');
 	};
-	callOff(reason);
+  if (!callInfo) {
+    callOff(reason);
+    return;
+  }
+  
+  if (incomingNotifications.has(callInfo.callUUID)) {
+    const incomingCall = incomingNotifications.get(callInfo.callUUID)
+    incomingCall.hide();
+    incomingNotifications.delete(callInfo.callUUID);
+  }
+  if (incomingNotifications.size === 0  && !plivoWebSdk.client.getCallUUID()) {
+    callOff(reason);
+  } else if (incomingNotifications.size === 0 && callInfo.direction === 'outgoing') {
+    callOff(reason);
+  }
 }
 function onMediaPermission(evt){
 	console.info('onMediaPermission',evt);
@@ -200,23 +246,66 @@ function onMediaPermission(evt){
 		audioGraph && audioGraph.start(window.localStream);
 	}
 }
-function onIncomingCall(callerName, extraHeaders){
+function onIncomingCall(callerName, extraHeaders, callInfo){
 
 	console.info('onIncomingCall : ', callerName, extraHeaders);
 	callStorage.startTime = date();
 	callStorage.mode = 'in';
 	callStorage.num = callerName;
-	$('#boundType').html('Incomming :');
-	$('#callNum').html(callerName);
-	$('#callDuration').html('00:00:00');
-	$('.callinfo').show();
-	$('.callScreen').show();
-	$('.inboundBeforeAnswer').show();
+	// $('.callScreen').show();
+	// $('.inboundBeforeAnswer').show();
+  
 	$('#makecall').hide();
+  const incomingNotification = Notify.success(`Incoming Call: ${callerName}`)
+  .button('Answer', () => {
+    console.info('Call accept clicked');
+    if (callInfo) {
+      plivoWebSdk.client.answer(callInfo.callUUID);
+    } else {
+      plivoWebSdk.client.answer();
+    }
+  	
+  })
+  .button('Reject', () => {
+    console.info('callReject');
+    if (callInfo) {
+      plivoWebSdk.client.reject(callInfo.callUUID);
+    } else {
+      plivoWebSdk.client.reject();
+    }  
+  })
+  .button('Ignore', () => {
+    console.info('call Ignored');
+    if (callInfo) {
+      plivoWebSdk.client.ignore(callInfo.callUUID);
+    } else {
+      plivoWebSdk.client.ignore();
+    }
+  });
+  if (callInfo) {
+    console.info(JSON.stringify(callInfo));
+    incomingNotifications.set(callInfo.callUUID, incomingNotification);
+  } else {
+    incomingNotificationAlert = incomingNotification;
+  }
+  
 }
-function onIncomingCallCanceled(){
-	console.info('onIncomingCallCanceled');
-	callOff();
+
+function onIncomingCallCanceled(callInfo){
+	if (callInfo) console.info(JSON.stringify(callInfo));
+  let incomingCallNotification;
+  if (callInfo) {
+    incomingCallNotification = incomingNotifications.get(callInfo.callUUID);
+    incomingNotifications.delete(callInfo.callUUID);
+  } else if(incomingNotificationAlert) {
+    incomingCallNotification = incomingNotificationAlert;
+  }
+  if (incomingCallNotification) {
+    incomingCallNotification.hide();
+  }
+  if (incomingNotifications.size === 0 && !plivoWebSdk.client.getCallUUID()) {
+    callOff();
+  }
 }
 
 function callOff(reason){
@@ -271,7 +360,8 @@ function resetSettings(source){
 		},
 		"dscp":true,
 		"enableTracking":true,
-		"dialType":"conference"
+		"dialType":"conference",
+    "allowMultipleIncomingCalls": true
 	};
 	var uiSettings = document.querySelector('#appSettings');
 	uiSettings.value = JSON.stringify(defaultSettings);
@@ -619,31 +709,33 @@ $('#sendFeedback').click(function(){
 	var score = $('#stars li.selected').last().data('value');
 	score = Number(score);
 	var lastCallid = plivoWebSdk.client.getLastCallUUID();
-	// var comment = $("input[type=radio][name=callqualitycheck]:checked").val() || "good";
-	var comment = "";
-	if(score == 5){
-		comment = "good";
-	}
+	var issues=[];
 	_forEach.call(document.querySelectorAll('[name="callqualitycheck"]'), e=>{
 		if(e.checked){
-			comment = comment? (comment + "," + e.value) : e.value;
+			issues.push(e.value);
 		}
 	});
-	if(sendFeedbackComment.value){
-		comment = comment? (comment + "," + sendFeedbackComment.value) : sendFeedbackComment.value;
-	}
-	if(!comment){
-		customAlert('feedback','Please select any comment');
-		return;
-	}
-	if(!score){
-		customAlert('feedback','Please select star');
-		return;		
-	}
+	var note = sendFeedbackComment.value;
 	var sendConsoleLogs = document.getElementById("sendConsoleLogs").checked;
-	plivoWebSdk.client.sendQualityFeedback(lastCallid, score , comment , sendConsoleLogs);
 
-	customAlert('Quality feedback ',lastCallid);
+	// New submitCallQualityFeedback takes parameteres callUUId, starRating, issues, note, sendConsoleLogs
+	plivoWebSdk.client.submitCallQualityFeedback(lastCallid, score, issues, note, sendConsoleLogs)
+	.then((result) => {
+		$('#feedbackStatus').html('Feedback sent');
+		$('#ignoreFeedback').click();
+		customAlert('Feedback sent','','info');
+	})
+	.catch((error) => {
+		$('#feedbackStatus').html(error);
+		customAlert('Could not send feedback','','warn');
+	});
+});
+
+$( "#ignoreFeedback" ).click(function() {		// Reset the feedback dialog for next time 
+	$('#stars li').removeClass("selected");
+	$('#sendFeedbackComment').empty();
+	$('.lowQualityRadios input').prop('checked', false);
+	$("#feedbackStatus").empty();
 });
 
 $('#clickLogin').click(function(e){
@@ -890,6 +982,7 @@ function initPhone(username, password){
 	plivoWebSdk.client.on('onTokenEvent', onLoginFailed);
 	plivoWebSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
 	plivoWebSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
+  plivoWebSdk.client.on('onIncomingCallIgnored', onIncomingCallCanceled);
 	plivoWebSdk.client.on('onCallFailed', onCallFailed);
 	plivoWebSdk.client.on('onCallAnswered', onCallAnswered);
 	plivoWebSdk.client.on('onCallTerminated', onCallTerminated);

@@ -1,0 +1,155 @@
+.messg {
+  position: fixed;
+  z-index: 9999;
+  left: 10px;
+  right: 10px;
+  border: 0 none;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-box-shadow: inset 0 -1px rgba(0,0,0,0.25);
+  -moz-box-shadow: inset 0 -1px rgba(0,0,0,0.25);
+  box-shadow: inset 0 -1px rgba(0,0,0,0.25);
+  font-size: 14px;
+  line-height: 1.4286;
+  text-align: left;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .messg {
+    left: 23%;
+    right: 23%;
+  }
+
+  .messg--left {
+    left: 10px !important;
+    right: 45%;
+  }
+
+  .messg--right {
+    left: 45%;
+    right: 10px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .messg {
+    left: 28%;
+    right: 28%;
+  }
+
+  .messg--left {
+    right: 55%;
+  }
+
+  .messg--right {
+    left: 55%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .messg {
+    left: 33%;
+    right: 33%;
+  }
+
+  .messg--left {
+    right: 65%;
+  }
+
+  .messg--right {
+    left: 65%;
+  }
+}
+
+.messg--default {
+  background-color: #323232;
+}
+
+.messg--success {
+  background-color: #4caf50;
+}
+
+.messg--info {
+  background-color: #00bcd4;
+}
+
+.messg--warning {
+  background-color: #ff9800;
+}
+
+.messg--error {
+  background-color: #f44336;
+}
+
+.messg__text {
+  padding: 10px 14px;
+}
+
+.messg__buttons {
+  float: right;
+  padding: 10px;
+}
+
+.messg,
+.messg__button {
+  color: #f5f5f5;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+.messg__button {
+  display: inline-block;
+  border: 0 none;
+  -webkit-border-radius: 1px;
+  -moz-border-radius: 1px;
+  -ms-border-radius: 1px;
+  -o-border-radius: 1px;
+  border-radius: 1px;
+  margin: 0 0 0 5px;
+  padding: 0 6px;
+  background: none;
+  cursor: pointer;
+}
+
+.messg--default .messg__button {
+  background-color: #212121;
+}
+
+.messg--default .messg__button:hover {
+  background-color: #000;
+}
+
+.messg--success .messg__button {
+  background-color: #43a047;
+}
+
+.messg--success .messg__button:hover {
+  background-color: #388e3c;
+}
+
+.messg--info .messg__button {
+  background-color: #00acc1;
+}
+
+.messg--info .messg__button:hover {
+  background-color: #0097a7;
+}
+
+.messg--warning .messg__button {
+  background-color: #fb8c00;
+}
+
+.messg--warning .messg__button:hover {
+  background-color: #f57c00;
+}
+
+.messg--error .messg__button {
+  background-color: #e53935;
+}
+
+.messg--error .messg__button:hover {
+  background-color: #d32f2f;
+}
