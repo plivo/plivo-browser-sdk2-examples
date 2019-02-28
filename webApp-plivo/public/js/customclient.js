@@ -156,7 +156,9 @@ function onCallRemoteRinging(callInfo){
 }
 function onMediaConnected(callInfo){
 	if (callInfo) console.log(JSON.stringify(callInfo));
+	if (callInfo && callInfo.direction === 'incoming') {
 $('#callstatus').html('Answered');
+	}
 console.info('onMediaConnected');
 }
 function onCallAnswered(callInfo){
