@@ -154,6 +154,13 @@ function onCallRemoteRinging(callInfo){
 	$('#callstatus').html('Ringing...');
 	console.info('onCallRemoteRinging');
 }
+function onMediaConnected(callInfo){
+	if (callInfo) console.log(JSON.stringify(callInfo));
+	if (callInfo && callInfo.direction === 'incoming') {
+$('#callstatus').html('Answered');
+	}
+console.info('onMediaConnected');
+}
 function onCallAnswered(callInfo){
 	console.info('onCallAnswered');
   if (callInfo) console.info(JSON.stringify(callInfo));
@@ -164,7 +171,8 @@ function onCallAnswered(callInfo){
     $('.inboundBeforeAnswer').hide();
     $('.AfterAnswer').show();
     $('#boundType').html('Inbound :');
-    $('#callNum').html(callInfo.src);
+		$('#callNum').html(callInfo.src);
+		$('#callstatus').html('Connecting...');
     $('#callDuration').html('00:00:00');
     $('.callinfo').show();
     if (incomingNotifications.has(callInfo.callUUID)) {
@@ -984,6 +992,7 @@ function initPhone(username, password){
 	plivoWebSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
   plivoWebSdk.client.on('onIncomingCallIgnored', onIncomingCallCanceled);
 	plivoWebSdk.client.on('onCallFailed', onCallFailed);
+	plivoWebSdk.client.on('onMediaConnected', onMediaConnected);
 	plivoWebSdk.client.on('onCallAnswered', onCallAnswered);
 	plivoWebSdk.client.on('onCallTerminated', onCallTerminated);
 	plivoWebSdk.client.on('onCalling', onCalling);
