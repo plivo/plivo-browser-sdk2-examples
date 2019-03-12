@@ -264,6 +264,7 @@ function onIncomingCall(callerName, extraHeaders, callInfo){
 	// $('.inboundBeforeAnswer').show();
   
 	$('#makecall').hide();
+	$('#callstatus').html('Ringing...');
   const incomingNotification = Notify.success(`Incoming Call: ${callerName}`)
   .button('Answer', () => {
     console.info('Call accept clicked');
