@@ -141,9 +141,14 @@ function onLoginFailed(reason){
 	$('.loader').remove()	
 }
 function onLogout(){
-	$('#phonestatus').html('Offline');
 	console.info('onLogout');
-	window.location.href=window.location.origin + window.location.pathname + "?logout"
+        $('#phonestatus').html('Offline');
+        $('#makecall').attr('class', 'btn btn-success btn-block flatbtn disabled');
+        $('#uiLogin').show();
+        $('#uiLogout').hide();
+        $('.feedback').hide();
+        $('.loader').remove();
+        $('.alertmsg').html('');
 }
 function onCalling(){
 	$('#callstatus').html('Progress...');	
