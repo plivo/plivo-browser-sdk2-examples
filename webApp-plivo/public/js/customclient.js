@@ -24,6 +24,7 @@ var _forEach = function(cb){
 
 if(typeof audioVisualize != "undefined"){
 	audioGraph =  new audioVisualize('audio-local');
+	audioGraphR =  new audioVisualize('audio-remote');
 }
 // UI tweaks
 $('#makecall').attr('class', 'btn btn-success btn-block flatbtn disabled');
@@ -53,7 +54,7 @@ function audioDeviceChange(e){
 		if(e.change == "added"){
 			customAlert(e.change,e.device.kind +" - "+e.device.label,'info');		
 		}else{
-			customAlert(e.change,e.device.kind +" - "+e.device.label,'warn');
+			customAlert(e.change,e.device.kind +" - "+e.device.label,'warn');		
 		}
 	}else{
 		customAlert('info','There is an audioDeviceChange but mediaPermission is not allowed yet');
@@ -198,6 +199,8 @@ function onCallAnswered(callInfo){
 	if(pcObj.pc && micVisualizer.checked && !window.localStream){
 		var stream = pcObj.pc.getLocalStreams()[0];
 		audioGraph && audioGraph.start(stream);
+		var streamR = pcObj.pc.getRemoteStreams()[0];
+		audioGraphR && audioGraphR.start(streamR);
 	}
 	// record calls if enabled
 	recAudioFun(pcObj);
@@ -351,6 +354,7 @@ function callOff(reason){
 		rec && rec.state != "inactive" && rec.stop();
 		// audio visuals
 		audioGraph && audioGraph.stop();
+		audioGraphR && audioGraphR.stop();
 	},3000);
 	// stop connect tone
 }
@@ -419,15 +423,33 @@ function updateAudioDevices(){
 	// Remove existing options if any
 	_forEach.call(document.querySelectorAll('#micDev option'), e=>e.remove());
 	_forEach.call(document.querySelectorAll('#ringtoneDev option'), e=>e.remove());
-
+	currentSetMicDeviceId = plivoWebSdk.client.audio.microphoneDevices.get();
+	currentSetRingToneDeviceId = plivoWebSdk.client.audio.ringtoneDevices.get();
+	currentSetSpeakerDeviceId = plivoWebSdk.client.audio.speakerDevices.get();
 	plivoWebSdk.client.audio.availableDevices()
 	.then(function(e){
 		e.forEach(function(dev){
-			if(dev.label && dev.kind == "audioinput")
-				$('#micDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
+			if(dev.label && dev.kind == "audioinput"){
+				if (currentSetMicDeviceId == "" || currentSetMicDeviceId != dev.deviceId){
+					$('#micDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
+				}
+				else if(currentSetMicDeviceId == dev.deviceId){
+					$('#micDev').append('<option value='+dev.deviceId+' selected >'+dev.label+'</option>')
+				}
+			}
 			if(dev.label && dev.kind == "audiooutput"){
-				$('#ringtoneDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>');
-				$('#speakerDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')		
+				if (currentSetRingToneDeviceId == "" || currentSetRingToneDeviceId != dev.deviceId){
+					$('#ringtoneDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>');
+				}else if(currentSetRingToneDeviceId == dev.deviceId){
+					$('#ringtoneDev').append('<option value='+dev.deviceId+' selected >'+dev.label+'</option>');
+				}
+
+				if(currentSetSpeakerDeviceId == "" || currentSetSpeakerDeviceId != dev.deviceId){
+					$('#speakerDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
+				}
+				else if(currentSetSpeakerDeviceId == dev.deviceId){
+					$('#speakerDev').append('<option value='+dev.deviceId+' selected >'+dev.label+'</option>')
+				}		
 			}
 		});
 	})
