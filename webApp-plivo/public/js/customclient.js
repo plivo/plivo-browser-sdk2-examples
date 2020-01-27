@@ -383,7 +383,8 @@ function resetSettings(source){
 		"dscp":true,
 		"enableTracking":true,
 		"dialType":"conference",
-    "allowMultipleIncomingCalls": true
+		"allowMultipleIncomingCalls": true,
+		"closeProtection": false
 	};
 	var uiSettings = document.querySelector('#appSettings');
 	uiSettings.value = JSON.stringify(defaultSettings);
