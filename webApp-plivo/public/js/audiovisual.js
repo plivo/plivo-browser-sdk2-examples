@@ -30,7 +30,8 @@ function audioVisualize(canvasId) {
         for(var j = 0; j < fFrequencyData.length; j++) {
             total += fFrequencyData[j];
         }
-        
+        //console.log("frequency data");
+        //console.log(fFrequencyData);
         var avg = total / fFrequencyData.length;
         avg = avg / 1.2;
         //bar style visual representation

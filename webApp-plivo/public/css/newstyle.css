@@ -344,3 +344,16 @@ p
   font-weight: 600;
   font-family: sans-serif;
 }
+.volume-indicators {
+  display: none;
+  padding: 10px;
+  margin-top: 20px;
+  width: 500px;
+  text-align: left;
+}
+
+.volumeBar{
+  background: green;
+  height: 30px;
+  border-radius: 15px;
+}
