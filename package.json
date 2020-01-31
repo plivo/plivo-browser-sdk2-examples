@@ -13,7 +13,7 @@
     "semver": "npm version $(semver $npm_package_version -i $release --preid $preid)"
   },
   "dependencies": {
-    "ejs": "~1.0.0",
+    "ejs": "~2.5.5",
     "express": "^4.9.8"
   },
   "devDependencies": {
