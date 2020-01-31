@@ -24,7 +24,6 @@ var _forEach = function(cb){
 
 if(typeof audioVisualize != "undefined"){
 	audioGraph =  new audioVisualize('audio-local');
-	audioGraphR =  new audioVisualize('audio-remote');
 }
 // UI tweaks
 $('#makecall').attr('class', 'btn btn-success btn-block flatbtn disabled');
@@ -199,8 +198,6 @@ function onCallAnswered(callInfo){
 	if(pcObj.pc && micVisualizer.checked && !window.localStream){
 		var stream = pcObj.pc.getLocalStreams()[0];
 		audioGraph && audioGraph.start(stream);
-		var streamR = pcObj.pc.getRemoteStreams()[0];
-		audioGraphR && audioGraphR.start(streamR);
 	}
 	// record calls if enabled
 	recAudioFun(pcObj);
@@ -354,7 +351,6 @@ function callOff(reason){
 		rec && rec.state != "inactive" && rec.stop();
 		// audio visuals
 		audioGraph && audioGraph.stop();
-		audioGraphR && audioGraphR.stop();
 	},3000);
 	// stop connect tone
 }
