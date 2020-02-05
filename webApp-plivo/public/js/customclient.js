@@ -1,9 +1,15 @@
-var audioChunks,rec, audioGraph, audioStreamContext, uioptions,
+var audioChunks,rec, audioGraph,audioGraphR, audioStreamContext, uioptions,
 localStorage = window.localStorage;
 var callStorage = {}, timer = "00:00:00";
 
 const incomingNotifications = new Map();
 let incomingNotificationAlert = null;
+
+
+var outputVolumeBar = document.getElementById('output-volume');
+var inputVolumeBar = document.getElementById('input-volume');
+var volumeIndicators = document.getElementById('volume-indicators');
+volumeIndicators.style.display = 'none';
 
 String.prototype.calltimer = function () {
     var sec_num = parseInt(this, 10);
@@ -201,7 +207,8 @@ function onCallAnswered(callInfo){
 	}
 	// record calls if enabled
 	recAudioFun(pcObj);
-	
+
+	volumeIndicators.style.display = 'block';
 }
 function onCallTerminated(evt, callInfo){
 	$('#callstatus').html('Call Ended');
@@ -353,6 +360,7 @@ function callOff(reason){
 		audioGraph && audioGraph.stop();
 	},3000);
 	// stop connect tone
+	volumeIndicators.style.display = 'none';
 }
 
 
@@ -375,7 +383,8 @@ function resetSettings(source){
 		"dscp":true,
 		"enableTracking":true,
 		"dialType":"conference",
-    "allowMultipleIncomingCalls": true
+		"allowMultipleIncomingCalls": true,
+		"closeProtection": false
 	};
 	var uiSettings = document.querySelector('#appSettings');
 	uiSettings.value = JSON.stringify(defaultSettings);
@@ -624,6 +633,14 @@ function tokenGenFunc(){
 			cb('failed',null);
 		});		
 	}
+}
+
+
+function onVolume(audioStats){
+	inputVolume = audioStats.inputVolume;
+	outputVolume =  audioStats.outputVolume;
+	inputVolumeBar.style.width = Math.floor(inputVolume * 400) + 'px';
+    outputVolumeBar.style.width = Math.floor(outputVolume * 400) + 'px';
 }
 /** 
 * Hangup calls on page reload / close
@@ -1026,6 +1043,7 @@ function initPhone(username, password){
 	plivoWebSdk.client.on('audioDeviceChange',audioDeviceChange);
 	plivoWebSdk.client.on('onPermissionNeeded', onPermissionNeeded); 
 	plivoWebSdk.client.on('onConnectionChange', onConnectionChange); // To show connection change events
+	plivoWebSdk.client.on('volume', onVolume);
 
 	// Methods 
 	plivoWebSdk.client.setRingTone(true);
