@@ -211,17 +211,26 @@
 			                                    Microphone</p>
 			                            </span>
 			                        </div>
-			                    </div>
+								</div>
 			                </div>
 				        	<div class="col-md-6">
-				        		<canvas id="audio-local"></canvas>
+
+								<div id="volume-indicators">
+									<label style="font-weight: 100;">Local Volume</label>
+									<div class="volumeBar" id="input-volume"></div><br/>
+									<label style="font-weight: 100;">Remote Volume</label>
+									<div class="volumeBar" id="output-volume"></div>
+								</div>						
+								
+								<canvas id="audio-local"></canvas>
+
 				        		<div id=recPlayerLayout>
 				        			<audio id=recPlayer></audio>
 				        			<a class="btn btn-info btn-sm" id=audioDownload>Download</a>
-				        			<a class="btn btn-default btn-sm" id="clearRecPlayer"> Ignore</a>
-				        		</div>
-				        	</div>			                
-			            </div>	            			        	
+				        			<a class="btn btn-default btn-sm" id="clearRecPlayer"> Ignore</a>	                
+						</div>	 
+							  </div>
+						</div>           			        	
 			        </div>
 			    </div>
 			</div>
@@ -313,8 +322,8 @@
 				    </div>
 				    <div>
 				    	<h2>Reload audio devices</h2>
-				    	<button type=button class="btn btn-success btn-sm" id=allowAudioDevices>refresh</button>
-			    		<h3 class="text-center text-success">USB headsets works better in reducing background noise and echo.</h3>					    	
+						<button type=button class="btn btn-success btn-sm" id=allowAudioDevices>refresh</button>
+						<h3 class="text-center text-success">USB headsets works better in reducing background noise and echo.</h3>					    	
 				    </div>
 				  </form>
 		    </div>
@@ -511,7 +520,7 @@
 					      <label><input type="checkbox" name="callqualitycheck" value="BROKEN_AUDIO">Broken Audio</label>
 					    </div>
 					    <div class="checkbox">
-					      <label><input type="checkbox" name="callqualitycheck" value="CALL_DROPPPED">Call Dropped</label>
+					      <label><input type="checkbox" name="callqualitycheck" value="CALL_DROPPED">Call Dropped</label>
 					    </div>
 					    <div class="checkbox">
 					      <label><input type="checkbox" name="callqualitycheck" value="CALLERID_ISSUES">Callerid Issue</label>
@@ -535,7 +544,7 @@
 					      <label><input type="checkbox" name="callqualitycheck" value="ROBOTIC_AUDIO">Robotic Audio</label>
 					    </div>	
 					    <div class="checkbox">
-					      <label><input type="checkbox" name="callqualitycheck" value="OTHER">Other</label>
+					      <label><input type="checkbox" name="callqualitycheck" value="OTHERS">Others</label>
 					    </div>	
 					    <label>* Mandatory to select atleast one issue for feedback</label>					    				    					    			    	
 				    </div>			    
@@ -564,7 +573,6 @@
 </div>
 
 <script src="https://cdn.plivo.com/sdk/browser/v2/plivobeta.min.js"></script>
-
 <script src="js/audiovisual.js"></script>
 <script src="js/customclient.js"></script>
 <script type="text/javascript">

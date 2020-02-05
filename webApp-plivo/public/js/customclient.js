@@ -1,9 +1,15 @@
-var audioChunks,rec, audioGraph, audioStreamContext, uioptions,
+var audioChunks,rec, audioGraph,audioGraphR, audioStreamContext, uioptions,
 localStorage = window.localStorage;
 var callStorage = {}, timer = "00:00:00";
 
 const incomingNotifications = new Map();
 let incomingNotificationAlert = null;
+
+
+var outputVolumeBar = document.getElementById('output-volume');
+var inputVolumeBar = document.getElementById('input-volume');
+var volumeIndicators = document.getElementById('volume-indicators');
+volumeIndicators.style.display = 'none';
 
 String.prototype.calltimer = function () {
     var sec_num = parseInt(this, 10);
@@ -53,7 +59,7 @@ function audioDeviceChange(e){
 		if(e.change == "added"){
 			customAlert(e.change,e.device.kind +" - "+e.device.label,'info');		
 		}else{
-			customAlert(e.change,e.device.kind +" - "+e.device.label,'warn');
+			customAlert(e.change,e.device.kind +" - "+e.device.label,'warn');		
 		}
 	}else{
 		customAlert('info','There is an audioDeviceChange but mediaPermission is not allowed yet');
@@ -141,9 +147,14 @@ function onLoginFailed(reason){
 	$('.loader').remove()	
 }
 function onLogout(){
-	$('#phonestatus').html('Offline');
 	console.info('onLogout');
-	window.location.href=window.location.origin + window.location.pathname + "?logout"
+        $('#phonestatus').html('Offline');
+        $('#makecall').attr('class', 'btn btn-success btn-block flatbtn disabled');
+        $('#uiLogin').show();
+        $('#uiLogout').hide();
+        $('.feedback').hide();
+        $('.loader').remove();
+        $('.alertmsg').html('');
 }
 function onCalling(){
 	$('#callstatus').html('Progress...');	
@@ -153,6 +164,13 @@ function onCallRemoteRinging(callInfo){
   	if (callInfo) console.log(JSON.stringify(callInfo));
 	$('#callstatus').html('Ringing...');
 	console.info('onCallRemoteRinging');
+}
+function onMediaConnected(callInfo){
+	if (callInfo) console.log(JSON.stringify(callInfo));
+	if (callInfo && callInfo.direction === 'incoming') {
+$('#callstatus').html('Answered');
+	}
+console.info('onMediaConnected');
 }
 function onCallAnswered(callInfo){
 	console.info('onCallAnswered');
@@ -164,7 +182,8 @@ function onCallAnswered(callInfo){
     $('.inboundBeforeAnswer').hide();
     $('.AfterAnswer').show();
     $('#boundType').html('Inbound :');
-    $('#callNum').html(callInfo.src);
+		$('#callNum').html(callInfo.src);
+		$('#callstatus').html('Connecting...');
     $('#callDuration').html('00:00:00');
     $('.callinfo').show();
     if (incomingNotifications.has(callInfo.callUUID)) {
@@ -188,7 +207,8 @@ function onCallAnswered(callInfo){
 	}
 	// record calls if enabled
 	recAudioFun(pcObj);
-	
+
+	volumeIndicators.style.display = 'block';
 }
 function onCallTerminated(evt, callInfo){
 	$('#callstatus').html('Call Ended');
@@ -256,6 +276,7 @@ function onIncomingCall(callerName, extraHeaders, callInfo){
 	// $('.inboundBeforeAnswer').show();
   
 	$('#makecall').hide();
+	$('#callstatus').html('Ringing...');
   const incomingNotification = Notify.success(`Incoming Call: ${callerName}`)
   .button('Answer', () => {
     console.info('Call accept clicked');
@@ -339,6 +360,7 @@ function callOff(reason){
 		audioGraph && audioGraph.stop();
 	},3000);
 	// stop connect tone
+	volumeIndicators.style.display = 'none';
 }
 
 
@@ -361,7 +383,8 @@ function resetSettings(source){
 		"dscp":true,
 		"enableTracking":true,
 		"dialType":"conference",
-    "allowMultipleIncomingCalls": true
+		"allowMultipleIncomingCalls": true,
+		"closeProtection": false
 	};
 	var uiSettings = document.querySelector('#appSettings');
 	uiSettings.value = JSON.stringify(defaultSettings);
@@ -405,15 +428,33 @@ function updateAudioDevices(){
 	// Remove existing options if any
 	_forEach.call(document.querySelectorAll('#micDev option'), e=>e.remove());
 	_forEach.call(document.querySelectorAll('#ringtoneDev option'), e=>e.remove());
-
+	currentSetMicDeviceId = plivoWebSdk.client.audio.microphoneDevices.get();
+	currentSetRingToneDeviceId = plivoWebSdk.client.audio.ringtoneDevices.get();
+	currentSetSpeakerDeviceId = plivoWebSdk.client.audio.speakerDevices.get();
 	plivoWebSdk.client.audio.availableDevices()
 	.then(function(e){
 		e.forEach(function(dev){
-			if(dev.label && dev.kind == "audioinput")
-				$('#micDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
+			if(dev.label && dev.kind == "audioinput"){
+				if (currentSetMicDeviceId == "" || currentSetMicDeviceId != dev.deviceId){
+					$('#micDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
+				}
+				else if(currentSetMicDeviceId == dev.deviceId){
+					$('#micDev').append('<option value='+dev.deviceId+' selected >'+dev.label+'</option>')
+				}
+			}
 			if(dev.label && dev.kind == "audiooutput"){
-				$('#ringtoneDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>');
-				$('#speakerDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')		
+				if (currentSetRingToneDeviceId == "" || currentSetRingToneDeviceId != dev.deviceId){
+					$('#ringtoneDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>');
+				}else if(currentSetRingToneDeviceId == dev.deviceId){
+					$('#ringtoneDev').append('<option value='+dev.deviceId+' selected >'+dev.label+'</option>');
+				}
+
+				if(currentSetSpeakerDeviceId == "" || currentSetSpeakerDeviceId != dev.deviceId){
+					$('#speakerDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
+				}
+				else if(currentSetSpeakerDeviceId == dev.deviceId){
+					$('#speakerDev').append('<option value='+dev.deviceId+' selected >'+dev.label+'</option>')
+				}		
 			}
 		});
 	})
@@ -592,6 +633,14 @@ function tokenGenFunc(){
 			cb('failed',null);
 		});		
 	}
+}
+
+
+function onVolume(audioStats){
+	inputVolume = audioStats.inputVolume;
+	outputVolume =  audioStats.outputVolume;
+	inputVolumeBar.style.width = Math.floor(inputVolume * 400) + 'px';
+    outputVolumeBar.style.width = Math.floor(outputVolume * 400) + 'px';
 }
 /** 
 * Hangup calls on page reload / close
@@ -984,6 +1033,7 @@ function initPhone(username, password){
 	plivoWebSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
   plivoWebSdk.client.on('onIncomingCallIgnored', onIncomingCallCanceled);
 	plivoWebSdk.client.on('onCallFailed', onCallFailed);
+	plivoWebSdk.client.on('onMediaConnected', onMediaConnected);
 	plivoWebSdk.client.on('onCallAnswered', onCallAnswered);
 	plivoWebSdk.client.on('onCallTerminated', onCallTerminated);
 	plivoWebSdk.client.on('onCalling', onCalling);
@@ -993,6 +1043,7 @@ function initPhone(username, password){
 	plivoWebSdk.client.on('audioDeviceChange',audioDeviceChange);
 	plivoWebSdk.client.on('onPermissionNeeded', onPermissionNeeded); 
 	plivoWebSdk.client.on('onConnectionChange', onConnectionChange); // To show connection change events
+	plivoWebSdk.client.on('volume', onVolume);
 
 	// Methods 
 	plivoWebSdk.client.setRingTone(true);
