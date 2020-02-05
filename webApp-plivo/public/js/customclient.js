@@ -208,7 +208,7 @@ function onCallAnswered(callInfo){
 	// record calls if enabled
 	recAudioFun(pcObj);
 
-	volumeIndicators.style.display = 'block';
+	
 }
 function onCallTerminated(evt, callInfo){
 	$('#callstatus').html('Call Ended');
@@ -342,6 +342,7 @@ function callOff(reason){
 	$('.hangup').hide();
 	$('#makecall').show();
 	resetMute();
+	volumeIndicators.style.display = 'none';
 	window.calltimer? clearInterval(window.calltimer) : false;
 	callStorage.dur = timer.toString().calltimer();
 	if(timer == "00:00:00" && callStorage.mode == "in"){
@@ -360,7 +361,7 @@ function callOff(reason){
 		audioGraph && audioGraph.stop();
 	},3000);
 	// stop connect tone
-	volumeIndicators.style.display = 'none';
+	
 }
 
 
@@ -618,6 +619,7 @@ function tokenGenFunc(){
 
 
 function onVolume(audioStats){
+	volumeIndicators.style.display = 'block';
 	inputVolume = audioStats.inputVolume;
 	outputVolume =  audioStats.outputVolume;
 	inputVolumeBar.style.width = Math.floor(inputVolume * 400) + 'px';
@@ -630,6 +632,27 @@ function onVolume(audioStats){
 window.onbeforeunload = function () {
     // plivoWebSdk.client && plivoWebSdk.client.logout();
 };
+
+
+
+function loginJWT(){
+	var JwtToken = function() {
+		Token.apply();
+	};
+	JwtToken.prototype = Object.create(Token.prototype);
+	JwtToken.prototype.constructor = JwtToken;
+	  
+	JwtToken.prototype.getToken = function() {
+		console.log('----------testing JWT----------');
+	}
+	var jwtToken = new JwtToken();
+  
+    jwtToken.getToken();
+}
+
+  
+  
+
 
 /*
 	Capture UI onclick triggers 
@@ -999,11 +1022,13 @@ function starFeedback(){
 // variables to declare 
 
 var plivoWebSdk; // this will be retrived from settings in UI
+var Token;
 
 function initPhone(username, password){
 	var options = refreshSettings();
 	plivoWebSdk = new window.Plivo(options);
-	
+	Token = plivoWebSdk.client.Token;
+
 	plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported); 
 	plivoWebSdk.client.on('onLogin', onLogin);
 	// plivoWebSdk.client.on('onTokenRegister',onLogin);
@@ -1041,4 +1066,5 @@ function initPhone(username, password){
 	displayCallHistory();
 	starFeedback();
 	console.log('initPhone ready!')
+	loginJWT();
 }
