@@ -211,17 +211,26 @@
 			                                    Microphone</p>
 			                            </span>
 			                        </div>
-			                    </div>
+								</div>
 			                </div>
 				        	<div class="col-md-6">
+
+								<div id="volume-indicators">
+									<label style="font-weight: 100;">Local Volume</label>
+									<div class="volumeBar" id="input-volume"></div><br/>
+									<label style="font-weight: 100;">Remote Volume</label>
+									<div class="volumeBar" id="output-volume"></div>
+								</div>						
+								
 								<canvas id="audio-local"></canvas>
+
 				        		<div id=recPlayerLayout>
 				        			<audio id=recPlayer></audio>
 				        			<a class="btn btn-info btn-sm" id=audioDownload>Download</a>
-				        			<a class="btn btn-default btn-sm" id="clearRecPlayer"> Ignore</a>
-				        		</div>
-				        	</div>			                
-			            </div>	            			        	
+				        			<a class="btn btn-default btn-sm" id="clearRecPlayer"> Ignore</a>	                
+						</div>	 
+							  </div>
+						</div>           			        	
 			        </div>
 			    </div>
 			</div>
@@ -563,8 +572,8 @@
 	<!-- media metrics message comes here -->
 </div>
 
-<script src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script>
-
+<!--script src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script-->
+<script src="http://localhost:9000/plivowebsdk.js"></script>
 <script src="js/audiovisual.js"></script>
 <script src="js/customclient.js"></script>
 <script type="text/javascript">
