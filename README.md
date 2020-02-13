@@ -432,6 +432,7 @@ $('#sendFeedback').click(function(){
 ### Real-time volume indicator on UI
 Display user real-time volume of mic and speaker.
 'volume' event handler will be invoked 60 times per second. The handler receives inputVolume and outputVolume as percentages of maximum volume represented by a floating point number between 0.0 and 1.0, inclusive. This value represents a range of relative decibel values between -100dB and -30dB.
+
 ![plivo-websdk-2.0-example](img/volume.png)
 
 ```js
