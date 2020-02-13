@@ -636,7 +636,7 @@ function tokenGenFunc(){
 }
 
 
-function onVolume(audioStats){
+function volume(audioStats){
 	inputVolume = audioStats.inputVolume;
 	outputVolume =  audioStats.outputVolume;
 	inputVolumeBar.style.width = Math.floor(inputVolume * 400) + 'px';
@@ -1043,7 +1043,7 @@ function initPhone(username, password){
 	plivoWebSdk.client.on('audioDeviceChange',audioDeviceChange);
 	plivoWebSdk.client.on('onPermissionNeeded', onPermissionNeeded); 
 	plivoWebSdk.client.on('onConnectionChange', onConnectionChange); // To show connection change events
-	plivoWebSdk.client.on('volume', onVolume);
+	plivoWebSdk.client.on('volume', volume);
 
 	// Methods 
 	plivoWebSdk.client.setRingTone(true);

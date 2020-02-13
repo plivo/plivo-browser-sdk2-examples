@@ -50,6 +50,8 @@ This is where we initialise a new Plivo object by passing `options` as `plivoWeb
         plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
         plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
         plivoWebSdk.client.on('audioDeviceChange',audioDeviceChange);
+        plivoWebSdk.client.on('onConnectionChange', onConnectionChange);
+	      plivoWebSdk.client.on('volume', volume);
         plivoWebSdk.client.setRingTone(true);
         plivoWebSdk.client.setRingToneBack(true);
         console.log('initPhone ready!')
@@ -425,4 +427,18 @@ $('#sendFeedback').click(function(){
   plivoWebSdk.client.sendQualityFeedback(lastCallid,score,comment);
   customAlert('Quality feedback ',lastCallid);
 });
+```
+
+### Real-time volume indicator on UI
+Display user real-time volume of mic and speaker.
+'volume' event handler will be invoked 60 times per second. The handler receives inputVolume and outputVolume as percentages of maximum volume represented by a floating point number between 0.0 and 1.0, inclusive. This value represents a range of relative decibel values between -100dB and -30dB.
+![plivo-websdk-2.0-example](img/volume.png)
+
+```js
+function volume(audioStats){
+	inputVolume = audioStats.inputVolume;
+	outputVolume =  audioStats.outputVolume;
+	inputVolumeBar.style.width = Math.floor(inputVolume * 400) + ‘px’;
+        outputVolumeBar.style.width = Math.floor(outputVolume * 400) + ‘px’;
+}
 ```
