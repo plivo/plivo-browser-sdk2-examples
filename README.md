@@ -51,7 +51,7 @@ This is where we initialise a new Plivo object by passing `options` as `plivoWeb
         plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
         plivoWebSdk.client.on('audioDeviceChange',audioDeviceChange);
         plivoWebSdk.client.on('onConnectionChange', onConnectionChange);
-	      plivoWebSdk.client.on('volume', volume);
+	plivoWebSdk.client.on('volume', volume);
         plivoWebSdk.client.setRingTone(true);
         plivoWebSdk.client.setRingToneBack(true);
         console.log('initPhone ready!')
