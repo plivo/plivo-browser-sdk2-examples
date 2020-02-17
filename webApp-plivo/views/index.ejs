@@ -8,6 +8,8 @@
 	<script src="lib/jquery.min.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/hmac-sha256.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64-min.js"></script>
 	<link rel="stylesheet" href="/css/notify.css">
 	<script src="/lib/notify.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/newstyle.css"> 
@@ -227,7 +229,7 @@
 				        			<audio id=recPlayer></audio>
 				        			<a class="btn btn-info btn-sm" id=audioDownload>Download</a>
 				        			<a class="btn btn-default btn-sm" id="clearRecPlayer"> Ignore</a>	                
-						</div>	 
+						</div>
 							  </div>
 						</div>           			        	
 			        </div>
@@ -582,6 +584,51 @@
 	    resetSettings();
 	    initPhone();
 	});
+
+	function base64url(source) {
+		// Encode in classical base64
+		encodedSource = CryptoJS.enc.Base64.stringify(source);
+		
+		// Remove padding equal characters
+		encodedSource = encodedSource.replace(/=+$/, '');
+		
+		// Replace characters according to base64url specifications
+		encodedSource = encodedSource.replace(/\+/g, '-');
+		encodedSource = encodedSource.replace(/\//g, '_');
+		
+		return encodedSource;
+	}
+
+	function getToken(){
+
+		var header = {
+			"alg": "HS256",
+			"typ": "JWT",
+			"cty": "plivo;v=1"
+		};
+
+		var data = {
+			"jti": "username-14521231",
+			"iss": "AUTHID1234567890",
+			"sub":  "endpointUsername",
+			"nbf": "1450471147",
+			"exp": "1450474747",
+			"grants":" {'username': 'endpoint-username','Voice':{'incoming_allow':true,'outgoing_allow':true}"
+		};
+		var signature=""
+		var secret = "Keep it secret AUTHID1234567890";
+		var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header));
+		var encodedHeader = base64url(stringifiedHeader);
+
+		var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data));
+		var encodedData = base64url(stringifiedData);
+		signature = encodedHeader + "." + encodedData;
+		signature = CryptoJS.HmacSHA256(signature, secret);
+		
+		signature = base64url(signature);
+		
+		document.getElementById("signature").innerText = signature;
+   }
 </script>
 </body>
 </html>

@@ -635,19 +635,48 @@ window.onbeforeunload = function () {
 
 
 
-function loginJWT(){
+function implementToken(){
 	var JwtToken = function() {
 		Token.apply();
 	};
 	JwtToken.prototype = Object.create(Token.prototype);
 	JwtToken.prototype.constructor = JwtToken;
 	  
-	JwtToken.prototype.getToken = function() {
-		console.log('----------testing JWT----------');
+	JwtToken.prototype.getToken = async function() {
+		//get JWT Token
+		
+		
+			const url = "http://127.0.0.1:5000/jwttoken"
+			const requestBody = {
+				"start_time":12345,
+				"end_time":12465
+			}
+			const response = await fetch(url, {
+								  method: 'POST',
+								  body: JSON.stringify(requestBody), // string or object
+					  			  headers: {
+									'Content-Type': 'application/json'
+					  			  }
+							});
+			const myJson = await response.json(); //extract JSON from the http response
+					// do something with myJson
+			return (myJson['token'])
+				
+		  
+		//jwtToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJ1c2VybmFtZS0xNDUyMTIzMSIsImlzcyI6IkFVVEhJRDEyMzQ1Njc4OTAiLCJzdWIiOiJFUEVJR0hUMTgwODI5MTAwMzQ5IiwibmJmIjoiMTQ1MDQ3MTE0NyIsImV4cCI6IjE0NTA0NzEzNDciLCJncmFudHMiOiIgeyd1c2VybmFtZSc6ICdlbmRwb2ludC11c2VybmFtZScsJ1ZvaWNlJzp7J2luY29taW5nX2FsbG93Jzp0cnVlLCdvdXRnb2luZ19hbGxvdyc6dHJ1ZX0ifQ.hMq2iB5YynRFnooUiE9Sx8Psyg8g7WDQz4-yMbDIHwM";
+		//return tToken;
 	}
 	var jwtToken = new JwtToken();
-  
-    jwtToken.getToken();
+	//resp = jwtToken.getToken().then(resp => {console.log(resp)})
+	//console.log(resp);
+	
+    loginJWT(jwtToken);
+}
+
+function loginJWT(jwtToken){
+	console.log("calling json token")
+	
+	plivoWebSdk.client.loginJWT(jwtToken);
 }
 
   
@@ -1027,7 +1056,7 @@ var Token;
 function initPhone(username, password){
 	var options = refreshSettings();
 	plivoWebSdk = new window.Plivo(options);
-	Token = plivoWebSdk.client.Token;
+	Token = plivoWebSdk.client.token;
 
 	plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported); 
 	plivoWebSdk.client.on('onLogin', onLogin);
@@ -1037,7 +1066,7 @@ function initPhone(username, password){
 	plivoWebSdk.client.on('onTokenEvent', onLoginFailed);
 	plivoWebSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
 	plivoWebSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
-  plivoWebSdk.client.on('onIncomingCallIgnored', onIncomingCallCanceled);
+    plivoWebSdk.client.on('onIncomingCallIgnored', onIncomingCallCanceled);
 	plivoWebSdk.client.on('onCallFailed', onCallFailed);
 	plivoWebSdk.client.on('onMediaConnected', onMediaConnected);
 	plivoWebSdk.client.on('onCallAnswered', onCallAnswered);
@@ -1066,5 +1095,32 @@ function initPhone(username, password){
 	displayCallHistory();
 	starFeedback();
 	console.log('initPhone ready!')
-	loginJWT();
+	implementToken();
+}
+
+function generateJwtToken(){
+	var header = {
+		"alg": "HS256",
+		"typ": "JWT"
+	};
+	var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header));
+	var encodedHeader = base64url(stringifiedHeader);
+
+	var data = {
+	"id": 1337,
+	"username": "john.doe"
+	};
+	var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data));
+	var encodedData = base64url(stringifiedData);
+	var token = encodedHeader + "." + encodedData;
+	var secret = "KeepYourAuthToken";
+
+	var signature = CryptoJS.HmacSHA256(token, secret);
+	signature = base64url(signature);
+
+	var signedToken = token + "." + signature;
+	console.log(signedToken);
+	return signedToken;
+
+
 }
