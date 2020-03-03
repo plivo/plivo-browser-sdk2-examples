@@ -10,6 +10,7 @@ var outputVolumeBar = document.getElementById('output-volume');
 var inputVolumeBar = document.getElementById('input-volume');
 var volumeIndicators = document.getElementById('volume-indicators');
 volumeIndicators.style.display = 'none';
+var isJWTLogin = false;
 
 String.prototype.calltimer = function () {
     var sec_num = parseInt(this, 10);
@@ -646,17 +647,19 @@ function implementToken(){
 		//get JWT Token
 		
 		
-			const url = "http://127.0.0.1:5000/jwttoken"
+			const url = "https://jwttokengen.herokuapp.com/jwttoken"
 			const requestBody = {
-				"start_time":12345,
-				"end_time":12465
+				"auth_id" : $('#authId').val(),
+				"auth_token" : $('#authToken').val(),
+				"start_time":parseInt(Date.now()/1000),
+				"end_time":parseInt(Date.now()/1000) + Number($('#tokenExpiry').val()),
 			}
+			
+			
 			const response = await fetch(url, {
 								  method: 'POST',
 								  body: JSON.stringify(requestBody), // string or object
-					  			  headers: {
-									'Content-Type': 'application/json'
-					  			  }
+					  			  headers: {'Content-Type' : 'application/json'}
 							});
 			const myJson = await response.json(); //extract JSON from the http response
 					// do something with myJson
@@ -686,6 +689,20 @@ function loginJWT(jwtToken){
 /*
 	Capture UI onclick triggers 
 */
+
+$("#jwtFlag").click(function() {
+	isJWTLogin = !isJWTLogin
+	var jwtLoginWindow = document.getElementById('jwtLoginWindow');
+	var loginWindow = document.getElementById('loginWindow');
+	if(isJWTLogin){
+		//$("#loginWindow").hide(); 
+		loginWindow.style.display = 'none';
+		jwtLoginWindow.style.display = 'block';
+	}else{
+		loginWindow.style.display = 'block';
+		jwtLoginWindow.style.display = 'none';
+	}
+});
 $('#inboundAccept').click(function(){
 	console.info('Call accept clicked');
 	plivoWebSdk.client.answer();
@@ -823,7 +840,12 @@ $( "#ignoreFeedback" ).click(function() {		// Reset the feedback dialog for next
 $('#clickLogin').click(function(e){
 	var userName = $('#loginUser').val();
 	var password = $('#loginPwd').val();
-	login(userName, password);
+	if(isJWTLogin){
+		implementToken()
+	}else{
+		login(userName, password);
+	}
+	
 	$('#uiLogout').click(function(e) {
 		plivoWebSdk.client && plivoWebSdk.client.logout();
 
@@ -1095,32 +1117,5 @@ function initPhone(username, password){
 	displayCallHistory();
 	starFeedback();
 	console.log('initPhone ready!')
-	implementToken();
-}
-
-function generateJwtToken(){
-	var header = {
-		"alg": "HS256",
-		"typ": "JWT"
-	};
-	var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header));
-	var encodedHeader = base64url(stringifiedHeader);
-
-	var data = {
-	"id": 1337,
-	"username": "john.doe"
-	};
-	var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data));
-	var encodedData = base64url(stringifiedData);
-	var token = encodedHeader + "." + encodedData;
-	var secret = "KeepYourAuthToken";
-
-	var signature = CryptoJS.HmacSHA256(token, secret);
-	signature = base64url(signature);
-
-	var signedToken = token + "." + signature;
-	console.log(signedToken);
-	return signedToken;
-
-
+	//implementToken();
 }

@@ -264,12 +264,21 @@
 		<div class="modal-dialog modal-lg">
 		  <div class="modal-content">
 		    <div class="modal-header">
-		      <button type="button" class="close" data-dismiss="modal">&times;</button>
-		      <h4 class="modal-title">Please enter your plivo credentials</h4>
+			  <button type="button" class="close" data-dismiss="modal">&times;</button>
+			  <div class="row">
+					<div class="form-group col-xs-4">
+						<h4 class="modal-title">Please enter your plivo credentials</h4>
+					</div>
+					<div class="form-group col-xs-4">
+						<label><input type="checkbox" id="jwtFlag" >Log in with JWT</label>
+					</div>	
+			  </div>
 		    </div>
 		    <div class="modal-body">
 				<div class="container">
+				<div id="loginWindow">	
 				  <form>
+							
 				  	<div class="row">
 					    <div class="form-group col-xs-4">
 					      	<label for="loginUser">Username</label>
@@ -283,8 +292,29 @@
 							</div>
 					    </div>
 					</div>
-				    <label><input type="checkbox">Remember Me</label>
+					<label><input type="checkbox">Remember Me</label>
 				  </form>
+				  </div>
+				  <div id="jwtLoginWindow" style="display:none">	
+				  <form>
+					<div class="row">  
+						<div class="form-group col-xs-8">
+						<label for="authToken">Auth Token</label>
+						<input type="text" onblur="trimSpace(this)" class="form-control " id="authToken" name="authToken" placeholder="Enter valid Auth token">						      
+						</div class="form-group">
+					  </div>
+					  <div class="row">  
+							<div class="form-group col-xs-4">
+								<label for="authId">Auth Id</label>
+								<input type="text" onblur="trimSpace(this)" class="form-control " id="authId" name="authId" placeholder="Enter valid Auth Id">						      
+							</div class="form-group">
+							<div class="form-group col-xs-4">
+								<label for="tokenExpiry">Token Expiry</label>
+								<input type="text" onblur="trimSpace(this)" class="form-control " id="tokenExpiry" name="tokenExpiry" placeholder="Token expiry from now in seconds">						      
+								</div class="form-group">
+						  </div>
+				  </form>
+				  </div>
 				</div>
 		    </div>
 		    <div class="modal-footer">
@@ -585,6 +615,10 @@
 	    initPhone();
 	});
 
+	function toggleCheckbox(element){
+   		element.checked = !element.checked;
+ 	}
+
 	function base64url(source) {
 		// Encode in classical base64
 		encodedSource = CryptoJS.enc.Base64.stringify(source);
@@ -599,36 +633,6 @@
 		return encodedSource;
 	}
 
-	function getToken(){
-
-		var header = {
-			"alg": "HS256",
-			"typ": "JWT",
-			"cty": "plivo;v=1"
-		};
-
-		var data = {
-			"jti": "username-14521231",
-			"iss": "AUTHID1234567890",
-			"sub":  "endpointUsername",
-			"nbf": "1450471147",
-			"exp": "1450474747",
-			"grants":" {'username': 'endpoint-username','Voice':{'incoming_allow':true,'outgoing_allow':true}"
-		};
-		var signature=""
-		var secret = "Keep it secret AUTHID1234567890";
-		var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header));
-		var encodedHeader = base64url(stringifiedHeader);
-
-		var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data));
-		var encodedData = base64url(stringifiedData);
-		signature = encodedHeader + "." + encodedData;
-		signature = CryptoJS.HmacSHA256(signature, secret);
-		
-		signature = base64url(signature);
-		
-		document.getElementById("signature").innerText = signature;
-   }
 </script>
 </body>
 </html>
