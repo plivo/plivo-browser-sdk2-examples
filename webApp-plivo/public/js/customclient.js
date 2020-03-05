@@ -11,6 +11,7 @@ var inputVolumeBar = document.getElementById('input-volume');
 var volumeIndicators = document.getElementById('volume-indicators');
 volumeIndicators.style.display = 'none';
 var isJWTLogin = false;
+var tokenGenServerURI = "https://jwttokengen.herokuapp.com/jwttoken";
 
 String.prototype.calltimer = function () {
     var sec_num = parseInt(this, 10);
@@ -140,6 +141,7 @@ function onLogin(){
 }
 function onLoginFailed(reason){
 	$('#phonestatus').html('login failed');
+	$('#sipUserName').html('Login failed with JWT token');
 	console.info('onLoginFailed ',reason);
 	if(Object.prototype.toString.call(reason) == "[object Object]"){
 		reason = JSON.stringify(reason);
@@ -601,23 +603,6 @@ function resetMute(){
 	$('.tmute').attr('class', 'fa tmute fa-microphone');
 }
 
-//jwt tokengen fun
-function tokenGenFunc(){
-	return function(cb){
-		$.get( "https://pxml.herokuapp.com/jwt", {userName:loginUser.value,min:10}, function(e) {
-			console.log( "received token");
-			cb(null,e);
-		})
-		.done(function(e) {
-			console.log( "done");
-		})
-		.fail(function(e) {
-			console.log("fail",e);
-			cb('failed',null);
-		});		
-	}
-}
-
 
 function onVolume(audioStats){
 	volumeIndicators.style.display = 'block';
@@ -644,42 +629,53 @@ function implementToken(){
 	JwtToken.prototype.constructor = JwtToken;
 	  
 	JwtToken.prototype.getToken = async function() {
+		
 		//get JWT Token
-		
-		
-			const url = "https://jwttokengen.herokuapp.com/jwttoken"
-			const requestBody = {
-				"auth_id" : $('#authId').val(),
-				"auth_token" : $('#authToken').val(),
-				"start_time":parseInt(Date.now()/1000),
-				"end_time":parseInt(Date.now()/1000) + Number($('#tokenExpiry').val()),
-			}
-			
-			
-			const response = await fetch(url, {
-								  method: 'POST',
-								  body: JSON.stringify(requestBody), // string or object
-					  			  headers: {'Content-Type' : 'application/json'}
-							});
-			const myJson = await response.json(); //extract JSON from the http response
-					// do something with myJson
+		const requestBody = {
+			"auth_id" : $('#authId').val(),
+			"auth_token" : $('#authToken').val(),
+			"start_time":parseInt(Date.now()/1000),
+			"end_time":parseInt(Date.now()/1000) + Number($('#tokenExpiry').val()),
+			"is_incoming_grant":$('#isIncomingGrant').is(':checked'),
+			"is_outgoing_grant":$('#isOutgoingGrant').is(':checked')
+		}	
+		const response = await fetch(tokenGenServerURI, {
+						method: 'POST',
+						body: JSON.stringify(requestBody),
+			  			headers: {'Content-Type' : 'application/json'}
+					}).catch(function (err) {
+						console.error("Error in fetching the token ", err);
+						return null;
+					});
+		try{	
+			const myJson = await response.json();
 			return (myJson['token'])
+		}catch(error){
+			console.error("Error : "+error);	
+			return(null);
+		}
+		
+		
+		
 				
-		  
-		//jwtToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJ1c2VybmFtZS0xNDUyMTIzMSIsImlzcyI6IkFVVEhJRDEyMzQ1Njc4OTAiLCJzdWIiOiJFUEVJR0hUMTgwODI5MTAwMzQ5IiwibmJmIjoiMTQ1MDQ3MTE0NyIsImV4cCI6IjE0NTA0NzEzNDciLCJncmFudHMiOiIgeyd1c2VybmFtZSc6ICdlbmRwb2ludC11c2VybmFtZScsJ1ZvaWNlJzp7J2luY29taW5nX2FsbG93Jzp0cnVlLCdvdXRnb2luZ19hbGxvdyc6dHJ1ZX0ifQ.hMq2iB5YynRFnooUiE9Sx8Psyg8g7WDQz4-yMbDIHwM";
-		//return tToken;
 	}
-	var jwtToken = new JwtToken();
-	//resp = jwtToken.getToken().then(resp => {console.log(resp)})
-	//console.log(resp);
-	
-    loginJWT(jwtToken);
+	var jwtTokenObject = new JwtToken();
+
+    loginJWT(jwtTokenObject);
 }
 
-function loginJWT(jwtToken){
-	console.log("calling json token")
+function loginJWT(jwtTokenObject){
 	
-	plivoWebSdk.client.loginJWT(jwtToken);
+	if(jwtTokenObject!=null){
+		//start UI load spinner
+		kickStartNow();			
+
+		//Calling SDK loginJWT method
+		plivoWebSdk.client.loginJWT(jwtTokenObject);
+		$('#sipUserName').html('Successfully logged in with JWT token');
+	}else{
+		console.error('JWT Object found null')
+	}
 }
 
   
@@ -695,7 +691,6 @@ $("#jwtFlag").click(function() {
 	var jwtLoginWindow = document.getElementById('jwtLoginWindow');
 	var loginWindow = document.getElementById('loginWindow');
 	if(isJWTLogin){
-		//$("#loginWindow").hide(); 
 		loginWindow.style.display = 'none';
 		jwtLoginWindow.style.display = 'block';
 	}else{
@@ -1078,6 +1073,8 @@ var Token;
 function initPhone(username, password){
 	var options = refreshSettings();
 	plivoWebSdk = new window.Plivo(options);
+
+	//initialise Token object
 	Token = plivoWebSdk.client.token;
 
 	plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported); 
@@ -1117,5 +1114,4 @@ function initPhone(username, password){
 	displayCallHistory();
 	starFeedback();
 	console.log('initPhone ready!')
-	//implementToken();
 }
