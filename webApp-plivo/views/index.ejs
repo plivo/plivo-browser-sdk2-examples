@@ -8,6 +8,8 @@
 	<script src="lib/jquery.min.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/hmac-sha256.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64-min.js"></script>
 	<link rel="stylesheet" href="/css/notify.css">
 	<script src="/lib/notify.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/newstyle.css"> 
@@ -228,7 +230,7 @@
 				        			<audio id=recPlayer></audio>
 				        			<a class="btn btn-info btn-sm" id=audioDownload>Download</a>
 				        			<a class="btn btn-default btn-sm" id="clearRecPlayer"> Ignore</a>	                
-						</div>	 
+						</div>
 							  </div>
 						</div>           			        	
 			        </div>
@@ -263,12 +265,21 @@
 		<div class="modal-dialog modal-lg">
 		  <div class="modal-content">
 		    <div class="modal-header">
-		      <button type="button" class="close" data-dismiss="modal">&times;</button>
-		      <h4 class="modal-title">Please enter your plivo credentials</h4>
+			  <button type="button" class="close" data-dismiss="modal">&times;</button>
+			  <div class="row">
+					<div class="form-group col-xs-4">
+						<h4 class="modal-title">Please enter your plivo credentials</h4>
+					</div>
+					<div class="form-group col-xs-4">
+						<label><input type="checkbox" id="jwtFlag" >Log in with JWT</label>
+					</div>	
+			  </div>
 		    </div>
 		    <div class="modal-body">
 				<div class="container">
+				<div id="loginWindow">	
 				  <form>
+							
 				  	<div class="row">
 					    <div class="form-group col-xs-4">
 					      	<label for="loginUser">Username</label>
@@ -282,8 +293,37 @@
 							</div>
 					    </div>
 					</div>
-				    <label><input type="checkbox">Remember Me</label>
+					<label><input type="checkbox">Remember Me</label>
 				  </form>
+				  </div>
+				  <div id="jwtLoginWindow" style="display:none">	
+				  <form>
+					<div class="row">  
+						<div class="form-group col-xs-8">
+						<label for="authToken">Auth Token</label>
+						<input type="text" onblur="trimSpace(this)" class="form-control " id="authToken" name="authToken" placeholder="Enter valid Auth token">						      
+						</div class="form-group">
+					  </div>
+					  <div class="row">  
+							<div class="form-group col-xs-4">
+								<label for="authId">Auth Id</label>
+								<input type="text" onblur="trimSpace(this)" class="form-control " id="authId" name="authId" placeholder="Enter valid Auth Id">						      
+							</div class="form-group">
+							<div class="form-group col-xs-4">
+								<label for="tokenExpiry">Token Expiry</label>
+								<input type="text" onblur="trimSpace(this)" class="form-control " id="tokenExpiry" name="tokenExpiry" placeholder="Token expiry from now in seconds">						      
+								</div class="form-group">
+						  </div>
+						<div class="row">  
+							<div class="form-group col-xs-2">
+									<label><input type="checkbox" id="isIncomingGrant">Incoming Grant </label>
+							</div class="form-group">
+							<div class="form-group col-xs-2">
+									<label><input type="checkbox" id="isOutgoingGrant">Outgoing Grant </label>
+							</div class="form-group">
+					  </div>
+				  </form>
+				  </div>
 				</div>
 		    </div>
 		    <div class="modal-footer">
@@ -582,6 +622,25 @@
 	    resetSettings();
 	    initPhone();
 	});
+
+	function toggleCheckbox(element){
+   		element.checked = !element.checked;
+ 	}
+
+	function base64url(source) {
+		// Encode in classical base64
+		encodedSource = CryptoJS.enc.Base64.stringify(source);
+		
+		// Remove padding equal characters
+		encodedSource = encodedSource.replace(/=+$/, '');
+		
+		// Replace characters according to base64url specifications
+		encodedSource = encodedSource.replace(/\+/g, '-');
+		encodedSource = encodedSource.replace(/\//g, '_');
+		
+		return encodedSource;
+	}
+
 </script>
 </body>
 </html>
