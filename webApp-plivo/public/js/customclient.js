@@ -61,7 +61,7 @@ function audioDeviceChange(e){
 		if(e.change == "added"){
 			customAlert(e.change,e.device.kind +" - "+e.device.label,'info');		
 		}else{
-			customAlert(e.change,e.device.kind +" - "+e.device.label,'warn');
+			customAlert(e.change,e.device.kind +" - "+e.device.label,'warn');		
 		}
 	}else{
 		customAlert('info','There is an audioDeviceChange but mediaPermission is not allowed yet');
@@ -386,7 +386,8 @@ function resetSettings(source){
 		"dscp":true,
 		"enableTracking":true,
 		"dialType":"conference",
-    "allowMultipleIncomingCalls": true
+		"allowMultipleIncomingCalls": true,
+		"closeProtection": false
 	};
 	var uiSettings = document.querySelector('#appSettings');
 	uiSettings.value = JSON.stringify(defaultSettings);
@@ -430,15 +431,33 @@ function updateAudioDevices(){
 	// Remove existing options if any
 	_forEach.call(document.querySelectorAll('#micDev option'), e=>e.remove());
 	_forEach.call(document.querySelectorAll('#ringtoneDev option'), e=>e.remove());
-
+	currentSetMicDeviceId = plivoWebSdk.client.audio.microphoneDevices.get();
+	currentSetRingToneDeviceId = plivoWebSdk.client.audio.ringtoneDevices.get();
+	currentSetSpeakerDeviceId = plivoWebSdk.client.audio.speakerDevices.get();
 	plivoWebSdk.client.audio.availableDevices()
 	.then(function(e){
 		e.forEach(function(dev){
-			if(dev.label && dev.kind == "audioinput")
-				$('#micDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
+			if(dev.label && dev.kind == "audioinput"){
+				if (currentSetMicDeviceId == "" || currentSetMicDeviceId != dev.deviceId){
+					$('#micDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
+				}
+				else if(currentSetMicDeviceId == dev.deviceId){
+					$('#micDev').append('<option value='+dev.deviceId+' selected >'+dev.label+'</option>')
+				}
+			}
 			if(dev.label && dev.kind == "audiooutput"){
-				$('#ringtoneDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>');
-				$('#speakerDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')		
+				if (currentSetRingToneDeviceId == "" || currentSetRingToneDeviceId != dev.deviceId){
+					$('#ringtoneDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>');
+				}else if(currentSetRingToneDeviceId == dev.deviceId){
+					$('#ringtoneDev').append('<option value='+dev.deviceId+' selected >'+dev.label+'</option>');
+				}
+
+				if(currentSetSpeakerDeviceId == "" || currentSetSpeakerDeviceId != dev.deviceId){
+					$('#speakerDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
+				}
+				else if(currentSetSpeakerDeviceId == dev.deviceId){
+					$('#speakerDev').append('<option value='+dev.deviceId+' selected >'+dev.label+'</option>')
+				}		
 			}
 		});
 	})
@@ -603,8 +622,7 @@ function resetMute(){
 }
 
 
-function onVolume(audioStats){
-	volumeIndicators.style.display = 'block';
+function volume(audioStats){
 	inputVolume = audioStats.inputVolume;
 	outputVolume =  audioStats.outputVolume;
 	inputVolumeBar.style.width = Math.floor(inputVolume * 400) + 'px';
@@ -1102,7 +1120,7 @@ function initPhone(username, password){
 	plivoWebSdk.client.on('audioDeviceChange',audioDeviceChange);
 	plivoWebSdk.client.on('onPermissionNeeded', onPermissionNeeded); 
 	plivoWebSdk.client.on('onConnectionChange', onConnectionChange); // To show connection change events
-	plivoWebSdk.client.on('volume', onVolume);
+	plivoWebSdk.client.on('volume', volume);
 
 	// Methods 
 	plivoWebSdk.client.setRingTone(true);
