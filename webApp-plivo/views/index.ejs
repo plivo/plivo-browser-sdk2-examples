@@ -298,29 +298,36 @@
 				  <div id="jwtLoginWindow" style="display:none">	
 				  <form>
 					<div class="row">  
-						<div class="form-group col-xs-8">
-						<label for="authToken">Auth Token</label>
-						<input type="text" onblur="trimSpace(this)" class="form-control " id="authToken" name="authToken" placeholder="Enter valid Auth token">						      
+						<div class="form-group col-xs-4">
+							<label for="authToken">Auth Token</label>
+							<input type="text" onblur="trimSpace(this)" class="form-control " id="authToken" name="authToken" placeholder="Enter valid Auth token">						      
 						</div class="form-group">
-					  </div>
-					  <div class="row">  
-							<div class="form-group col-xs-4">
-								<label for="authId">Auth Id</label>
-								<input type="text" onblur="trimSpace(this)" class="form-control " id="authId" name="authId" placeholder="Enter valid Auth Id">						      
-							</div class="form-group">
-							<div class="form-group col-xs-4">
-								<label for="tokenExpiry">Token Expiry</label>
-								<input type="text" onblur="trimSpace(this)" class="form-control " id="tokenExpiry" name="tokenExpiry" placeholder="Token expiry from now in seconds">						      
-								</div class="form-group">
-						  </div>
-						<div class="row">  
-							<div class="form-group col-xs-2">
-									<label><input type="checkbox" id="isIncomingGrant">Incoming Grant </label>
-							</div class="form-group">
-							<div class="form-group col-xs-2">
-									<label><input type="checkbox" id="isOutgoingGrant">Outgoing Grant </label>
-							</div class="form-group">
-					  </div>
+						<div class="form-group col-xs-4">
+							<label for="authId">Auth Id</label>
+							<input type="text" onblur="trimSpace(this)" class="form-control " id="authId" name="authId" placeholder="Enter valid Auth Id">						      
+						</div class="form-group">
+					</div>
+					<div class="row">  
+						<div class="form-group col-xs-4">
+							<label for="endpointName">Endpoint</label>
+							<input type="text" onblur="trimSpace(this)" class="form-control " id="endpointName" name="endpointName" placeholder="Enter Endpoint, tokens will be generated for this token only">						      
+						</div class="form-group">
+					   <div class="form-group col-xs-4">
+							<label for="tokenExpiry">Token Expiry</label>
+							<input type="text" onblur="trimSpace(this)" class="form-control " id="tokenExpiry" name="tokenExpiry" placeholder="Token expiry from now in seconds">						      
+						</div class="form-group">
+					</div>
+					<div class="row">  
+						<div class="form-group col-xs-2">
+							<label><input type="checkbox" id="isIncomingGrant">Incoming Grant </label>
+						</div class="form-group">
+						<div class="form-group col-xs-2">
+							<label><input type="checkbox" id="isOutgoingGrant">Outgoing Grant </label>
+						</div class="form-group">
+						<div class="form-group col-xs-2">
+							<label><input type="checkbox" id="randomEndpoint">Choose random endpoint from above account </label>
+						</div class="form-group">
+					</div>
 				  </form>
 				  </div>
 				</div>

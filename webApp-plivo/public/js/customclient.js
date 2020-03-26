@@ -232,7 +232,6 @@ function onCallTerminated(evt, callInfo){
 }
 function onCallFailed(reason, callInfo){
   if (callInfo) {
-    console.log(JSON.stringify(callInfo));
     console.info(`onCallFailed ${reason} ${callInfo.callUUID} ${callInfo.direction}`);
   } else {
     console.info(`onCallFailed ${reason}`);
@@ -620,47 +619,45 @@ window.onbeforeunload = function () {
 };
 
 
-
+//Implementing the Token structure
 function implementToken(){
 	var JwtToken = function() {
 		Token.apply();
 	};
 	JwtToken.prototype = Object.create(Token.prototype);
 	JwtToken.prototype.constructor = JwtToken;
-	  
+	//Define  the logic to fetch the JWT token
 	JwtToken.prototype.getToken = async function() {
-		
 		//get JWT Token
-		const requestBody = {
+		var requestBody = {
 			"auth_id" : $('#authId').val(),
 			"auth_token" : $('#authToken').val(),
 			"start_time":parseInt(Date.now()/1000),
-			"end_time":parseInt(Date.now()/1000) + Number($('#tokenExpiry').val()),
+			"end_time":parseInt(Date.now()/1000) + Math.round(Number($('#tokenExpiry').val())),
 			"is_incoming_grant":$('#isIncomingGrant').is(':checked'),
-			"is_outgoing_grant":$('#isOutgoingGrant').is(':checked')
+			"is_outgoing_grant":$('#isOutgoingGrant').is(':checked'),
 		}	
+		if (!$('#randomEndpoint').is(':checked')){
+			requestBody['endpoint'] = $('#endpointName').val()
+		}
 		const response = await fetch(tokenGenServerURI, {
 						method: 'POST',
 						body: JSON.stringify(requestBody),
 			  			headers: {'Content-Type' : 'application/json'}
-					}).catch(function (err) {
-						console.error("Error in fetching the token ", err);
-						return null;
-					});
+		}).catch(function (err) {
+			console.error("Error in fetching the token ", err);
+			return null;
+		});
 		try{	
 			const myJson = await response.json();
 			return (myJson['token'])
 		}catch(error){
 			console.error("Error : "+error);	
 			return(null);
-		}
-		
-		
-		
-				
+		}			
 	}
 	var jwtTokenObject = new JwtToken();
-
+	//pass the JWT token object to SDK loginJWT method.
     loginJWT(jwtTokenObject);
 }
 
@@ -685,6 +682,14 @@ function loginJWT(jwtTokenObject){
 /*
 	Capture UI onclick triggers 
 */
+
+$("#randomEndpoint").click(function() {
+	if ($('#randomEndpoint').is(':checked')){
+		$("#endpointName").prop('disabled', true);
+	}else{
+		$("#endpointName").prop('disabled', false);
+	}
+});
 
 $("#jwtFlag").click(function() {
 	isJWTLogin = !isJWTLogin
