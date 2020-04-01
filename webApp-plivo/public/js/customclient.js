@@ -141,7 +141,9 @@ function onLogin(){
 }
 function onLoginFailed(reason){
 	$('#phonestatus').html('login failed');
-	$('#sipUserName').html('Login failed with JWT token');
+	if(isJWTLogin){
+		$('#sipUserName').html('Login failed with JWT token');
+	}
 	console.info('onLoginFailed ',reason);
 	if(Object.prototype.toString.call(reason) == "[object Object]"){
 		reason = JSON.stringify(reason);
@@ -663,14 +665,14 @@ function implementToken(){
 						body: JSON.stringify(requestBody),
 			  			headers: {'Content-Type' : 'application/json'}
 		}).catch(function (err) {
-			console.error("Error in fetching the token ", err);
+			console.error("Failed to fecth the JWT token ", err);
 			return null;
 		});
 		try{	
 			const myJson = await response.json();
 			return (myJson['token'])
 		}catch(error){
-			console.error("Error : "+error);	
+			console.error(error);	
 			return(null);
 		}			
 	}
