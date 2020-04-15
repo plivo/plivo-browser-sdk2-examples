@@ -44,6 +44,24 @@ p
     margin-top: 15px;
     background: rgba(150, 209, 150, 0.09);
 }
+
+.callanswerpad{
+  width:100%;
+}
+
+.callinfo
+{
+    margin-top: 15px;
+    background: rgba(150, 209, 150, 0.09);
+    width: 50%;
+}
+
+.incomingCallDefault {
+  margin-top: 15px;
+  background: rgba(150, 209, 150, 0.09);
+  width: 40%;
+}
+
 .tel
 {
   margin-bottom: 10px;
@@ -70,7 +88,7 @@ p
 }
 .num:hover
 {
-    background-color: #5cb85c;
+    background-color: #05006d;
     color: #fff;
     transition-property: background-color .2s linear 0s;
     -moz-transition: background-color .2s linear 0s;
@@ -97,6 +115,9 @@ p
     -webkit-transition: .1s ease-in background-color;
     -webkit-font-smoothing: antialiased;
     letter-spacing: 1px;
+}
+.btn-lg{
+  width: 35%;
 }
 .btn:hover
 {
@@ -154,7 +175,7 @@ p
     /*width: 20%;*/
     z-index: 100000;
 }
-#recPlayerLayout, .hangup,.inboundBeforeAnswer, .outboundBeforeAnswer, .AfterAnswer, .callinfo, #uiLogout, .lowQualityRadios, .feedback, .loader, .fadein-effect{
+#recPlayerLayout,.inboundBeforeAnswer, .outboundBeforeAnswer, .AfterAnswer, .callinfo, .lowQualityRadios, .feedback, .loader, .fadein-effect{
     display: none;
 }
 
@@ -194,6 +215,13 @@ p
   margin-left: 20px;
   cursor: pointer;
 }
+
+#answerkeypad{
+  color: white;
+  font-weight: 600;
+  margin-top: 20px;
+}
+
 .feedback{
     transform: rotate(90deg);
     position: absolute;
@@ -232,6 +260,11 @@ p
   height: 100px;
   display: block;
 }
+
+#clickLogin, #clickLoginJWT{
+  width:20%;
+}
+
 .center-div
 {
   position: absolute;
@@ -248,14 +281,16 @@ p
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);    
 }
 .client-name{
-  margin-left: 28%;
+  margin-left: 14px;
   position: absolute;
-  /*font-size: 30px;*/
-  /*font-weight: 600;*/
-  color: gray;
+  color: white;
 }
 .lead{
   font-weight: 600;
+  color: gray;
+}
+.text-success{
+  color: #130abd;
 }
 .loader {
   position: absolute;
@@ -267,7 +302,7 @@ p
   margin: -75px 0 0 -75px;
   border: 16px solid #f3f3f3;
   border-radius: 50%;
-  border-top: 16px solid #00a848;
+  border-top: 16px solid #05006d;
   width: 120px;
   height: 120px;
   -webkit-animation: spin 2s linear infinite;
@@ -284,19 +319,146 @@ p
   100% { transform: rotate(360deg); }
 }
 .btn-success{
-  background-color: #00a848;
-  border-color: rgba(0,0,0,.0001);  
+  background-color: #05006d !important;
+  border-color: rgba(0,0,0,.0001) !important;  
 }
-.dropdown{
-  margin-top: 6%;
+.btn-success:hover, .btn-success:active, .btn-success:focus, .btn-success:visited{
+  background-color: #080188 !important;
+  border-color: rgba(0,0,0,.0001) !important;  
 }
+.navbar-text{
+  color: white;
+}
+.modal-footer{
+  text-align: center;
+}
+.iti__flag{
+  background-image: url("../img/flags.png");
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .iti__flag {background-image: url("../img/flags@2x.png");}
+}
+.iti{
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+#callerid {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #ffffff;
+  outline:none;
+  box-shadow:none;
+  text-align: center;
+  margin-bottom: 10px;
+  color: white;
+}
+.micsettingslink{
+  color: white;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  text-decoration: underline;
+}
+
+a, a:focus, a:hover, a:visited {
+  color: white;
+}
+
+.pidinput{
+  width: calc(10% - 60px);
+  height: 10px;
+  display: inline-block;
+  margin: 5px;
+}
+
+.pidspeakeroutput, .pidringoutput{
+  width: calc(10% - 60px);
+  height: 10px;
+  display: inline-block;
+  margin: 5px;
+  background-color: #e6e7e8;
+}
+
+.pidlocalaudio, .pidremoteaudio{
+  width: calc(10% - 20px);
+  height: 10px;
+  display: inline-block;
+  margin: 5px;
+  background-color:white;
+}
+.miclink, .speakerlink{
+  margin-left: 20px;
+  font-size: 15px;
+  position: absolute;
+  text-decoration: underline;
+}
+
+.audio-btn{
+  margin-right: 15px;
+  width: 104px;
+  margin-bottom: 25px;
+}
+
+.audio-text {
+  margin-right: 15px; 
+  margin-bottom: 15px;
+  font-size: 15px;
+}
+
+.hangup{
+  width: 60%;
+  margin-bottom: 10px;
+  margin-top: 15px;
+}
+
+.rejectIncoming, .ignoreIncoming{
+  width:100%;
+  margin-top:5px;
+}
+
+/* .answerIncoming, .makecall{
+  width: 100%;
+  background-color: #43A047 !important;
+  border-color: #43A047 !important;
+}
+
+.answerIncoming:hover, .answerIncoming:active, .answerIncoming:focus, .answerIncoming:visited, .makecall:hover, .makecall:active, .makecall:focus, .makecall:visited{
+  background-color: rgb(16, 128, 22) !important;
+  border-color: rgb(16, 128, 22) !important;
+} */
+
+.answerIncoming{
+  width: 100%;
+  background-color: #43A047 !important;
+  border-color: #43A047 !important;
+  margin-top: 20px;
+}
+
+.answerIncoming:hover, .answerIncoming:active, .answerIncoming:focus, .answerIncoming:visited{
+  background-color: rgb(16, 128, 22) !important;
+  border-color: rgb(16, 128, 22) !important;
+}
+
+.btn-default, .btn-default:active, .btn-default:focus {
+  color:white;
+  background-color: rgba(150, 209, 150, 0.09);;
+  border-color: white;
+}
+
+.configparambtn, .configparambtn:active, .configparambtn:focus, .configparambtn.visited{
+  color:black;
+  border-color: #ccc;
+  margin-right: 13px;
+}
+
 .log-out{
   font-size: 25px;
   color: orange;
 }
 .log-in{
   font-size: 25px;
-  color: green;
+  color: #05006d;
 }
 .log-missed{
   font-size: 25px;
@@ -304,7 +466,7 @@ p
 }
 .log-call{
   font-size: 25px;
-  color: green;  
+  color: #05006d;  
 }
 .log-call:hover{
   text-shadow: 7px 2px 10px;
@@ -313,6 +475,20 @@ p
 
 .feedbackTextArea{
   width: 100%;
+}
+
+.feedbackComment{
+  width: 50%;
+}
+
+.feedbackIssue{
+  width: 45%;
+  margin-top: -15px;
+  margin-left: 10px;
+}
+
+#sendFeedback, #ignoreFeedback {
+  width: 15%;
 }
 
 /* Rating Star Widgets Style */
@@ -343,17 +519,4 @@ p
   color: #afaf00;
   font-weight: 600;
   font-family: sans-serif;
-}
-.volume-indicators {
-  display: none;
-  padding: 10px;
-  margin-top: 20px;
-  width: 500px;
-  text-align: left;
-}
-
-.volumeBar{
-  background: green;
-  height: 30px;
-  border-radius: 15px;
 }
