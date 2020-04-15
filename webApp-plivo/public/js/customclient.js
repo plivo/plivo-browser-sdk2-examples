@@ -151,6 +151,7 @@ function onLoginFailed(reason){
 	customAlert('Login failure :',reason);
 	$('.loader').remove()	
 }
+
 function onLogout(){
 	console.info('onLogout');
         $('#phonestatus').html('Offline');
@@ -656,6 +657,7 @@ function implementToken(){
 			"end_time":parseInt(Date.now()/1000) + Math.round(Number($('#tokenExpiry').val())),
 			"is_incoming_grant":$('#isIncomingGrant').is(':checked'),
 			"is_outgoing_grant":$('#isOutgoingGrant').is(':checked'),
+			"env":"qa",
 		}	
 		if (!$('#randomEndpoint').is(':checked')){
 			requestBody['endpoint'] = $('#endpointName').val()
@@ -678,17 +680,17 @@ function implementToken(){
 	}
 	var jwtTokenObject = new JwtToken();
 	//pass the JWT token object to SDK loginJWT method.
-    loginJWT(jwtTokenObject);
+    loginJWTObject(jwtTokenObject);
 }
 
-function loginJWT(jwtTokenObject){
+function loginJWTObject(jwtTokenObject){
 	
 	if(jwtTokenObject!=null){
 		//start UI load spinner
 		kickStartNow();			
 
 		//Calling SDK loginJWT method
-		plivoWebSdk.client.loginJWT(jwtTokenObject);
+		plivoWebSdk.client.loginWithAccessTokenGenerater(jwtTokenObject);
 		$('#sipUserName').html('Successfully logged in with JWT token');
 	}else{
 		console.error('JWT Object found null')
