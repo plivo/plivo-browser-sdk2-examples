@@ -148,7 +148,7 @@ p
     color: #3498db;
 }
 .metrics{
-    margin-bottom: 10px;
+    margin-bottom: 7px;
     padding: 10px;
     /*z-index: 10000;*/
     /*display: inline-block;*/
@@ -168,13 +168,32 @@ p
     right:0;
     font-family: monospace; 
 }
-.alertmsg{
-    position: fixed;
-    top: 10px;
-    right: 10px;
+
+.oncallalertmsg{
+  position: absolute !important;
+  top: 34% !important;
+  right: 5% !important;
+  /*width: 20%;*/
+  z-index: 100000 !important;
+  left: 65% !important;
+}
+
+.mediaalertmsg{
+    position: absolute;
+    top: 34%;
+    right: 5%;
     /*width: 20%;*/
     z-index: 100000;
 }
+
+.alertmsg{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  /*width: 20%;*/
+  z-index: 100000;
+}
+
 #recPlayerLayout,.inboundBeforeAnswer, .outboundBeforeAnswer, .AfterAnswer, .callinfo, .lowQualityRadios, .feedback, .loader, .fadein-effect{
     display: none;
 }

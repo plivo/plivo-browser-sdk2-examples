@@ -29,6 +29,7 @@ var defaultSettings = {
 
 var iti;
 var incomingCallInfo;
+var isIncomingCallPresent = false
 
 var outputVolumeBar = document.getElementById('output-volume');
 var inputVolumeBar = document.getElementById('input-volume');
@@ -124,14 +125,17 @@ function mediaMetrics(obj){
 	}
 	if(obj.active){
 		classExist? classExist.remove() : null; 
-	$(".alertmsg").prepend(
-	  '<div class="metrics -'+obj.type+'">' +
-	  '<span style="margin-left:20px;">'+obj.level+' | </span>' +
-	  '<span style="margin-left:20px;">'+obj.group+' | </span>' +
-	  '<span style="margin-left:20px;">'+message+' - '+obj.value+' : </span><span >'+obj.desc+'</span>'+
-	  '<span aria-hidden="true" onclick="closeMetrics(this)" style="margin-left:25px;cursor:pointer;">X</span>' +
+	let closeAlert = Math.random().toString(36).substring(7);
+	$(".oncallalertmsg").append(
+	  '<div id="alert'+closeAlert+'" class="metrics -'+obj.type+'">' +
+	  '<span>'+obj.level+' | </span>' +
+	  '<span>'+message+' : '+obj.value+' | </span><span >'+obj.desc+'</span>'+
+	  '<span aria-hidden="true" onclick="closeMetrics(this)" style="margin-left:15px;cursor:pointer;">X</span>' +
 	  '</div>'
 	);
+	setTimeout(function () {
+        $('#'+'alert'+closeAlert).remove();
+    }, 5000);
 	}
 	if(!obj.active && classExist){
 		document.querySelector('.-'+obj.type).remove();
@@ -283,10 +287,12 @@ function onMediaPermission(evt){
 }
 function onIncomingCall(callerName, extraHeaders, callInfo){
 	console.info('onIncomingCall : ', callerName, extraHeaders);
+	let prevIncoming = isIncomingCallPresent;
+	isIncomingCallPresent = true;
 	callStorage.startTime = date();
 	callStorage.mode = 'in';
 	callStorage.num = callerName;
-	if (document.getElementById('callstatus').innerHTML == 'Idle') {
+	if (document.getElementById('callstatus').innerHTML == 'Idle' && !prevIncoming) {
 		$('#incomingCallDefault').show();
 		$('#phone').hide();
 		$('#callstatus').html('Ringing...');
@@ -296,6 +302,7 @@ function onIncomingCall(callerName, extraHeaders, callInfo){
 		$('#callstatus').html('Ringing...');
 		const incomingNotification = Notify.success(`Incoming Call: ${callerName}`)
 		.button('Answer', () => {
+			isIncomingCallPresent = false;
 			console.info('Call accept clicked');
 			if (callInfo) {
 			plivoWebSdk.client.answer(callInfo.callUUID);
@@ -304,6 +311,7 @@ function onIncomingCall(callerName, extraHeaders, callInfo){
 			}
 		})
 		.button('Reject', () => {
+			isIncomingCallPresent = false;
 			console.info('callReject');
 			if (callInfo) {
 			plivoWebSdk.client.reject(callInfo.callUUID);
@@ -312,6 +320,7 @@ function onIncomingCall(callerName, extraHeaders, callInfo){
 			}  
 		})
 		.button('Ignore', () => {
+			isIncomingCallPresent = false;
 			console.info('call Ignored');
 			if (callInfo) {
 			plivoWebSdk.client.ignore(callInfo.callUUID);
@@ -461,7 +470,7 @@ function customAlert(header,alertMessage,type){
 	}else if(type == "warn"){
 		typeClass = "alertwarn";
 	}
-	$(".alertmsg").prepend(
+	$(".alertmsg").append(
 	  '<div id="alert'+closeAlert+'" class="customAlert'+' '+typeClass+'">' +
 	  '<span style="margin-left:20px;">'+header+' | </span>' +
 	  '<span style="margin-left:20px;">'+alertMessage+' </span>'+
@@ -470,7 +479,7 @@ function customAlert(header,alertMessage,type){
 	);
 	setTimeout(function () {
         $('#'+'alert'+closeAlert).remove();
-    }, 10000);
+    }, 5000);
 }
 
 function updateAudioDevices(){

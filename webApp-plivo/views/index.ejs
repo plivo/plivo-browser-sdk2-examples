@@ -12,7 +12,6 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/hmac-sha256.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64-min.js"></script>
 	<link rel="stylesheet" href="/css/notify.css">
-	<script src="/lib/notify.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/newstyle.css"> 
 </head>
 <body>
@@ -522,7 +521,7 @@
 	<!-- call page div -->
 	<div id="callContainer" class="container" style="display: none;">
 		<div class="page-header">
-			<div class="text-center" style="margin-top: -15px;">
+			<div class="text-center" style="margin-top: -25px;">
 				<figure>
 					<img src="img/plivo-logo.png" style="margin-bottom: -1%;">
 					<figcaption class="white">Plivo web client</figcaption>
@@ -692,7 +691,7 @@
 									<div class="row" style="margin-top: 40px;">
 										<div class="form-group col-sm-1">
 										</div>
-										<div class="form-group col-sm-1" data-toggle="mute" id="tmute">
+										<div class="form-group col-sm-1" data-toggle="mute" id="tmute" style="cursor:pointer;">
 											<i class="tmute fa fa-microphone fa-lg" style="font-size: 2em;"></i>
 										</div>
 										<div class="pids-wrapper">
@@ -765,13 +764,16 @@
 	</div>
 
 
-
+	<div id="oncallalertmsg" class="oncallalertmsg">
+		<!-- Incoming call notification comes here when user already on call -->
+	</div>
 	<div class="alertmsg">
-		<!-- media metrics message comes here -->
+		<!-- alert message comes here -->
 	</div>
 
-	<script src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script>
-	<script src="js/intlTelInput.min.js"></script>
+	<script src="http://localhost:9000/plivowebsdk.js"></script>
+	<script src="/lib/notify.js"></script>
+	<script src="lib/intlTelInput.min.js"></script>
 	<script src="js/utils.js"></script>
 	<script src="js/audiovisual.js"></script>
 	<script src="js/customclient.js"></script>
