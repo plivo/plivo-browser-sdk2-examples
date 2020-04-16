@@ -94,7 +94,7 @@ function onPermissionNeeded(obj){
 function onConnectionChange(obj){
 	console.log('onConnectionChange: ', obj);
 	if(obj.state === "connected" ){
-		customAlert( obj.state , "info");
+		console.log( obj.state , "info", 'info');
 	}else if(obj.state === "disconnected"){
 		customAlert( obj.state + " "+ obj.eventCode +" "+ obj.eventReason  , "info");
 	}else{
@@ -153,8 +153,9 @@ function onReady(){
 function onLogin(){
 	$('#loginContainer').hide();
 	$('#callContainer').show();
+	document.body.style.backgroundImage = 'url(../img/background1.svg)';
 	let username = plivoWebSdk.client.userName;
-	$('#sipUserName').html('LOGGED IN AS: '+username+'@'+plivoWebSdk.client.phone.configuration.hostport_params);
+	$('#sipUserName').html(username+'@'+plivoWebSdk.client.phone.configuration.hostport_params);
 	document.querySelector('title').innerHTML = username;
 	$('#phonestatus').html('online');
 	console.info('Logged in');
@@ -166,6 +167,7 @@ function onLogin(){
 	$('#makecall').attr('class', 'btn btn-success btn-block flatbtn makecall');
 	$('#uiLogin').hide();
 	$('#uiLogout').show();
+	customAlert( "connected" , "info", 'info');
 	$('.loader').hide();
 	// show call rec url based on sipuser
 	$('#callrecLink').attr('href','https://pxml.herokuapp.com/callrec.html?userId='+username);
@@ -175,11 +177,12 @@ function onLoginFailed(reason){
 	if(Object.prototype.toString.call(reason) == "[object Object]"){
 		reason = JSON.stringify(reason);
 	}
-	customAlert('Login failure :',reason);
+	customAlert('Login failure :',reason, 'warn');
 	$('.loader').hide()	
 }
 function onLogout(){
 	console.info('onLogout');
+	document.body.style.backgroundImage = 'url(../img/background.svg)';
 	$('#loginContainer').show();
 	$('#callContainer').hide();
 	$('.loader').hide()
@@ -277,7 +280,7 @@ function onCallFailed(reason, callInfo){
 function onMediaPermission(evt){
 	console.info('onMediaPermission',evt);
 	if(evt.error){
-		customAlert('Media permission error',evt.error);
+		customAlert('Media permission error',evt.error, 'warn');
 		if(client.browserDetails.browser == "chrome")
 			$('#mediaAccessBlock').modal('show');
 	}

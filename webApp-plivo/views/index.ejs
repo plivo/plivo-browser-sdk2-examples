@@ -21,17 +21,17 @@
 		<div class="text-center" style="margin-top:7%;">
 			<figure>
 				<img src="img/plivo-logo.png" style="margin-bottom: -1%;">
-				<figcaption class="white">Plivo web client</figcaption>
+				<figcaption class="caption">Plivo web client</figcaption>
 			</figure>
 		</div>
-		<div class="text-center" style="margin-top:5%;">
-			<span class="white">
-				<h1>LOGIN</h1>
+		<div class="text-center loginscreen" style="margin-top:5%;">
+			<span class="black">
+				<h2>Log In to your Plivo account</h2>
 			</span>
 			<span class="row">
 				<button id=loginwithpassword class="btn btn-success btn-lg" data-toggle="modal" data-target="#loginwithcreds">With Username/Password</button>
 			</span>
-			<h4 class="white">OR</h4>
+			<h4 class="black">OR</h4>
 			<span class="row">
 				<button id=loginwithjwtbtn class="btn btn-success btn-lg" data-toggle="modal" data-target="#loginwithjwt">With Username/JWT</button>
 			</span>
@@ -57,7 +57,7 @@
 								<div class="form-group col-sm-2">
 								</div>
 								<div class="form-group col-sm-1">
-									<label for="loginUser">USERNAME</label>
+									<label for="loginUser" class="loginUser middleLabel">USERNAME</label>
 								</div>
 								<div class="form-group col-sm-4">
 									<input type="text" onblur="trimSpace(this)" class="form-control text-center" id="loginUser" name="loginUser" placeholder="plivo userId" value="">
@@ -67,7 +67,7 @@
 								<div class="form-group col-sm-2">
 								</div>
 								<div class="form-group col-sm-1">
-									<label for="loginPwd">PASSWORD</label>
+									<label for="loginPwd" class="loginPwd middleLabel">PASSWORD</label>
 								</div>
 								<div class="form-group col-sm-4">
 									<input type="password" class="form-control text-center" id="loginPwd" placeholder="password" name="loginPwd">
@@ -103,7 +103,7 @@
 								<div class="form-group col-sm-2">
 								</div>
 								<div class="form-group col-sm-1">
-									<label for="loginJwtUser">USERNAME</label>
+									<label for="loginJwtUser" class="loginUser middleLabel">USERNAME</label>
 								</div>
 								<div class="form-group col-sm-4">
 									<input type="text" onblur="trimSpace(this)" class="form-control text-center" id="loginJwtUser" name="loginJwtUser" placeholder="plivo userId" value="">
@@ -141,8 +141,8 @@
 							<div class="form-group col-md-1">
 							</div>
 							<div class="form-group col-sm-4">
-								<label for="loglevel">LOG LEVEL</label>
-								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Log Level"></span>
+								<label for="loglevel" class="middleLabel">LOG LEVEL</label>
+								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Enable log level in JS log"></span>
 							</div>
 							<div class="form-group col-sm-2">
 								<select class="form-control jcf-hidden" name="loglevelbtn" id="loglevelbtn">
@@ -160,7 +160,7 @@
 							</div>
 							<div class="form-group col-sm-4">
 								<label for="micaccess">ASK FOR MIC ACCESS</label>
-								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Ask for mic access"></span>
+								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Request for mic access before login or call initiation"></span>
 							</div>
 							<div class="form-group col-sm-2">
 								<input type="radio" name="micaccess" id="onlogin" checked> ON LOGIN
@@ -174,7 +174,7 @@
 							</div>
 							<div class="form-group col-sm-4">
 								<label for="callquality">MONITOR CALL QUALITY</label>
-								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Monitor call quality"></span>
+								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Enable media metrics and call quality tracking"></span>
 							</div>
 							<div class="form-group col-sm-2">
 								<input type="radio" name="callquality" id="monitorquality" checked> YES
@@ -188,7 +188,7 @@
 							</div>
 							<div class="form-group col-sm-4">
 								<label for="closeprotection">BROWSER TAB CLOSE PROTECTION</label>
-								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Close protection for browser tab"></span>
+								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Show dialog prompt while closing the app when call is in progress"></span>
 							</div>
 							<div class="form-group col-sm-2">
 								<input type="radio" name="closeprotection" id="closeprotect"> YES
@@ -202,7 +202,7 @@
 							</div>
 							<div class="form-group col-sm-4">
 								<label for="dscp">DSCP</label>
-								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="dscp"></span>
+								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Enable QoS in voice traffic"></span>
 							</div>
 							<div class="form-group col-sm-2">
 								<input type="radio" name="dscp" id="allowdscp" checked> ENABLED
@@ -216,7 +216,7 @@
 							</div>
 							<div class="form-group col-sm-4">
 								<label for="multipleincoming">MULTIPLE INCOMING CALLS</label>
-								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="dscp"></span>
+								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Enable multiple incoming calls to the endpoint at same time"></span>
 							</div>
 							<div class="form-group col-sm-2">
 								<input type="radio" name="multipleincoming" id="allowincoming"> ALLOWED
@@ -229,7 +229,7 @@
 							<div class="form-group col-md-1">
 							</div>
 							<div class="form-group col-sm-4">
-								<label for="msregion">PLIVO MS REGION</label>
+								<label for="msregion" class="middleLabel">PLIVO MS REGION</label>
 								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Plivo MS Region"></span>
 							</div>
 							<div class="form-group col-sm-2">
@@ -244,8 +244,8 @@
 							<div class="form-group col-md-1">
 							</div>
 							<div class="form-group col-sm-4">
-								<label for="bitrate">MAX AVERAGE BITRATE</label>
-								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Max average bitrate"></span>
+								<label for="bitrate" class="middleLabel">MAX AVERAGE BITRATE</label>
+								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Controls your application’s bandwidth consumption for calls"></span>
 							</div>
 							<div class="form-group col-sm-2">
 								<input type="text" onblur="trimSpace(this)" class="form-control" id="averagebitrate" name="averagebitrate" value=48000>
@@ -276,7 +276,7 @@
 						<div class="form-group col-sm-1">
 						</div>
 						<div class="form-group col-sm-2">
-							<label for="micDev">MICROPHONE</label>
+							<label for="micDev" class="middleLabel">MICROPHONE</label>
 						</div>
 						<div class="form-group col-sm-9">
 							<select class="form-control" id="micDev">
@@ -307,7 +307,7 @@
 						<div class="form-group col-sm-1">
 						</div>
 						<div class="form-group col-sm-2">
-							<label for="speakerDev">SPEAKER</label>
+							<label for="speakerDev" class="middleLabel">SPEAKER</label>
 						</div>
 						<div class="form-group col-sm-9">
 							<select class="form-control" id="speakerDev">
@@ -338,7 +338,7 @@
 						<div class="form-group col-sm-1">
 						</div>
 						<div class="form-group col-sm-2">
-							<label for="ringtoneDev">RINGTONE</label>
+							<label for="ringtoneDev" class="middleLabel">RINGTONE</label>
 						</div>
 						<div class="form-group col-sm-9">
 							<select class="form-control" id="ringtoneDev">
@@ -389,8 +389,8 @@
 						<div class="row">
 							<div class="form-group col-sm-1">
 							</div>
-							<div class="form-group col-sm-2">
-								<label for="inputDev"><strong>INPUT</strong></label>
+							<div class="form-group col-sm-1" style="margin-left:10px;">
+								<label for="inputDev" class="middleLabel"><strong>INPUT</strong></label>
 							</div>
 							<div class="form-group col-sm-9">
 								<select class="form-control" id="inputDev">
@@ -416,8 +416,8 @@
 						<div class="row">
 							<div class="form-group col-sm-1">
 							</div>
-							<div class="form-group col-sm-2">
-								<label for="outputDev"><strong>OUTPUT</strong></label>
+							<div class="form-group col-sm-1" style="margin-left:10px;">
+								<label for="outputDev" class="middleLabel"><strong>OUTPUT</strong></label>
 							</div>
 							<div class="form-group col-sm-9">
 								<select class="form-control" id="outputDev">
@@ -520,19 +520,20 @@
 
 	<!-- call page div -->
 	<div id="callContainer" class="container" style="display: none;">
-		<div class="page-header">
-			<div class="text-center" style="margin-top: -25px;">
+		<div class="page-header borderline">
+			<div class="text-center" style="margin-top: -35px;">
 				<figure>
 					<img src="img/plivo-logo.png" style="margin-bottom: -1%;">
-					<figcaption class="white">Plivo web client</figcaption>
+					<figcaption class="caption">Plivo web client</figcaption>
 				</figure>
 			</div>
 			<div class="row">
-				<div class="col-sm-6">
-					<span class="white" id=sipUserName >Not ready...</span>
+				<div class="col-sm-9">
+					<span class="lead text-success">LOGGED IN AS: </span>
+					<span id=sipUserName class="label-value">Not ready...</span>
 				</div>
-				<div class="col-sm-6">
-					<span class="white-icon glyphicon glyphicon-off pull-right" id=uiLogout>LOGOUT</span>
+				<div class="col-sm-3">
+					<span class="glyphicon glyphicon-off pull-right logout" id=uiLogout>LOGOUT</span>
 				</div>
 			</div>
 		</div>
@@ -540,8 +541,8 @@
 		<div class="">
 			<div>
 				<span class="lead text-success"> - CALL STATUS: </span>
-				<span class="white" id=callstatus>Idle</span>
-				<span class="white-icon glyphicon glyphicon-cog pull-right" data-toggle="modal" data-target="#configparams">CONFIGPARAMS</span>
+				<span id=callstatus class="label-value">Idle</span>
+				<span class="glyphicon glyphicon-cog pull-right config" data-toggle="modal" data-target="#configparams">CONFIGPARAMS</span>
 			</div>
 			<div class="panel-body">
 				<div class="container">
@@ -666,7 +667,7 @@
 									<div class="clearfix">
 									</div>
 									<div class="form-inline calleridinfo">
-										<label for="calleridlabel" class="control-label" style="color:white;">CALLER ID: 
+										<label for="calleridlabel" class="control-label">CALLER ID: 
 											<input type="text" name="callerid" class="form-control" id="callerid" placeholder="SET CALLER ID">
 											<span id="saveCallerId" class="glyphicon glyphicon-ok-circle fa-lg" style="cursor:pointer;" data-toggle="tooltip" title="Save Caller ID"></span>
 											<span id="removeCallerId" class="glyphicon glyphicon-remove-circle fa-lg" style="cursor:pointer;margin-left:3px;" data-toggle="tooltip" title="Remove Caller ID"></span>
@@ -681,7 +682,7 @@
 							<div class="clearfix">
 							</div>
 						</div>
-						<div class="white col-md-4 callinfo">
+						<div class="col-md-4 callinfo">
 							<div class="row1">
 								<div class="col-md-12 white-shadow">
 									<div class="text-center">
@@ -733,26 +734,28 @@
 								</div>
 							</div>
 						</div>
-						<div class="white col-md-4 incomingCallDefault" id="incomingCallDefault" style="display: none;">
+						<div class="col-md-4 incomingCallDefault" id="incomingCallDefault" style="display: none;">
 							<div class="row1">
-								<div class="text-center">
-									<h2>INCOMING CALL</h2>
-									<h4>FROM</h4>
-									<h4 id="callernum">FROM</h4>
-								</div>
-								<div class="text-center" id="answerIncoming">
-									<button class="btn btn-success answerIncoming">ANSWER</button>
-								</div>
-								<div class="row" style="margin-bottom:-40px;">
-									<div class="form-group col-sm-4" id="rejectIncoming" style="width:50%">
-										<button class="rejectIncoming btn btn-danger">REJECT</button>
+								<div class="col-md-12 white-shadow">
+									<div class="text-center">
+										<h2>INCOMING CALL</h2>
+										<h4>FROM</h4>
+										<h4 id="callernum">FROM</h4>
 									</div>
-									<div class="form-group col-sm-4" id="ignoreIncoming" style="width:50%">
-										<button class="ignoreIncoming btn btn-danger">IGNORE</button>
+									<div class="text-center" id="answerIncoming">
+										<button class="btn btn-success answerIncoming">ANSWER</button>
 									</div>
-								</div>
-								<div class="micsettingslink text-center" style="font-size:15px;">
-									<a id="micsettingslink" data-toggle="modal" href="#popAudioDevices">MIC/SPEAKER SETTINGS</a>
+									<div class="row" style="margin-bottom:-40px;">
+										<div class="form-group col-sm-4" id="rejectIncoming" style="width:50%">
+											<button class="rejectIncoming btn btn-danger">REJECT</button>
+										</div>
+										<div class="form-group col-sm-4" id="ignoreIncoming" style="width:50%">
+											<button class="ignoreIncoming btn btn-danger">IGNORE</button>
+										</div>
+									</div>
+									<div class="micsettingslink text-center" style="font-size:15px;">
+										<a id="micsettingslink" data-toggle="modal" href="#popAudioDevices">MIC/SPEAKER SETTINGS</a>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -771,7 +774,7 @@
 		<!-- alert message comes here -->
 	</div>
 
-	<script src="http://localhost:9000/plivowebsdk.js"></script>
+	<script src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script>
 	<script src="/lib/notify.js"></script>
 	<script src="lib/intlTelInput.min.js"></script>
 	<script src="js/utils.js"></script>
