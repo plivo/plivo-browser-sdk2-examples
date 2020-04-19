@@ -228,13 +228,17 @@
 							</div>
 							<div class="form-group col-sm-4">
 								<label for="msregion" class="middleLabel">PLIVO MS REGION</label>
-								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Plivo MS Region"></span>
+								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Route calls to specific MediaServer POPs"></span>
 							</div>
 							<div class="form-group col-sm-2">
 								<select class="form-control jcf-hidden" name="msregionbtn" id="msregionbtn">
 									<option value="AUTO">AUTO</option>
-									<option value="US-WEST-1">US-WEST-1</option>
-									<option value="US-EAST-1">US-EAST-1</option>
+									<option value="usa_west">USA-WEST</option>
+									<option value="usa_east">USA-EAST</option>
+									<option value="australia">AUSTRALIA</option>
+									<option value="europe">EUROPE</option>
+									<option value="asia">ASIA</option>
+									<option value="south_america">SOUTH-AMERICA</option>
 								</select>
 							</div>
 						</div>
@@ -369,6 +373,43 @@
 				    </div>
 				  </form>
 		    </div>
+		  </div>
+		</div>
+	</div>
+
+	<!-- media not allowed div -->
+	<div class="modal fade" id="mediaAccessBlock" role="dialog">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      <h4 class="modal-title">Audio device access is blocked Please allow!</h4>
+		    </div>
+		    <div class="modal-body">
+				<div class="container">          
+				  <img src="img/micdenied.png" class="img-rounded" width="304" height="236"> 
+				</div>
+		    </div>
+		    <div class="modal-footer">
+		   		<h4 class="text-center lead">Have a look at your right hand side of your address bar</h4>
+		    </div>		    
+		  </div>
+		</div>
+	</div>
+
+	<!-- mic blocked after perm -->
+	<div class="modal fade" id="micAccessBlock" role="dialog">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      <h4 class="modal-title">Mic input access is blocked</h4>
+		    </div>
+		    <div class="modal-body">
+				<h4>
+					Your browser has some issues in accessing your microphone in the hardware. Please close all running chrome and open back your browser to fix it.
+				</h4>
+		    </div>	    
 		  </div>
 		</div>
 	</div>
@@ -670,7 +711,7 @@
 											<span id="removeCallerId" class="glyphicon glyphicon-remove-circle fa-lg" style="cursor:pointer;margin-left:3px;" data-toggle="tooltip" title="Remove Caller ID"></span>
 										</label>
 									</div>
-									<button id=makecall class="btn btn-success makecall" style="width:100%">CALL</button>
+									<button id=makecall class="btn btn-success makecall">CALL</button>
 									<div class="micsettingslink text-center">
 										<a id="micsettingslink" data-toggle="modal" href="#popAudioDevices">MIC/SPEAKER SETTINGS</a>
 									</div>
@@ -775,7 +816,6 @@
 	<script src="/lib/notify.js"></script>
 	<script src="lib/intlTelInput.min.js"></script>
 	<script src="js/utils.js"></script>
-	<script src="js/audiovisual.js"></script>
 	<script src="js/customclient.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
