@@ -166,7 +166,7 @@ function onLogin(){
 	}
 	$('#makecall').attr('class', 'btn btn-success btn-block flatbtn makecall');
 	$('#uiLogin').hide();
-	$('#uiLogout').show();
+	$('.logout').show();
 	customAlert( "connected" , "info", 'info');
 	$('.loader').hide();
 	// show call rec url based on sipuser
@@ -213,8 +213,7 @@ function onCallAnswered(callInfo){
   if (callInfo && callInfo.direction === 'incoming') {
 	$('#phone').hide();
     $('#boundType').html('Incoming : '+callInfo.src);
-		$('#callNum').html(callInfo.src);
-		$('#callstatus').html('Connecting...');
+	$('#callNum').html(callInfo.src);
     $('#callDuration').html('00:00:00');
     $('.callinfo').show();
     if (incomingNotifications.has(callInfo.callUUID)) {
@@ -235,12 +234,8 @@ function onCallAnswered(callInfo){
 function onCallTerminated(evt, callInfo){
 	$('#callstatus').html('Call Ended');
 	console.info(`onCallTerminated ${evt}`);
-	if(sessionStorage.getItem('triggerFB')){
-		clearStars();
-		$('#sendQualityFeedback').modal('show');
-		// clear at end of every call
-		sessionStorage.removeItem('triggerFB');
-	}
+	clearStars();
+	$('#sendQualityFeedback').modal('show');
   if (callInfo && callInfo.callUUID === plivoWebSdk.client.getCallUUID()) {
     console.info(JSON.stringify(callInfo));
     callOff(evt);
@@ -945,6 +940,7 @@ $('.hangup').click(function(){
 });
 
 $('.answerIncoming').click(function(){
+	isIncomingCallPresent = false;
 	console.info('Call accept clicked');
 	if (incomingCallInfo) {
 	plivoWebSdk.client.answer(incomingCallInfo.callUUID);
@@ -956,6 +952,7 @@ $('.answerIncoming').click(function(){
 });
 
 $('.rejectIncoming').click(function(){
+	isIncomingCallPresent = false;
 	console.info('Call rejected');
 	if (incomingCallInfo) {
 		plivoWebSdk.client.reject(incomingCallInfo.callUUID);
@@ -966,6 +963,7 @@ $('.rejectIncoming').click(function(){
 });
 
 $('.ignoreIncoming').click(function(){
+	isIncomingCallPresent = false;
 	console.info('Call ignored');
 	if (incomingCallInfo) {
 		plivoWebSdk.client.ignore(incomingCallInfo.callUUID);
@@ -1075,6 +1073,7 @@ $('#sendFeedback').click(function(){
 		$('#feedbackStatus').html('Feedback sent');
 		$('#ignoreFeedback').click();
 		customAlert('Feedback sent','','info');
+		$('.lowQualityRadios').hide();
 	})
 	.catch((error) => {
 		$('#feedbackStatus').html(error);
@@ -1087,9 +1086,18 @@ $( "#ignoreFeedback" ).click(function() {		// Reset the feedback dialog for next
 	$('#sendFeedbackComment').empty();
 	$('.lowQualityRadios input').prop('checked', false);
 	$("#feedbackStatus").empty();
+	$('.lowQualityRadios').hide();
 });
 
-$('#uiLogout').click(function(e) {
+$('#sendQualityFeedback').on('hidden.bs.modal', function () {
+    $('#stars li').removeClass("selected");
+	$('#sendFeedbackComment').empty();
+	$('.lowQualityRadios input').prop('checked', false);
+	$("#feedbackStatus").empty();
+	$('.lowQualityRadios').hide();
+});
+
+$('.logout').click(function(e) {
 	//start UI load spinner
 	kickStartNow();	
 	plivoWebSdk.client && plivoWebSdk.client.logout();

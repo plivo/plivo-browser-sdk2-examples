@@ -47,10 +47,8 @@
 				</div>
 				<div class="modal-body">
 					<div class="container">
-						<div>
-							<button type="button" class="btn-default configparambtn" data-toggle="modal" href="#configparams">
-								<span class="glyphicon glyphicon-cog fa-lg">CONFIGPARAMS</span>
-							</button>
+						<div class="config-div">
+							<span class="glyphicon glyphicon-cog fa-lg config-login" data-toggle="modal" href="#configparams"></span><span class="config-login" data-toggle="modal" href="#configparams">Config</span>
 						</div>
 						<form>
 							<div class="row">
@@ -94,9 +92,9 @@
 				<div class="modal-body">
 					<div class="container">
 						<div>
-							<button type="button" class="btn-default configparambtn" data-toggle="modal" href="#configparams">
-								<span class="glyphicon glyphicon-cog fa-lg">CONFIGPARAMS</span>
-							</button>
+							<div class="config-div">
+								<span class="glyphicon glyphicon-cog fa-lg config-login" data-toggle="modal" href="#configparams"></span><span class="config-login" data-toggle="modal" href="#configparams">Config</span>
+							</div>
 						</div>
 						<form>
 							<div class="row">
@@ -147,11 +145,11 @@
 							<div class="form-group col-sm-2">
 								<select class="form-control jcf-hidden" name="loglevelbtn" id="loglevelbtn">
 									<option value="INFO">INFO</option>
-									<option value="DEBUG">DEBUG</option>
-									<option value="ALL">ALL</option>
 									<option value="OFF">OFF</option>
 									<option value="ERROR">ERROR</option>
 									<option value="WARN">WARN</option>
+									<option value="DEBUG">DEBUG</option>
+									<option value="ALL">ALL</option>
 								</select>
 							</div>
 						</div>
@@ -254,9 +252,9 @@
 					</form>
 				</div>		    
 			</div>
-			<div class="modal-footer">
-				<button type="button" id="resetSettings" class="btn btn-success" style="width:15%;">Reset</button>		    
-				<button type="button" id="updateSettings" class="btn btn-success" style="width:15%;" data-dismiss="modal" data-toggle="tooltip" title="Please reload the page to update options in SDK">Update</button>
+			<div class="modal-footer">	    
+				<button type="button" id="updateSettings" class="btn btn-primary" style="width:15%;" data-dismiss="modal" data-toggle="tooltip" title="Please reload the page to update options in SDK">Update</button>
+				<button type="button" id="resetSettings" class="btn btn-outline-primary" style="width:15%;margin-left:10px;">Reset</button>	
 			</div>
 		</div>
 		</div>
@@ -332,7 +330,7 @@
 							<div class="pidspeakeroutput"></div>
 							<div class="pidspeakeroutput"></div>
 						</div>
-						<button type=button class="btn btn-success pull-right audio-btn" id=speakerDevTest>Test</button>	
+						<button type=button class="btn btn-success pull-right audio-btn" id=speakerDevTest>Test</button>
 					</div>
 					<div class="row">
 						<div class="form-group col-sm-1">
@@ -366,9 +364,8 @@
 						<button type=button class="btn btn-success pull-right audio-btn" id=ringtoneDevTest>Test</button>	
 					</div>
 				    <div class="text-center">
-				    	<h4>RELOAD AUDIO DEVICES</h4>
-						<button type=button class="btn btn-success" id=allowAudioDevices>Refresh</button>
-						<h3 class="text-center text-success">USB headsets works better in reducing background noise and echo.</h3>					    	
+						<button type=button class="btn btn-success" id=allowAudioDevices>Reload Audio Devices</button>
+						<h3 class="text-center text-success"><i>* Headsets works better in reducing background noise and echo</i></h3>					    	
 				    </div>
 				  </form>
 		    </div>
@@ -467,7 +464,7 @@
 							<div class="form-group lowQualityRadios">
 								<div class="col-sm-4 feedbackComment">
 									<textarea class="feedbackTextArea" rows="4" id="sendFeedbackComment" placeholder="Optional comments"></textarea>
-									<label><input id=sendConsoleLogs type="checkbox">Send Console Logs</label>
+									<label><input id=sendConsoleLogs type="checkbox" style="margin-right:5px;">Send Console Logs</label>
 								</div>
 								<div class="col-sm-4 feedbackIssue">
 									<div class="checkbox">
@@ -511,8 +508,8 @@
 				</div>
 		    </div>
 		    <div class="modal-footer">
-		   		<button type="button" class="btn btn-success" id=sendFeedback >Send</button>
-		   		<button class="btn btn-danger" data-dismiss="modal" id=ignoreFeedback>Ignore</button>
+		   		<button type="button" class="btn btn-primary" id=sendFeedback >Send</button>
+		   		<button class="btn btn-outline-primary" data-dismiss="modal" id=ignoreFeedback>Ignore</button>
 		    </div>
 		  </div>
 		</div>
@@ -532,17 +529,17 @@
 					<span class="lead text-success">LOGGED IN AS: </span>
 					<span id=sipUserName class="label-value">Not ready...</span>
 				</div>
-				<div class="col-sm-3">
-					<span class="glyphicon glyphicon-off pull-right logout" id=uiLogout>LOGOUT</span>
+				<div class="col-sm-3" style="text-align:right;">
+					<span class="glyphicon glyphicon-off logout"></span><span class="logout" style="margin-right:1px;">Logout</span>
 				</div>
 			</div>
 		</div>
 
 		<div class="">
 			<div>
-				<span class="lead text-success"> - CALL STATUS: </span>
+				<span class="lead text-success">CALL STATUS: </span>
 				<span id=callstatus class="label-value">Idle</span>
-				<span class="glyphicon glyphicon-cog pull-right config" data-toggle="modal" data-target="#configparams">CONFIGPARAMS</span>
+				<span class="config pull-right" data-toggle="modal" data-target="#configparams" style="margin-right: 4px;">Config</span><span class="glyphicon glyphicon-cog fa-lg pull-right config-cog" data-toggle="modal" data-target="#configparams"></span>
 			</div>
 			<div class="panel-body">
 				<div class="container">
@@ -641,7 +638,7 @@
 										</div>
 										<div class="span4">
 											<div class="num">
-												<div class="txt">
+												<div class="txt" style="font-size:55px; margin-top:-5px;">
 													*
 												</div>
 											</div>

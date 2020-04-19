@@ -119,11 +119,10 @@ p
     text-align: center;
     /*margin-top: 15px;*/
     font-family: 'Lato' , sans-serif;
-    line-height: 30px;
 }
 .small
 {
-    font-size: 15px;
+    font-size: 13px;
 }
 
 .btn
@@ -188,23 +187,23 @@ p
 
 .oncallalertmsg{
   position: absolute !important;
-  top: 32% !important;
-  right: 5% !important;
+  top: 30% !important;
+  right: 10% !important;
   /*width: 20%;*/
   z-index: 100000 !important;
-  left: 65% !important;
+  left: 60% !important;
 }
 
 .mediaalertmsg{
     position: absolute;
-    top: 32%;
-    right: 5%;
+    top: 30%;
+    right: 10%;
     /*width: 20%;*/
     z-index: 100000;
 }
 
 .alertmsg{
-  position: absolute;
+  position: fixed;
   top: 10px;
   right: 10px;
   /*width: 20%;*/
@@ -376,13 +375,24 @@ p
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-.btn-success{
+.btn-success, .btn-primary{
   background-color: #05006d !important;
   border-color: rgba(0,0,0,.0001) !important;  
 }
-.btn-success:hover, .btn-success:active, .btn-success:focus, .btn-success:visited{
+.btn-success:hover, .btn-success:active, .btn-success:focus, .btn-success:visited, .btn-primary:hover, .btn-primary:active, .btn-primary:focus, .btn-primary:visited{
   background-color: #080188 !important;
   border-color: rgba(0,0,0,.0001) !important;  
+}
+
+.btn-primary{
+  padding: 8px 16px;
+}
+
+.btn-outline-primary{
+  border: solid 1px #05006d;
+  padding: 8px 15px;
+  color: #05006d;
+  border-radius: 4px;
 }
 .navbar-text{
   color: black;
@@ -476,7 +486,7 @@ a, a:focus, a:hover, a:visited {
   margin-top:5px;
 }
 
-/* .answerIncoming, .makecall{
+.answerIncoming, .makecall{
   width: 100%;
   background-color: #43A047 !important;
   border-color: #43A047 !important;
@@ -485,18 +495,10 @@ a, a:focus, a:hover, a:visited {
 .answerIncoming:hover, .answerIncoming:active, .answerIncoming:focus, .answerIncoming:visited, .makecall:hover, .makecall:active, .makecall:focus, .makecall:visited{
   background-color: rgb(16, 128, 22) !important;
   border-color: rgb(16, 128, 22) !important;
-} */
-
-.answerIncoming{
-  width: 100%;
-  background-color: #43A047 !important;
-  border-color: #43A047 !important;
-  margin-top: 20px;
 }
 
-.answerIncoming:hover, .answerIncoming:active, .answerIncoming:focus, .answerIncoming:visited{
-  background-color: rgb(16, 128, 22) !important;
-  border-color: rgb(16, 128, 22) !important;
+.answerIncoming{
+  margin-top: 40px;
 }
 
 .btn-default, .btn-default:active, .btn-default:focus {
@@ -504,17 +506,38 @@ a, a:focus, a:hover, a:visited {
   border-color: black;
 }
 
-.configparambtn, .configparambtn:active, .configparambtn:focus, .configparambtn.visited{
+/* .configparambtn, .configparambtn:active, .configparambtn:focus, .configparambtn.visited{
   color:black;
   border-color: #ccc;
   margin-right: 13px;
-}
+} */
 
 .logout, .config{
   font-size: large;
   cursor: pointer;
   color: #43A047;
   font-weight: 500;
+  margin-right: 2px;
+}
+
+.config-cog{
+  cursor: pointer;
+  color: #43A047;
+  font-weight: 500;
+  margin-right: 2px;
+  font-size: 1.4em !important;
+  line-height: 1.1em !important;
+}
+
+.config-login{
+  cursor: pointer;
+  margin-bottom: 10px;
+  margin-right: 2px;
+}
+
+.config-div{
+  margin-left: 95px;
+  font-size: 16px;
 }
 
 .log-out{
@@ -584,4 +607,6 @@ a, a:focus, a:hover, a:visited {
   color: #afaf00;
   font-weight: 600;
   font-family: sans-serif;
+  text-align: center;
+  margin-right: 25%;
 }
