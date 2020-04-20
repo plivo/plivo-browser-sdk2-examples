@@ -1,37 +1,50 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:300);
 @import url(https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css);
-body{ 
-background: url(despic.png) no-repeat center center fixed; 
--webkit-background-size: cover;
--moz-background-size: cover;
--o-background-size: cover;
-background-size: cover;
+
+body{
+  background: no-repeat center center;
+  background-image: url(../img/background.svg);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 body
 {
     margin: 0;
     padding: 0;
-    font-family: 'Lato' , sans-serif;
-    color: #333;
+    font-family: soleil,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
     background-size: 100%;
     -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: none;
-    background-color: black;
+    color: #212933;
+    background-color: #f8f9fa;
 }
+
 p
 {
     margin: 0;
     padding: 0 0 10px 0;
     line-height: 20px;
 }
-.phone-panel{
-  margin-bottom: 20px;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
-  box-shadow: 0 1px 1px rgba(0,0,0,.05);
-  border-color: white;  
+
+.borderline{
+  border-bottom: 1px solid black;
 }
+
+.loginscreen{
+  position: relative;
+  background: #fff;
+  border-radius: 2px;
+  box-shadow: 0 0 14px 0 #dee5eb;
+  border: solid 1px #d7e1ec;
+  display: inline-block;
+  left: 27%;
+  padding-left: 80px;
+  padding-right: 80px;
+  margin-top:5%;
+}
+
 .span4
 {
     width: 80px;
@@ -42,7 +55,7 @@ p
 .phone
 {
     margin-top: 15px;
-    background: rgba(150, 209, 150, 0.09);
+    /* background: rgba(150, 209, 150, 0.09); */
 }
 
 .callanswerpad{
@@ -52,29 +65,39 @@ p
 .callinfo
 {
     margin-top: 15px;
-    background: rgba(150, 209, 150, 0.09);
+    /* background: rgba(150, 209, 150, 0.09); */
     width: 50%;
+}
+
+.callinfoIcon{
+  font-size: 2em;
+}
+
+.callinfoPid{
+  margin-left: 20px;
 }
 
 .incomingCallDefault {
   margin-top: 15px;
-  background: rgba(150, 209, 150, 0.09);
+  /* background: rgba(150, 209, 150, 0.09); */
   width: 40%;
+}
+
+.incomingCallBtnSecondary{
+  width: 50%;
 }
 
 .tel
 {
   margin-bottom: 10px;
   margin-top: 10px;
-  background-color: rgba(0, 0, 0, 0);
-  color: white;
+  color: black;
   font-weight: 600;
 }
 .num-pad
 {
     padding-left: 15px;
 }
-
 
 .num
 {
@@ -86,27 +109,31 @@ p
     /*background-color: #fff;*/
     cursor: pointer;
 }
+
 .num:hover
 {
-    background-color: #05006d;
-    color: #fff;
+    background-color: #d9edf7;
     transition-property: background-color .2s linear 0s;
     -moz-transition: background-color .2s linear 0s;
     -webkit-transition: background-color .2s linear 0s;
     -o-transition: background-color .2s linear 0s;
 }
+
+.num-star{
+  font-size:55px !important;
+  margin-top:-5px;
+}
+
 .txt
 {
     font-size: 30px;
     text-align: center;
-    /*margin-top: 15px;*/
     font-family: 'Lato' , sans-serif;
-    line-height: 30px;
-    color: white;
 }
+
 .small
 {
-    font-size: 15px;
+    font-size: 13px;
 }
 
 .btn
@@ -116,9 +143,11 @@ p
     -webkit-font-smoothing: antialiased;
     letter-spacing: 1px;
 }
+
 .btn-lg{
-  width: 35%;
+  width: 80%;
 }
+
 .btn:hover
 {
     transition-property: background-color .2s linear 0s;
@@ -126,35 +155,16 @@ p
     -webkit-transition: background-color .2s linear 0s;
     -o-transition: background-color .2s linear 0s;
 }
-.spanicons
-{
-    width: 72px;
-    float: left;
-    text-align: center;
-    margin-top: 40px;
-    font-size: 30px;
-    cursor: pointer;
-}
-.spanicons:hover
-{
-    color: #3498db;
-    transition-property: color .2s linear 0s;
-    -moz-transition: color .2s linear 0s;
-    -webkit-transition: color .2s linear 0s;
-    -o-transition: color .2s linear 0s;
-}
+
 .active
 {
     color: #3498db;
 }
+
 .metrics{
     margin-bottom: 7px;
     padding: 10px;
-    /*z-index: 10000;*/
-    /*display: inline-block;*/
-    /*background: rgba(0,153,204,0.93);*/
     background: rgba(244, 67, 54, 0.75);
-    /*border: 1px solid #006b8f;*/
     color: #fff;
     font-size: 13px;
     text-align: center;
@@ -162,39 +172,34 @@ p
     padding-top: 8px;
     padding-bottom: 8px;
     outline: 0;
-    /*position: fixed;*/
     top: 0;
-    /*left: 0;*/
     right:0;
     font-family: monospace; 
 }
 
 .oncallalertmsg{
   position: absolute !important;
-  top: 34% !important;
-  right: 5% !important;
-  /*width: 20%;*/
+  top: 30% !important;
+  right: 10% !important;
   z-index: 100000 !important;
-  left: 65% !important;
+  left: 60% !important;
 }
 
 .mediaalertmsg{
     position: absolute;
-    top: 34%;
-    right: 5%;
-    /*width: 20%;*/
+    top: 30%;
+    right: 10%;
     z-index: 100000;
 }
 
 .alertmsg{
-  position: absolute;
+  position: fixed;
   top: 10px;
   right: 10px;
-  /*width: 20%;*/
   z-index: 100000;
 }
 
-#recPlayerLayout,.inboundBeforeAnswer, .outboundBeforeAnswer, .AfterAnswer, .callinfo, .lowQualityRadios, .feedback, .loader, .fadein-effect{
+.AfterAnswer, .callinfo, .lowQualityRadios, .feedback, .loader, .fadein-effect{
     display: none;
 }
 
@@ -202,9 +207,7 @@ p
     margin-bottom: 10px;
     padding: 10px;
     z-index: 10000;
-    background: rgb(14, 14, 14);
-    /*border: 1px solid #03A9F4;*/
-    font-size: 13px;
+    font-size: 14px;
     text-align: center;
     border-radius: 3px;
     padding-top: 8px;
@@ -212,31 +215,38 @@ p
     outline: 0;
     top: 0;
     right: 0;
-    font-family: monospace;
-    color: red;    
-}
-.alertwarn{
-  color: red;
-}
-.alertinfo{
-  color: rgb(25, 255, 34);
+    font-family: monospace;  
 }
 
-.white{
-  color: white;
-  font-size: 20px;
-  font-weight: 600;
+.alertwarn{
+  color: red;
+  border: 1px solid red;
 }
-.white-icon {
-  color: white;
+
+.alertinfo{
+  color: green;
+  border: 1px solid green;
+}
+
+.black{
   font-size: 20px;
-  font-weight: 600;
-  margin-left: 20px;
-  cursor: pointer;
+  font-weight: 500;
+}
+
+.caption{
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.loginUser, .loginPwd{
+  font-size: initial;
+}
+
+.middleLabel{
+  margin-top: 5px;
 }
 
 #answerkeypad{
-  color: white;
   font-weight: 600;
   margin-top: 20px;
 }
@@ -247,70 +257,32 @@ p
     top: 50%;
     left: -2%;    
 }
-.audioDevices{
-    position: absolute;
-    top: 20%;
-    right: 0%;    
-}
+
 .monospace{
     font-family: monospace;
-}
-.keypad {
-    background-color: deepskyblue;
-    border-radius: 0%;
-    color: #fff;
-    display: inline-block;
-    font-size: 12px;
-    height: 20px;
-    line-height: 20px;
-    padding: 5px;
-    margin: 1px;
-    text-align: center;
-    width: 20px;
-    opacity: .8;
-    cursor:pointer;
-}
-.dialpad {
-      margin-left: 2%;
-}
-.googleLogin {
-  background: url(signin_button.png) no-repeat 6px center;
-  /*width: 100px;*/
-  height: 100px;
-  display: block;
 }
 
 #clickLogin, #clickLoginJWT{
   width:20%;
 }
 
-.center-div
-{
-  position: absolute;
-  margin: auto;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: 15%;
-  height: 100px;
-  border-radius: 3px;
-}
 .white-shadow{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);    
 }
-.client-name{
-  margin-left: 14px;
-  position: absolute;
-  color: white;
-}
+
 .lead{
-  font-weight: 600;
-  color: gray;
+  font-weight: 400;
+  font-size: 18px;
 }
+
 .text-success{
-  color: #130abd;
+  color: #05006D;
 }
+
+.label-value{
+  font-size: 18px;
+}
+
 .loader {
   position: absolute;
   left: 50%;
@@ -319,11 +291,12 @@ p
   width: 150px;
   height: 150px;
   margin: -75px 0 0 -75px;
-  border: 16px solid #f3f3f3;
+  border: 16px solid #D4D4D4;
   border-radius: 50%;
-  border-top: 16px solid #05006d;
+  border-top: 16px solid #05006D;
   width: 120px;
   height: 120px;
+  background-color: transparent;
   -webkit-animation: spin 2s linear infinite;
   animation: spin 2s linear infinite;
 }
@@ -337,20 +310,37 @@ p
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-.btn-success{
+
+.btn-success, .btn-primary{
   background-color: #05006d !important;
   border-color: rgba(0,0,0,.0001) !important;  
 }
-.btn-success:hover, .btn-success:active, .btn-success:focus, .btn-success:visited{
+
+.btn-success:hover, .btn-success:active, .btn-success:focus, .btn-success:visited, .btn-primary:hover, .btn-primary:active, .btn-primary:focus, .btn-primary:visited{
   background-color: #080188 !important;
   border-color: rgba(0,0,0,.0001) !important;  
 }
-.navbar-text{
-  color: white;
+
+.btn-primary{
+  padding: 8px 16px;
 }
+
+.btn-outline-primary{
+  border: solid 1px #05006d;
+  padding: 8px 15px;
+  color: #05006d;
+  border-radius: 4px;
+}
+
+.navbar-text{
+  color: black;
+  font-weight: 400;
+}
+
 .modal-footer{
   text-align: center;
 }
+
 .iti__flag{
   background-image: url("../img/flags.png");
 }
@@ -358,30 +348,46 @@ p
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .iti__flag {background-image: url("../img/flags@2x.png");}
 }
+
 .iti{
   width: 100%;
   margin-top: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
+
 #callerid {
   background: transparent;
   border: none;
-  border-bottom: 1px solid #ffffff;
+  border-bottom: 1px solid #000000;
   outline:none;
   box-shadow:none;
   text-align: center;
   margin-bottom: 10px;
-  color: white;
+  color: black;
 }
+
+.calleridRemove{
+  cursor:pointer;
+  margin-left:3px;
+}
+
 .micsettingslink{
-  color: white;
   margin-bottom: 10px;
   margin-top: 10px;
   text-decoration: underline;
 }
 
+.micLabel{
+  font-weight: 200;
+}
+
+.toggleLabel{
+  margin-left:10px;
+}
+
 a, a:focus, a:hover, a:visited {
-  color: white;
+  color: black;
+  font-weight: 600;
 }
 
 .pidinput{
@@ -404,8 +410,9 @@ a, a:focus, a:hover, a:visited {
   height: 10px;
   display: inline-block;
   margin: 5px;
-  background-color:white;
+  background-color: #e6e7e8;
 }
+
 .miclink, .speakerlink{
   margin-left: 20px;
   font-size: 15px;
@@ -436,7 +443,7 @@ a, a:focus, a:hover, a:visited {
   margin-top:5px;
 }
 
-/* .answerIncoming, .makecall{
+.answerIncoming, .makecall{
   width: 100%;
   background-color: #43A047 !important;
   border-color: #43A047 !important;
@@ -445,51 +452,52 @@ a, a:focus, a:hover, a:visited {
 .answerIncoming:hover, .answerIncoming:active, .answerIncoming:focus, .answerIncoming:visited, .makecall:hover, .makecall:active, .makecall:focus, .makecall:visited{
   background-color: rgb(16, 128, 22) !important;
   border-color: rgb(16, 128, 22) !important;
-} */
-
-.answerIncoming{
-  width: 100%;
-  background-color: #43A047 !important;
-  border-color: #43A047 !important;
-  margin-top: 20px;
 }
 
-.answerIncoming:hover, .answerIncoming:active, .answerIncoming:focus, .answerIncoming:visited{
-  background-color: rgb(16, 128, 22) !important;
-  border-color: rgb(16, 128, 22) !important;
+.answerIncoming{
+  margin-top: 40px;
 }
 
 .btn-default, .btn-default:active, .btn-default:focus {
-  color:white;
-  background-color: rgba(150, 209, 150, 0.09);;
-  border-color: white;
+  background-color: rgba(150, 209, 150, 0.09);
+  border-color: black;
 }
 
-.configparambtn, .configparambtn:active, .configparambtn:focus, .configparambtn.visited{
-  color:black;
-  border-color: #ccc;
-  margin-right: 13px;
+.logout, .config{
+  font-size: large;
+  cursor: pointer;
+  color: #43A047;
+  font-weight: 500;
+  margin-right: 2px;
 }
 
-.log-out{
-  font-size: 25px;
-  color: orange;
+.config-cog{
+  cursor: pointer;
+  color: #43A047;
+  font-weight: 500;
+  margin-right: 2px;
+  font-size: 1.4em !important;
+  line-height: 1.1em !important;
 }
-.log-in{
-  font-size: 25px;
-  color: #05006d;
+
+.config-login{
+  cursor: pointer;
+  margin-bottom: 10px;
+  margin-right: 2px;
 }
-.log-missed{
-  font-size: 25px;
-  color: red;
+
+.config-div{
+  margin-left: 95px;
+  font-size: 16px;
 }
-.log-call{
-  font-size: 25px;
-  color: #05006d;  
+
+.config-update{
+  width:15%;
 }
-.log-call:hover{
-  text-shadow: 7px 2px 10px;
-  cursor: pointer; 
+
+.config-reset{
+  width:15%;
+  margin-left:10px;
 }
 
 .feedbackTextArea{
@@ -526,16 +534,21 @@ a, a:focus, a:hover, a:visited {
   font-size:2.5em; /* Change the size of the stars */
   color:#ccc; /* Color on idle state */
 }
+
 /* Hover state of the stars */
 .rating-stars ul > li.star.hover > i.fa {
   color:#FFCC36;
 }
+
 /* Selected state of the stars */
 .rating-stars ul > li.star.selected > i.fa {
   color:#FF912C;
 }
+
 .feedback-status{
   color: #afaf00;
   font-weight: 600;
   font-family: sans-serif;
+  text-align: center;
+  margin-right: 25%;
 }
