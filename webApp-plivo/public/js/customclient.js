@@ -674,7 +674,7 @@ function loginJWT(jwtTokenObject){
 		//start UI load spinner
 		kickStartNow();			
 		//Calling SDK loginJWT method
-		plivoWebSdk.client.loginWithAccessTokenGenerater(jwtTokenObject);
+		plivoWebSdk.client.loginWithAccessTokenGenerator(jwtTokenObject);
 		$('#sipUserName').html('Successfully logged in with JWT token');
 	}else{
 		console.error('JWT Object found null')

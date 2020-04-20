@@ -32,30 +32,30 @@ Lets create a `customclient.js` file and declare a variable `var plivoWebSdk;`
 This is where we initialise a new Plivo object by passing `options` as `plivoWebSdk = new window.Plivo(options);`. The application can set up listeners for events as shown in the `initPhone` function below. 
 
 ```js
-    var plivoWebSdk; 
-    function initPhone(username, password){
-        var options = refreshSettings();
-        plivoWebSdk = new window.Plivo(options);
-        plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
-        plivoWebSdk.client.on('onLogin', onLogin);
-        plivoWebSdk.client.on('onLogout', onLogout);
-        plivoWebSdk.client.on('onLoginFailed', onLoginFailed);
-        plivoWebSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
-        plivoWebSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
-        plivoWebSdk.client.on('onCallFailed', onCallFailed);
-        plivoWebSdk.client.on('onCallAnswered', onCallAnswered);
-        plivoWebSdk.client.on('onCallTerminated', onCallTerminated);
-        plivoWebSdk.client.on('onCalling', onCalling);
-        plivoWebSdk.client.on('onIncomingCall', onIncomingCall);
-        plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
-        plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
-        plivoWebSdk.client.on('audioDeviceChange',audioDeviceChange);
-        plivoWebSdk.client.on('onConnectionChange', onConnectionChange);
-	plivoWebSdk.client.on('volume', volume);
-        plivoWebSdk.client.setRingTone(true);
-        plivoWebSdk.client.setRingToneBack(true);
-        console.log('initPhone ready!')
-        }
+var plivoWebSdk; 
+function initPhone(username, password){
+  var options = refreshSettings();
+  plivoWebSdk = new window.Plivo(options);
+  plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
+  plivoWebSdk.client.on('onLogin', onLogin);
+  plivoWebSdk.client.on('onLogout', onLogout);
+  plivoWebSdk.client.on('onLoginFailed', onLoginFailed);
+  plivoWebSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
+  plivoWebSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
+  plivoWebSdk.client.on('onCallFailed', onCallFailed);
+  plivoWebSdk.client.on('onCallAnswered', onCallAnswered);
+  plivoWebSdk.client.on('onCallTerminated', onCallTerminated);
+  plivoWebSdk.client.on('onCalling', onCalling);
+  plivoWebSdk.client.on('onIncomingCall', onIncomingCall);
+  plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
+  plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
+  plivoWebSdk.client.on('audioDeviceChange',audioDeviceChange);
+  plivoWebSdk.client.on('onConnectionChange', onConnectionChange);
+  plivoWebSdk.client.on('volume', volume);
+  plivoWebSdk.client.setRingTone(true);
+  plivoWebSdk.client.setRingToneBack(true);
+  console.log('initPhone ready!')
+}
 ```
 In the demo, `options` can be set from UI in the CONFIG menu. Once the CONFIG is updated clicking on LOGIN will boot the phone again.
 
@@ -73,30 +73,79 @@ In the demo, `options` can be set from UI in the CONFIG menu. Once the CONFIG is
     </script>
 ```
 ### Login 
-Login accepts Plivo Endpoint Credentials. 
+Login with username/password. 
 ![plivo-websdk-2.0-example](img/login.png)
 ```js
-    function login(username, password) {
-      if(username && password){
-        //start UI load spinner
-        kickStartNow();			
-        plivoWebSdk.client.login(username, password);
-      } else{
-        console.error('username/password missing!')
-      }
-    }
-    $('#clickLogin').click(function(e){
-      var userName = $('#loginUser').val();
-      var password = $('#loginPwd').val();
-      login(userName, password);
-    });
-```    
+function login(username, password) {
+  if(username && password){
+    //start UI load spinner
+    kickStartNow();			
+    plivoWebSdk.client.login(username, password);
+  } else{
+    console.error('username/password missing!')
+  }
+}
+$('#clickLogin').click(function(e){
+  var userName = $('#loginUser').val();
+  var password = $('#loginPwd').val();
+  login(userName, password);
+});
+```
+Login with username/jwt. 
+![plivo-websdk-2.0-example](img/login_jwt.png)
+```js
+$('#clickLoginJWT').click(function(e){
+	var userName = $('#loginJwtUser').val();
+	implementToken(userName);
+});
+
+function implementToken(username){
+	var JwtToken = function() { Token.apply(); };
+	JwtToken.prototype = Object.create(Token.prototype);
+	JwtToken.prototype.constructor = JwtToken;
+	JwtToken.prototype.getToken = async function() {
+		//get JWT Token
+		const requestBody = {
+			"endpoint":username
+		}	
+		const response = await fetch(tokenGenServerURI, {
+						method: 'POST',
+						body: JSON.stringify(requestBody),
+			  			headers: {'Content-Type' : 'application/json'}
+					}).catch(function (err) {
+						console.error("Error in fetching the token ", err);
+						return null;
+					});
+		try{	
+			const myJson = await response.json();
+			return (myJson['token'])
+		}catch(error){
+			console.error("Error : "+error);	
+			return(null);
+		}		
+	}
+	var jwtTokenObject = new JwtToken();
+    loginJWT(jwtTokenObject);
+}
+
+function loginJWT(jwtTokenObject){
+	if(jwtTokenObject!=null){
+		//start UI load spinner
+		kickStartNow();			
+		//Calling SDK loginJWT method
+		plivoWebSdk.client.loginWithAccessTokenGenerator(jwtTokenObject);
+		$('#sipUserName').html('Successfully logged in with JWT token');
+	}else{
+		console.error('JWT Object found null')
+	}
+}
+``` 
 ### Options
 *Options allow to disable tracking, setting codec type, enabling and disabling AEC/AGC etc. The list of all the settings can be found in the documentation page.*
 ![plivo-websdk-2.0-example](img/settings.png)
 
 ```js
-  var defaultSettings = { "debug":"DEBUG", "permOnClick":true, "codecs":["OPUS","PCMU"], "enableIPV6":false, "audioConstraints":{"optional":[{"googAutoGainControl":false}, {"googEchoCancellation":false}]}, "enableTracking":true, "closeProtection":false, "maxAverageBitrate":48000}
+var defaultSettings = { "debug":"DEBUG", "permOnClick":true, "codecs":["OPUS","PCMU"], "enableIPV6":false, "audioConstraints":{"optional":[{"googAutoGainControl":false}, {"googEchoCancellation":false}]}, "enableTracking":true, "closeProtection":false, "maxAverageBitrate":48000}
 function resetSettings(){
 	document.getElementById('loglevelbtn').value = "INFO"
 	document.getElementById('onlogin').checked = true
@@ -389,6 +438,7 @@ function audioDeviceChange(e){
 ```
 ### Sending Feedback
 The following snippet shows how to collect feedback using the SDK. There is a predefined list of feedback comments that users can select for the score range from 1-3. In this application we are taking “good” and “perfect” as feedback for scores 4 and 5.
+
 ![plivo-websdk-2.0-example](img/feedback.png)
 
 ```js
