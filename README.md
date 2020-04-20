@@ -73,7 +73,7 @@ In the demo, `options` can be set from UI in the CONFIG menu. Once the CONFIG is
   </script>
 ```
 ### Login 
-##### Login with username/password. 
+#### Login with username/password. 
 ![plivo-websdk-2.0-example](img/login.png)
 ```js
 function login(username, password) {
@@ -92,7 +92,7 @@ $('#clickLogin').click(function(e){
   login(userName, password);
 });
 ```
-##### Login with username/jwt. 
+#### Login with username/jwt. 
 ![plivo-websdk-2.0-example](img/login_jwt.png)
 ```js
 function implementToken(username){
