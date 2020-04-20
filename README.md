@@ -34,27 +34,27 @@ This is where we initialise a new Plivo object by passing `options` as `plivoWeb
 ```js
 var plivoWebSdk; 
 function initPhone(username, password){
-	var options = refreshSettings();
-	plivoWebSdk = new window.Plivo(options);
-	plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
-	plivoWebSdk.client.on('onLogin', onLogin);
-	plivoWebSdk.client.on('onLogout', onLogout);
-	plivoWebSdk.client.on('onLoginFailed', onLoginFailed);
-	plivoWebSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
-	plivoWebSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
-	plivoWebSdk.client.on('onCallFailed', onCallFailed);
-	plivoWebSdk.client.on('onCallAnswered', onCallAnswered);
-	plivoWebSdk.client.on('onCallTerminated', onCallTerminated);
-	plivoWebSdk.client.on('onCalling', onCalling);
-	plivoWebSdk.client.on('onIncomingCall', onIncomingCall);
-	plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
-	plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
-	plivoWebSdk.client.on('audioDeviceChange',audioDeviceChange);
-	plivoWebSdk.client.on('onConnectionChange', onConnectionChange);
-	plivoWebSdk.client.on('volume', volume);
-	plivoWebSdk.client.setRingTone(true);
-	plivoWebSdk.client.setRingToneBack(true);
-	console.log('initPhone ready!')
+  var options = refreshSettings();
+  plivoWebSdk = new window.Plivo(options);
+  plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
+  plivoWebSdk.client.on('onLogin', onLogin);
+  plivoWebSdk.client.on('onLogout', onLogout);
+  plivoWebSdk.client.on('onLoginFailed', onLoginFailed);
+  plivoWebSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
+  plivoWebSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
+  plivoWebSdk.client.on('onCallFailed', onCallFailed);
+  plivoWebSdk.client.on('onCallAnswered', onCallAnswered);
+  plivoWebSdk.client.on('onCallTerminated', onCallTerminated);
+  plivoWebSdk.client.on('onCalling', onCalling);
+  plivoWebSdk.client.on('onIncomingCall', onIncomingCall);
+  plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
+  plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
+  plivoWebSdk.client.on('audioDeviceChange',audioDeviceChange);
+  plivoWebSdk.client.on('onConnectionChange', onConnectionChange);
+  plivoWebSdk.client.on('volume', volume);
+  plivoWebSdk.client.setRingTone(true);
+  plivoWebSdk.client.setRingToneBack(true);
+  console.log('initPhone ready!')
 }
 ```
 In the demo, `options` can be set from UI in the CONFIG menu. Once the CONFIG is updated clicking on LOGIN will boot the phone again.
@@ -64,81 +64,81 @@ In the demo, `options` can be set from UI in the CONFIG menu. Once the CONFIG is
 >If you're directly calling login on page load, please make sure you do that only after HTML document ready. 
 
 ```html
-    <script type="text/javascript">
-        $( document ).ready(function() {
-            console.log( "HTML ready!" );
-            resetSettings(); // Optional, reset your Plivo settings on page load
-            initPhone(); // Optional, Initialise Plivo sdk instance on load
-        }); 
-    </script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      console.log("HTML ready!");
+      resetSettings(); // Optional, reset your Plivo settings on page load
+      initPhone(); // Optional, Initialise Plivo sdk instance on load
+    }); 
+  </script>
 ```
 ### Login 
 ###### Login with username/password. 
 ![plivo-websdk-2.0-example](img/login.png)
 ```js
 function login(username, password) {
-	if(username && password){
-	//start UI load spinner
-	kickStartNow();			
-	plivoWebSdk.client.login(username, password);
-	} else{
-	console.error('username/password missing!')
-	}
+  if(username && password) {
+    //start UI load spinner
+    kickStartNow();     
+    plivoWebSdk.client.login(username, password);
+  } else {
+    console.error('username/password missing!')
+  }
 }
 
 $('#clickLogin').click(function(e){
-	var userName = $('#loginUser').val();
-	var password = $('#loginPwd').val();
-	login(userName, password);
+  var userName = $('#loginUser').val();
+  var password = $('#loginPwd').val();
+  login(userName, password);
 });
 ```
 ###### Login with username/jwt. 
 ![plivo-websdk-2.0-example](img/login_jwt.png)
 ```js
 function implementToken(username){
-	var JwtToken = function() { Token.apply(); };
-	JwtToken.prototype = Object.create(Token.prototype);
-	JwtToken.prototype.constructor = JwtToken;
-	JwtToken.prototype.getToken = async function() {
-		//get JWT Token
-		const requestBody = {
-			"endpoint":username
-		}	
-		const response = await fetch(tokenGenServerURI, {
-						method: 'POST',
-						body: JSON.stringify(requestBody),
-			  			headers: {'Content-Type' : 'application/json'}
-					}).catch(function (err) {
-						console.error("Error in fetching the token ", err);
-						return null;
-					});
-		try{	
-			const myJson = await response.json();
-			return (myJson['token'])
-		}catch(error){
-			console.error("Error : "+error);	
-			return(null);
-		}		
-	}
-	var jwtTokenObject = new JwtToken();
-    loginJWT(jwtTokenObject);
+  var JwtToken = function() { Token.apply(); };
+  JwtToken.prototype = Object.create(Token.prototype);
+  JwtToken.prototype.constructor = JwtToken;
+  JwtToken.prototype.getToken = async function() {
+    //get JWT Token
+    const requestBody = {
+      "endpoint":username
+    }   
+    const response = await fetch(tokenGenServerURI, {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {'Content-Type' : 'application/json'}
+          }).catch(function (err) {
+            console.error("Error in fetching the token ", err);
+            return null;
+          });
+    try{  
+      const myJson = await response.json();
+      return (myJson['token'])
+    }catch(error){
+      console.error("Error : "+error);  
+      return(null);
+    }     
+  }
+  var jwtTokenObject = new JwtToken();
+  loginJWT(jwtTokenObject);
 }
 
 function loginJWT(jwtTokenObject){
-	if(jwtTokenObject!=null){
-		//start UI load spinner
-		kickStartNow();			
-		//Calling SDK loginJWT method
-		plivoWebSdk.client.loginWithAccessTokenGenerator(jwtTokenObject);
-		$('#sipUserName').html('Successfully logged in with JWT token');
-	}else{
-		console.error('JWT Object found null')
-	}
+  if(jwtTokenObject!=null) {
+    //start UI load spinner
+    kickStartNow();     
+    //Calling SDK loginJWT method
+    plivoWebSdk.client.loginWithAccessTokenGenerator(jwtTokenObject);
+    $('#sipUserName').html('Successfully logged in with JWT token');
+  }else {
+    console.error('JWT Object found null')
+  }
 }
 
 $('#clickLoginJWT').click(function(e){
-	var userName = $('#loginJwtUser').val();
-	implementToken(userName);
+  var userName = $('#loginJwtUser').val();
+  implementToken(userName);
 });
 ``` 
 ### Options
@@ -148,84 +148,84 @@ $('#clickLoginJWT').click(function(e){
 ```js
 var defaultSettings = { "debug":"DEBUG", "permOnClick":true, "codecs":["OPUS","PCMU"], "enableIPV6":false, "audioConstraints":{"optional":[{"googAutoGainControl":false}, {"googEchoCancellation":false}]}, "enableTracking":true, "closeProtection":false, "maxAverageBitrate":48000}
 function resetSettings(){
-	document.getElementById('loglevelbtn').value = "INFO"
-	document.getElementById('onlogin').checked = true
-	document.getElementById('monitorquality').checked = true
-	document.getElementById('dontcloseprotect').checked = true
-	document.getElementById('allowdscp').checked = true
-	document.getElementById('noincoming').checked = true
-	document.getElementById('msregionbtn').value = "AUTO"
-	document.getElementById('averagebitrate').value = 48000
-	localStorage.setItem('plivosettings',JSON.stringify(defaultSettings));
+  document.getElementById('loglevelbtn').value = "INFO"
+  document.getElementById('onlogin').checked = true
+  document.getElementById('monitorquality').checked = true
+  document.getElementById('dontcloseprotect').checked = true
+  document.getElementById('allowdscp').checked = true
+  document.getElementById('noincoming').checked = true
+  document.getElementById('msregionbtn').value = "AUTO"
+  document.getElementById('averagebitrate').value = 48000
+  localStorage.setItem('plivosettings',JSON.stringify(defaultSettings));
 }
 
 function updateSettings(val){
-	let loglevel = document.getElementById('loglevelbtn').value;
-	val.debug = loglevel;
-	changeVal(val, document.getElementById('onlogin').checked, 'onLoginMicAccess', false);
-	changeVal(val, document.getElementById('monitorquality').checked, "enableTracking", false);
-	changeVal(val, document.getElementById('dontcloseprotect').checked, "closeProtection", true);
-	changeVal(val, document.getElementById('allowdscp').checked, "dscp", false);
-	changeVal(val, document.getElementById('noincoming').checked, "allowMultipleIncomingCalls", true);
-	let clientRegion = document.getElementById('msregionbtn').value;
-	if(clientRegion!='AUTO') {
-		val.clientRegion = clientRegion;
-	}
-	let averagebitrate = document.getElementById('averagebitrate').value;
-	val.maxAverageBitrate = parseInt(averagebitrate);
-	localStorage.setItem('plivosettings',JSON.stringify(val));
-	console.log('plivosettings updated!')
+  let loglevel = document.getElementById('loglevelbtn').value;
+  val.debug = loglevel;
+  changeVal(val, document.getElementById('onlogin').checked, 'onLoginMicAccess', false);
+  changeVal(val, document.getElementById('monitorquality').checked, "enableTracking", false);
+  changeVal(val, document.getElementById('dontcloseprotect').checked, "closeProtection", true);
+  changeVal(val, document.getElementById('allowdscp').checked, "dscp", false);
+  changeVal(val, document.getElementById('noincoming').checked, "allowMultipleIncomingCalls", true);
+  let clientRegion = document.getElementById('msregionbtn').value;
+  if(clientRegion!='AUTO') {
+    val.clientRegion = clientRegion;
+  }
+  let averagebitrate = document.getElementById('averagebitrate').value;
+  val.maxAverageBitrate = parseInt(averagebitrate);
+  localStorage.setItem('plivosettings',JSON.stringify(val));
+  console.log('plivosettings updated!')
 }
 // From UI triggers
 $('#updateSettings').click(function(e){
-	updateSettings(defaultSettings);
+  updateSettings(defaultSettings);
 });
 
 $('#resetSettings').click(function(e){
-	resetSettings();
+  resetSettings();
 }); 
-```    
+```  
 ### Registration
 The following snippet shows how to handle registration related events in the application
 ```js
 function onReady(){
-	$('#phonestatus').html('trying to login...');
-	console.info('Ready');
+  $('#phonestatus').html('trying to login...');
+  console.info('Ready');
 }
 
 function onLogin(){
-	$('#phonestatus').html('online');
-	console.info('Logged in');
-	$('#makecall').attr('class', 'btn btn-success btn-block flatbtn');
-	$('#loginContainer').hide();
-	$('#callContainer').show();
+  $('#phonestatus').html('online');
+  console.info('Logged in');
+  $('#makecall').attr('class', 'btn btn-success btn-block flatbtn');
+  $('#loginContainer').hide();
+  $('#callContainer').show();
 }
 
 function onLoginFailed(reason){
-	console.info('onLoginFailed ',reason);
-	customAlert('Login failure :',reason, 'warn');  
+  console.info('onLoginFailed ',reason);
+  customAlert('Login failure :',reason, 'warn');  
 }
 
 function onLogout(){
-	console.info('onLogout');
-	$('#loginContainer').show();
-	$('#callContainer').hide();
+  console.info('onLogout');
+  $('#loginContainer').show();
+  $('#callContainer').hide();
 }
-```    
+```  
 ### Outgoing call
 Given a number or SIP URI, this snippet shows how to make an outgoing call. The following snippet takes input from the dial pad UI. 
 ```js
 $('#makecall').click(function(e){
-	var to = $('#toNumber').val().replace(" ","");
-	var callEnabled = $('#makecall').attr('class').match('disabled');
-	if(!to || !plivoWebSdk || !!callEnabled){return};
-	console.info('Click make call : ',to);
-	plivoWebSdk.client.call(to);
-	$('.phone').hide();
-	$('.AfterAnswer').show();
-	$('#boundType').html('Outgoing : '+to);
-	$('#callDuration').html('00:00:00');
-	$('.callinfo').show();
+  var to = $('#toNumber').val().replace(" ","");
+  var callEnabled = $('#makecall').attr('class').match('disabled');
+  if(!to || !plivoWebSdk || !!callEnabled){return};
+  console.info('Click make call : ',to);
+  plivoWebSdk.client.call(to);
+  $('.phone').hide();
+  $('.AfterAnswer').show();
+  $('#boundType').html('Outgoing : '+to);
+  $('#callDuration').html('00:00:00');
+  $('.callinfo').show();
 });
 ```
 #### Outgoing call with dynamic caller ID
@@ -235,9 +235,9 @@ $('#makecall').click(function(e){
   var to = $('#toNumber').val();
   // pass caller Id
   var extraHeaders={},
-      customCallerId = localStorage.getItem('callerId'); // get the dynamic caller id
-  if(customCallerId){
-   extraHeaders = {'X-PH-callerId': customCallerId};
+  customCallerId = localStorage.getItem('callerId'); // get the dynamic caller id
+  if(customCallerId) {
+    extraHeaders = {'X-PH-callerId': customCallerId};
   }
   console.info('Click make call : ',to);
   plivoWebSdk.client.call(to, extraHeaders);
@@ -270,7 +270,7 @@ $('.answerIncoming').click(function(){
   console.info('Call accept clicked');
   plivoWebSdk.client.answer();
   $('.incomingCallDefault').hide();
-	$('.callinfo').show();
+  $('.callinfo').show();
 });
 ```
 The following snippet shows how to reject an incoming call
@@ -293,12 +293,12 @@ $('.ignoreIncoming').click(function(){
 This code may be used to terminate a call. 
 ```js
 $('.hangup').click(function(){
-	console.info('Hangup');
-	if(plivoWebSdk.client.callSession){
-		plivoWebSdk.client.hangup();
-	}else{
-		callOff();
-	}
+  console.info('Hangup');
+  if(plivoWebSdk.client.callSession) {
+    plivoWebSdk.client.hangup();
+  }else {
+    callOff();
+  }
 }); 
 ```
 ### Implementing MediaMetrics
@@ -310,15 +310,15 @@ This snippet shows how to handle network or media related events from the SDK. A
 Please check Chrome or Firefox console to see the complete info of the event. 
 ```js
 function mediaMetrics(obj){
-	console.table([obj]); 
-	$(".alertmsg").prepend(
-	'<div class="metrics -'+obj.type+'">' +
-	'<span style="margin-left:20px;">'+obj.level+' | </span>' +
-	'<span style="margin-left:20px;">'+obj.group+' | </span>' +
-	'<span style="margin-left:20px;">'+message+' - '+obj.desc+' : </span><span >'+obj.value+'</span>'+
-	'<span aria-hidden="true" onclick="closeMetrics(this)" style="margin-left:25px;cursor:pointer;">X</span>' +
-	'</div>'
-	);
+  console.table([obj]); 
+  $(".alertmsg").prepend(
+  '<div class="metrics -'+obj.type+'">' +
+  '<span style="margin-left:20px;">'+obj.level+' | </span>' +
+  '<span style="margin-left:20px;">'+obj.group+' | </span>' +
+  '<span style="margin-left:20px;">'+message+' - '+obj.desc+' : </span><span >'+obj.value+'</span>'+
+  '<span aria-hidden="true" onclick="closeMetrics(this)" style="margin-left:25px;cursor:pointer;">X</span>' +
+  '</div>'
+  );
 }
 ```
 
@@ -332,21 +332,21 @@ The following snippet uses this API to demonstrate how to handle device selectio
 ```js
 // Audio device selection
 $('#micDev').change(function(){
-	var selectDev = $('#micDev').val();
-	plivoWebSdk.client.audio.microphoneDevices.set(selectDev);
-	console.debug('Microphone device set to : ',selectDev);
+  var selectDev = $('#micDev').val();
+  plivoWebSdk.client.audio.microphoneDevices.set(selectDev);
+  console.debug('Microphone device set to : ',selectDev);
 });
 
 $('#speakerDev').change(function(){
-	var selectDev = $('#speakerDev').val();
-	plivoWebSdk.client.audio.speakerDevices.set(selectDev);
-	console.debug('Speaker device set to : ',selectDev);
+  var selectDev = $('#speakerDev').val();
+  plivoWebSdk.client.audio.speakerDevices.set(selectDev);
+  console.debug('Speaker device set to : ',selectDev);
 });
 
 $('#ringtoneDev').change(function(){
-	var selectDev = $('#ringtoneDev').val();
-	plivoWebSdk.client.audio.ringtoneDevices.set(selectDev);
-	console.debug('Ringtone dev set to : ',selectDev);
+  var selectDev = $('#ringtoneDev').val();
+  plivoWebSdk.client.audio.ringtoneDevices.set(selectDev);
+  console.debug('Ringtone dev set to : ',selectDev);
 });
 ```
 
@@ -355,28 +355,28 @@ The following snippet uses this API and demonstrates the use case of testing aud
 ```js
 // Ringtone device test
 $('#ringtoneDevTest').click(function(){
-	let ringtoneVal = document.getElementById('ringtoneDevTest').innerText;
-	// Toggle Test
-	if(ringtoneVal=='Test') {
-		showOuputAudioLevel('ringoutput');
-		$('#ringtoneDevTest').html('Stop');
-	} else if(ringtoneVal=='Stop') {
-		stopOutputAudioLevel('ringoutput');
-		$('#ringtoneDevTest').html('Test');
-	}
+  let ringtoneVal = document.getElementById('ringtoneDevTest').innerText;
+  // Toggle Test
+  if(ringtoneVal=='Test') {
+    showOuputAudioLevel('ringoutput');
+    $('#ringtoneDevTest').html('Stop');
+  } else if(ringtoneVal=='Stop') {
+    stopOutputAudioLevel('ringoutput');
+    $('#ringtoneDevTest').html('Test');
+  }
 });
 
 // Speaker device test
 $('#speakerDevTest').click(function(){
-	let speakerVal = document.getElementById('speakerDevTest').innerText;
-	// Toggle Test
-	if(speakerVal=='Test') {
-		showOuputAudioLevel('speakeroutput');
-		$('#speakerDevTest').html('Stop');
-	} else if(speakerVal=='Stop') {
-		stopOutputAudioLevel('speakeroutput');
-		$('#speakerDevTest').html('Test');
-	}
+  let speakerVal = document.getElementById('speakerDevTest').innerText;
+  // Toggle Test
+  if(speakerVal=='Test') {
+    showOuputAudioLevel('speakeroutput');
+    $('#speakerDevTest').html('Stop');
+  } else if(speakerVal=='Stop') {
+    stopOutputAudioLevel('speakeroutput');
+    $('#speakerDevTest').html('Test');
+  }
 });
 ```
 
@@ -384,41 +384,41 @@ The following snippet uses this API to retrieve available devices and populate t
 
 ```js
 function updateAudioDevices(){
-	// Remove existing options if any
-	document.querySelectorAll('#micDev option').forEach(e=>e.remove())
-	document.querySelectorAll('#ringtoneDev option').forEach(e=>e.remove())
-	plivoWebSdk.client.audio.availableDevices()
-	.then(function(e){
-	e.forEach(function(dev){
-		if(dev.label && dev.kind == "audioinput")
-		$('#micDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
-		if(dev.label && dev.kind == "audiooutput"){
-		$('#ringtoneDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>');
-		$('#speakerDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')    
-		}
-	});
-	})
-	.catch(function(error){
-	console.error(error);
-	})
+  // Remove existing options if any
+  document.querySelectorAll('#micDev option').forEach(e=>e.remove())
+  document.querySelectorAll('#ringtoneDev option').forEach(e=>e.remove())
+  plivoWebSdk.client.audio.availableDevices()
+  .then(function(e){
+  e.forEach(function(dev){
+    if(dev.label && dev.kind == "audioinput")
+    $('#micDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
+    if(dev.label && dev.kind == "audiooutput"){
+    $('#ringtoneDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>');
+    $('#speakerDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')  
+    }
+  });
+  })
+  .catch(function(error){
+  console.error(error);
+  })
 }
 
 //revealAudioDevices
 $('#allowAudioDevices').click(function(){
-	refreshAudioDevices();
+  refreshAudioDevices();
 });
 
 function refreshAudioDevices() {
-	_forEach.call(document.querySelectorAll('#popAudioDevices option'), e=>e.remove());
-	plivoWebSdk.client.audio.revealAudioDevices()
-	.then(function(e){
-		updateAudioDevices();
-		console.log('Media permission ',e)
-	})
-	.catch(function(error){
-		console.error('media permission error :',error);
-		$('#mediaAccessBlock').modal('show');
-	})
+  _forEach.call(document.querySelectorAll('#popAudioDevices option'), e=>e.remove());
+  plivoWebSdk.client.audio.revealAudioDevices()
+  .then(function(e){
+    updateAudioDevices();
+    console.log('Media permission ',e)
+  })
+  .catch(function(error){
+    console.error('media permission error :',error);
+    $('#mediaAccessBlock').modal('show');
+  })
 }
 ```
 ### Audio Device change
@@ -429,16 +429,16 @@ When a new device gets added they can select the device for either input or outp
 
 ```js
 function audioDeviceChange(e){
-	console.log('audioDeviceChange',e);
-	if(e.change){
-	if(e.change == "added"){
-		customAlert(e.change,e.device.kind +" - "+e.device.label,'info');   
-	}else{
-		customAlert(e.change,e.device.kind +" - "+e.device.label,'warn');
-	}
-	}else{
-	customAlert('info','There is an audioDeviceChange but mediaPermission is not allowed yet');
-	}
+  console.log('audioDeviceChange',e);
+  if(e.change){
+    if(e.change == "added") {
+      customAlert(e.change,e.device.kind +" - "+e.device.label,'info');   
+    }else {
+      customAlert(e.change,e.device.kind +" - "+e.device.label,'warn');
+    }
+  }else {
+    customAlert('info','There is an audioDeviceChange but mediaPermission is not allowed yet');
+  }
 }
 ```
 ### Sending Feedback
@@ -448,29 +448,29 @@ The following snippet shows how to collect feedback using the SDK. There is a pr
 
 ```js
 $('#sendFeedback').click(function(){
-	var score = $('#stars li.selected').last().data('value');
-	score = Number(score);
-	var lastCallid = plivoWebSdk.client.getLastCallUUID();
-	var issues=[];
-	_forEach.call(document.querySelectorAll('[name="callqualitycheck"]'), e=>{
-		if(e.checked){
-			issues.push(e.value);
-		}
-	});
-	var note = sendFeedbackComment.value;
-	var sendConsoleLogs = document.getElementById("sendConsoleLogs").checked;
-	// submitCallQualityFeedback takes parameteres callUUId, starRating, issues, note, sendConsoleLogs
-	plivoWebSdk.client.submitCallQualityFeedback(lastCallid, score, issues, note, sendConsoleLogs)
-	.then((result) => {
-		$('#feedbackStatus').html('Feedback sent');
-		$('#ignoreFeedback').click();
-		customAlert('Feedback sent','','info');
-		$('.lowQualityRadios').hide();
-	})
-	.catch((error) => {
-		$('#feedbackStatus').html(error);
-		customAlert('Could not send feedback','','warn');
-	});
+  var score = $('#stars li.selected').last().data('value');
+  score = Number(score);
+  var lastCallid = plivoWebSdk.client.getLastCallUUID();
+  var issues=[];
+  _forEach.call(document.querySelectorAll('[name="callqualitycheck"]'), e=>{
+    if(e.checked) {
+      issues.push(e.value);
+    }
+  });
+  var note = sendFeedbackComment.value;
+  var sendConsoleLogs = document.getElementById("sendConsoleLogs").checked;
+  // submitCallQualityFeedback takes parameteres callUUId, starRating, issues, note, sendConsoleLogs
+  plivoWebSdk.client.submitCallQualityFeedback(lastCallid, score, issues, note, sendConsoleLogs)
+  .then((result) => {
+    $('#feedbackStatus').html('Feedback sent');
+    $('#ignoreFeedback').click();
+    customAlert('Feedback sent','','info');
+    $('.lowQualityRadios').hide();
+  })
+  .catch((error) => {
+    $('#feedbackStatus').html(error);
+    customAlert('Could not send feedback','','warn');
+  });
 });
 ```
 ### Real-time volume indicator on UI
@@ -481,9 +481,9 @@ Display user real-time volume of mic and speaker.
 
 ```js
 function volume(audioStats){
-	inputVolume = audioStats.inputVolume;
-	outputVolume =  audioStats.outputVolume;
-	colorPids(Math.floor(inputVolume * 325), 'localaudio');
-	colorPids(Math.floor(outputVolume * 325), 'remoteaudio');
+  inputVolume = audioStats.inputVolume;
+  outputVolume =  audioStats.outputVolume;
+  colorPids(Math.floor(inputVolume * 325), 'localaudio');
+  colorPids(Math.floor(outputVolume * 325), 'remoteaudio');
 }
 ```
