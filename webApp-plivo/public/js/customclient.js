@@ -9,7 +9,7 @@ let incomingNotificationAlert = null;
 
 var defaultSettings = {
 	"debug":"INFO",
-	"permOnClick":true,
+	"permOnClick":false,
 	"codecs":[  "OPUS", "PCMU" ],
 	"enableIPV6":false,
 	"audioConstraints":{
@@ -155,20 +155,18 @@ function onReady(){
 function onLogin(){
 	$('#loginContainer').hide();
 	$('#callContainer').show();
-	document.body.style.backgroundImage = 'url(../img/nobackground.svg)';
+	document.body.style.backgroundImage = 'none';
 	let username = plivoWebSdk.client.userName;
 	$('#sipUserName').html(username+'@'+plivoWebSdk.client.phone.configuration.hostport_params);
 	document.querySelector('title').innerHTML = username;
 	$('#phonestatus').html('online');
 	console.info('Logged in');
-	let customCallerId= localStorage.getItem('setCallerId')
+	let customCallerId= localStorage.getItem('callerId')
 	if(customCallerId) {
 		let callerid = document.getElementById("callerid");
 		callerid.value = customCallerId;
 	}
 	$('#makecall').attr('class', 'btn btn-success btn-block flatbtn makecall');
-	$('#uiLogin').hide();
-	$('.logout').show();
 	customAlert( "connected" , "info", 'info');
 	$('.loader').hide();
 }
@@ -187,7 +185,9 @@ function onLogout(){
 	document.body.style.backgroundImage = 'url(../img/background.svg)';
 	$('#loginContainer').show();
 	$('#callContainer').hide();
-	$('.loader').hide()
+	$('.loader').hide();
+	$('#toNumber').val("");
+	iti.setCountry("us");
 }
 
 function onCalling(){
@@ -408,6 +408,24 @@ function refreshSettings(){
 	}
 }
 
+function updateSettings(val){
+	let loglevel = document.getElementById('loglevelbtn').value;
+	val.debug = loglevel;
+	changeVal(val, document.getElementById('onlogin').checked, 'onLoginMicAccess', false);
+	changeVal(val, document.getElementById('monitorquality').checked, "enableTracking", false);
+	changeVal(val, document.getElementById('dontcloseprotect').checked, "closeProtection", true);
+	changeVal(val, document.getElementById('allowdscp').checked, "dscp", false);
+	changeVal(val, document.getElementById('noincoming').checked, "allowMultipleIncomingCalls", true);
+	let clientRegion = document.getElementById('msregionbtn').value;
+	if(clientRegion!='AUTO') {
+		val.clientRegion = clientRegion;
+	}
+	let averagebitrate = document.getElementById('averagebitrate').value;
+	val.maxAverageBitrate = parseInt(averagebitrate);
+	localStorage.setItem('plivosettings',JSON.stringify(val));
+	console.log('plivosettings updated!')
+}
+
 function updateElementsInConfig(access, element1, element2) {
 	if(access) {
 		document.getElementById(element1).checked = true
@@ -416,38 +434,10 @@ function updateElementsInConfig(access, element1, element2) {
 	}
 }
 
-function updateSettings(val){
-	let loglevel = document.getElementById('loglevelbtn').value;
-	val.debug = loglevel;
-	let onlogin = document.getElementById('onlogin').checked;
-	if(!onlogin) {
-		val.onLoginMicAccess = false;
+function changeVal(val, access, element, expected) {
+	if(!access) {
+		val[element] = expected;
 	}
-	let monitorquality = document.getElementById('monitorquality').checked;
-	if(!monitorquality) {
-		val.enableTracking = false;
-	}
-	let closeprotect = document.getElementById('dontcloseprotect').checked;
-	if(!closeprotect) {
-		val.closeProtection = true;
-	}
-	let allowdscp = document.getElementById('allowdscp').checked;
-	if(!allowdscp) {
-		val.dscp = false;
-	}
-	let allowincoming = document.getElementById('noincoming').checked;
-	if(!allowincoming) {
-		val.allowMultipleIncomingCalls = true;
-	}
-	let clientRegion = document.getElementById('msregionbtn').value;
-	if(clientRegion!='AUTO') {
-		val.clientRegion = clientRegion;
-	}
-	let averagebitrate = document.getElementById('averagebitrate').value;
-	val.maxAverageBitrate = parseInt(averagebitrate);
-
-	localStorage.setItem('plivosettings',JSON.stringify(val));
-	console.log('plivosettings updated!')
 }
 
 function customAlert(header,alertMessage,type){
@@ -558,8 +548,8 @@ function saveCallerId(id){
 		customAlert('callerId','empty','warn');
 		return;
 	}
-	localStorage.setItem('setCallerId',id);
-	console.log('setCallerId saved as :',localStorage.getItem('setCallerId'));
+	localStorage.setItem('callerId',id);
+	console.log('callerId saved as :',localStorage.getItem('callerId'));
 	if (plivoWebSdk.client.userName) {
 		callerIdAPI(plivoWebSdk.client.userName, id, "add");
 	}
@@ -567,8 +557,8 @@ function saveCallerId(id){
 }
 
 function removeCallerId(){
-	if (localStorage.hasOwnProperty('setCallerId')) {
-		localStorage.removeItem('setCallerId');
+	if (localStorage.hasOwnProperty('callerId')) {
+		localStorage.removeItem('callerId');
 		let id = document.getElementById('callerid');
 		console.debug('callerId removed');
 		if (plivoWebSdk.client.userName) {
@@ -587,7 +577,7 @@ function setIti(instance) {
 
 function resetMute(){
 	tmute.setAttribute('data-toggle','mute');
-	$('.tmute').attr('class', 'fa tmute fa-microphone fa-lg');
+	$('.tmute').attr('class', 'fa tmute fa-microphone fa-lg callinfoIcon');
 }
 
 function volume(audioStats){
@@ -847,18 +837,18 @@ $('#tmute').click(function(e){
 	if(event == "mute"){
 		plivoWebSdk.client.mute();
 		e.currentTarget.setAttribute('data-toggle','unmute');
-		$('.tmute').attr('class', 'fa tmute fa-microphone-slash fa-lg')
+		$('.tmute').attr('class', 'fa tmute fa-microphone-slash fa-lg callinfoIcon')
 	}else{
 		plivoWebSdk.client.unmute();
 		e.currentTarget.setAttribute('data-toggle','mute');
-		$('.tmute').attr('class', 'fa tmute fa-microphone fa-lg')
+		$('.tmute').attr('class', 'fa tmute fa-microphone fa-lg callinfoIcon')
 	}
 });
 
 $('#makecall').click(function(e){
 	var to = iti.getNumber(),
 		extraHeaders={}, dialType,
-		customCallerId= localStorage.getItem('setCallerId');
+		customCallerId= localStorage.getItem('callerId');
 	if(customCallerId){
 		customCallerId = customCallerId.replace("+","");
 		extraHeaders = {'X-PH-callerId': customCallerId};		
@@ -873,7 +863,7 @@ $('#makecall').click(function(e){
 	console.info('Click make call : ',to);
 	callStorage.mode = "out";
 	callStorage.startTime = date();
-	callStorage.num = to;
+	callStorage.num = to; 
 	$('.phone').hide();
 	$('.AfterAnswer').show();
 	$('#boundType').html('Outgoing : '+to);

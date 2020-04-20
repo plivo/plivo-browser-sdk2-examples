@@ -70,11 +70,11 @@ p
 }
 
 .callinfoIcon{
-  font-size: 2em;
+  font-size: 2em !important;
 }
 
 .callinfoPid{
-  margin-left: 20px;
+  margin-left: 20px !important;
 }
 
 .incomingCallDefault {
@@ -375,6 +375,10 @@ p
   margin-bottom: 10px;
   margin-top: 10px;
   text-decoration: underline;
+}
+
+.micsettingsLabel{
+  font-size: 15px !important;
 }
 
 .micLabel{
