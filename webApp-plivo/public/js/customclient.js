@@ -22,8 +22,7 @@ var defaultSettings = {
 	"closeProtection":false,
 	"maxAverageBitrate":48000,
 	"dialType":"conference",
-	"allowMultipleIncomingCalls":false,
-	"onLoginMicAccess":true
+	"allowMultipleIncomingCalls":false
   };
 
 var iti;
@@ -374,7 +373,7 @@ function closeMetrics(e){
 
 function resetSettings(){
 	document.getElementById('loglevelbtn').value = "INFO"
-	document.getElementById('onlogin').checked = true
+	document.getElementById('onpageload').checked = true
 	document.getElementById('monitorquality').checked = true
 	document.getElementById('dontcloseprotect').checked = true
 	document.getElementById('allowdscp').checked = true
@@ -389,7 +388,7 @@ function refreshSettings(){
 	if(getSettings){
 		var parsedSettings = JSON.parse(getSettings);
 		document.getElementById('loglevelbtn').value = parsedSettings.debug;
-		updateElementsInConfig(parsedSettings.onLoginMicAccess, 'onlogin', 'oncallinit');
+		updateElementsInConfig(parsedSettings.permOnClick, 'oncallinit', 'onpageload');
 		updateElementsInConfig(parsedSettings.enableTracking, 'monitorquality', 'dontmonitorquality');
 		updateElementsInConfig(parsedSettings.closeProtection, 'closeprotect', 'dontcloseprotect');
 		updateElementsInConfig(parsedSettings.dscp, 'allowdscp', 'nodscp');
@@ -411,7 +410,7 @@ function refreshSettings(){
 function updateSettings(val){
 	let loglevel = document.getElementById('loglevelbtn').value;
 	val.debug = loglevel;
-	changeVal(val, document.getElementById('onlogin').checked, 'onLoginMicAccess', false);
+	changeVal(val, document.getElementById('onpageload').checked, 'permOnClick', true);
 	changeVal(val, document.getElementById('monitorquality').checked, "enableTracking", false);
 	changeVal(val, document.getElementById('dontcloseprotect').checked, "closeProtection", true);
 	changeVal(val, document.getElementById('allowdscp').checked, "dscp", false);
@@ -642,7 +641,7 @@ function implementToken(username){
 		//get JWT Token
 		const requestBody = {
 			"auth_id" : "mmmmmm",
-			"auth_token" : "mmmmm",
+			"auth_token" : "mmmmmm",
 			"start_time":parseInt(Date.now()/1000),
 			"end_time":parseInt(Date.now()/1000) + 1000,
 			"is_incoming_grant":true,
@@ -666,7 +665,7 @@ function implementToken(username){
 		}		
 	}
 	var jwtTokenObject = new JwtToken();
-    loginJWT(jwtTokenObject);
+	return jwtTokenObject;
 }
 
 function loginJWT(jwtTokenObject){
@@ -951,8 +950,9 @@ $('#clickLogin').click(function(e){
 });
 
 $('#clickLoginJWT').click(function(e){
-	var userName = $('#loginJwtUser').val();
-	implementToken(userName);
+	let userName = $('#loginJwtUser').val();
+	let jwtTokenObject = implementToken(userName);
+	loginJWT(jwtTokenObject);
 });
 
 // Audio device selection

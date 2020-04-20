@@ -121,7 +121,7 @@ function implementToken(username){
     }     
   }
   var jwtTokenObject = new JwtToken();
-  loginJWT(jwtTokenObject);
+  return jwtTokenObject;
 }
 
 function loginJWT(jwtTokenObject){
@@ -137,8 +137,9 @@ function loginJWT(jwtTokenObject){
 }
 
 $('#clickLoginJWT').click(function(e){
-  var userName = $('#loginJwtUser').val();
-  implementToken(userName);
+  let userName = $('#loginJwtUser').val();
+  let jwtTokenObject = implementToken(userName);
+  loginJWT(jwtTokenObject);
 });
 ``` 
 ### Options
@@ -149,7 +150,7 @@ $('#clickLoginJWT').click(function(e){
 var defaultSettings = { "debug":"DEBUG", "permOnClick":true, "codecs":["OPUS","PCMU"], "enableIPV6":false, "audioConstraints":{"optional":[{"googAutoGainControl":false}, {"googEchoCancellation":false}]}, "enableTracking":true, "closeProtection":false, "maxAverageBitrate":48000}
 function resetSettings(){
   document.getElementById('loglevelbtn').value = "INFO"
-  document.getElementById('onlogin').checked = true
+  document.getElementById('onpageload').checked = true
   document.getElementById('monitorquality').checked = true
   document.getElementById('dontcloseprotect').checked = true
   document.getElementById('allowdscp').checked = true
@@ -162,7 +163,7 @@ function resetSettings(){
 function updateSettings(val){
   let loglevel = document.getElementById('loglevelbtn').value;
   val.debug = loglevel;
-  changeVal(val, document.getElementById('onlogin').checked, 'onLoginMicAccess', false);
+  changeVal(val, document.getElementById('onpageload').checked, 'permOnClick', true);
   changeVal(val, document.getElementById('monitorquality').checked, "enableTracking", false);
   changeVal(val, document.getElementById('dontcloseprotect').checked, "closeProtection", true);
   changeVal(val, document.getElementById('allowdscp').checked, "dscp", false);
