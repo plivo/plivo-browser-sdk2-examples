@@ -42,16 +42,9 @@ p
   left: 27%;
   padding-left: 80px;
   padding-right: 80px;
+  margin-top:5%;
 }
 
-.phone-panel{
-  margin-bottom: 20px;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
-  box-shadow: 0 1px 1px rgba(0,0,0,.05);
-  border-color: white;  
-}
 .span4
 {
     width: 80px;
@@ -76,10 +69,22 @@ p
     width: 50%;
 }
 
+.callinfoIcon{
+  font-size: 2em;
+}
+
+.callinfoPid{
+  margin-left: 20px;
+}
+
 .incomingCallDefault {
   margin-top: 15px;
   /* background: rgba(150, 209, 150, 0.09); */
   width: 40%;
+}
+
+.incomingCallBtnSecondary{
+  width: 50%;
 }
 
 .tel
@@ -94,7 +99,6 @@ p
     padding-left: 15px;
 }
 
-
 .num
 {
     /*border: 1px solid #9e9e9e;*/
@@ -105,6 +109,7 @@ p
     /*background-color: #fff;*/
     cursor: pointer;
 }
+
 .num:hover
 {
     background-color: #d9edf7;
@@ -113,13 +118,19 @@ p
     -webkit-transition: background-color .2s linear 0s;
     -o-transition: background-color .2s linear 0s;
 }
+
+.num-star{
+  font-size:55px !important;
+  margin-top:-5px;
+}
+
 .txt
 {
     font-size: 30px;
     text-align: center;
-    /*margin-top: 15px;*/
     font-family: 'Lato' , sans-serif;
 }
+
 .small
 {
     font-size: 13px;
@@ -132,9 +143,11 @@ p
     -webkit-font-smoothing: antialiased;
     letter-spacing: 1px;
 }
+
 .btn-lg{
   width: 80%;
 }
+
 .btn:hover
 {
     transition-property: background-color .2s linear 0s;
@@ -142,35 +155,16 @@ p
     -webkit-transition: background-color .2s linear 0s;
     -o-transition: background-color .2s linear 0s;
 }
-.spanicons
-{
-    width: 72px;
-    float: left;
-    text-align: center;
-    margin-top: 40px;
-    font-size: 30px;
-    cursor: pointer;
-}
-.spanicons:hover
-{
-    color: #3498db;
-    transition-property: color .2s linear 0s;
-    -moz-transition: color .2s linear 0s;
-    -webkit-transition: color .2s linear 0s;
-    -o-transition: color .2s linear 0s;
-}
+
 .active
 {
     color: #3498db;
 }
+
 .metrics{
     margin-bottom: 7px;
     padding: 10px;
-    /*z-index: 10000;*/
-    /*display: inline-block;*/
-    /*background: rgba(0,153,204,0.93);*/
     background: rgba(244, 67, 54, 0.75);
-    /*border: 1px solid #006b8f;*/
     color: #fff;
     font-size: 13px;
     text-align: center;
@@ -178,9 +172,7 @@ p
     padding-top: 8px;
     padding-bottom: 8px;
     outline: 0;
-    /*position: fixed;*/
     top: 0;
-    /*left: 0;*/
     right:0;
     font-family: monospace; 
 }
@@ -189,7 +181,6 @@ p
   position: absolute !important;
   top: 30% !important;
   right: 10% !important;
-  /*width: 20%;*/
   z-index: 100000 !important;
   left: 60% !important;
 }
@@ -198,7 +189,6 @@ p
     position: absolute;
     top: 30%;
     right: 10%;
-    /*width: 20%;*/
     z-index: 100000;
 }
 
@@ -206,11 +196,10 @@ p
   position: fixed;
   top: 10px;
   right: 10px;
-  /*width: 20%;*/
   z-index: 100000;
 }
 
-#recPlayerLayout,.inboundBeforeAnswer, .outboundBeforeAnswer, .AfterAnswer, .callinfo, .lowQualityRadios, .feedback, .loader, .fadein-effect{
+.AfterAnswer, .callinfo, .lowQualityRadios, .feedback, .loader, .fadein-effect{
     display: none;
 }
 
@@ -233,6 +222,7 @@ p
   color: red;
   border: 1px solid red;
 }
+
 .alertinfo{
   color: green;
   border: 1px solid green;
@@ -256,19 +246,6 @@ p
   margin-top: 5px;
 }
 
-.white{
-  color: white;
-  font-size: 20px;
-  font-weight: 600;
-}
-.white-icon {
-  color: white;
-  font-size: 20px;
-  font-weight: 600;
-  margin-left: 20px;
-  cursor: pointer;
-}
-
 #answerkeypad{
   font-weight: 600;
   margin-top: 20px;
@@ -280,70 +257,28 @@ p
     top: 50%;
     left: -2%;    
 }
-.audioDevices{
-    position: absolute;
-    top: 20%;
-    right: 0%;    
-}
+
 .monospace{
     font-family: monospace;
-}
-.keypad {
-    background-color: deepskyblue;
-    border-radius: 0%;
-    color: #fff;
-    display: inline-block;
-    font-size: 12px;
-    height: 20px;
-    line-height: 20px;
-    padding: 5px;
-    margin: 1px;
-    text-align: center;
-    width: 20px;
-    opacity: .8;
-    cursor:pointer;
-}
-.dialpad {
-      margin-left: 2%;
-}
-.googleLogin {
-  background: url(signin_button.png) no-repeat 6px center;
-  /*width: 100px;*/
-  height: 100px;
-  display: block;
 }
 
 #clickLogin, #clickLoginJWT{
   width:20%;
 }
 
-.center-div
-{
-  position: absolute;
-  margin: auto;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: 15%;
-  height: 100px;
-  border-radius: 3px;
-}
 .white-shadow{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);    
 }
-.client-name{
-  margin-left: 14px;
-  position: absolute;
-  color: white;
-}
+
 .lead{
   font-weight: 400;
   font-size: 18px;
 }
+
 .text-success{
   color: #05006D;
 }
+
 .label-value{
   font-size: 18px;
 }
@@ -375,10 +310,12 @@ p
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
 .btn-success, .btn-primary{
   background-color: #05006d !important;
   border-color: rgba(0,0,0,.0001) !important;  
 }
+
 .btn-success:hover, .btn-success:active, .btn-success:focus, .btn-success:visited, .btn-primary:hover, .btn-primary:active, .btn-primary:focus, .btn-primary:visited{
   background-color: #080188 !important;
   border-color: rgba(0,0,0,.0001) !important;  
@@ -394,13 +331,16 @@ p
   color: #05006d;
   border-radius: 4px;
 }
+
 .navbar-text{
   color: black;
   font-weight: 400;
 }
+
 .modal-footer{
   text-align: center;
 }
+
 .iti__flag{
   background-image: url("../img/flags.png");
 }
@@ -408,11 +348,13 @@ p
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .iti__flag {background-image: url("../img/flags@2x.png");}
 }
+
 .iti{
   width: 100%;
   margin-top: 10px;
   margin-bottom: 20px;
 }
+
 #callerid {
   background: transparent;
   border: none;
@@ -423,10 +365,24 @@ p
   margin-bottom: 10px;
   color: black;
 }
+
+.calleridRemove{
+  cursor:pointer;
+  margin-left:3px;
+}
+
 .micsettingslink{
   margin-bottom: 10px;
   margin-top: 10px;
   text-decoration: underline;
+}
+
+.micLabel{
+  font-weight: 200;
+}
+
+.toggleLabel{
+  margin-left:10px;
 }
 
 a, a:focus, a:hover, a:visited {
@@ -456,6 +412,7 @@ a, a:focus, a:hover, a:visited {
   margin: 5px;
   background-color: #e6e7e8;
 }
+
 .miclink, .speakerlink{
   margin-left: 20px;
   font-size: 15px;
@@ -506,12 +463,6 @@ a, a:focus, a:hover, a:visited {
   border-color: black;
 }
 
-/* .configparambtn, .configparambtn:active, .configparambtn:focus, .configparambtn.visited{
-  color:black;
-  border-color: #ccc;
-  margin-right: 13px;
-} */
-
 .logout, .config{
   font-size: large;
   cursor: pointer;
@@ -540,25 +491,13 @@ a, a:focus, a:hover, a:visited {
   font-size: 16px;
 }
 
-.log-out{
-  font-size: 25px;
-  color: orange;
+.config-update{
+  width:15%;
 }
-.log-in{
-  font-size: 25px;
-  color: #05006d;
-}
-.log-missed{
-  font-size: 25px;
-  color: red;
-}
-.log-call{
-  font-size: 25px;
-  color: #05006d;  
-}
-.log-call:hover{
-  text-shadow: 7px 2px 10px;
-  cursor: pointer; 
+
+.config-reset{
+  width:15%;
+  margin-left:10px;
 }
 
 .feedbackTextArea{
@@ -595,14 +534,17 @@ a, a:focus, a:hover, a:visited {
   font-size:2.5em; /* Change the size of the stars */
   color:#ccc; /* Color on idle state */
 }
+
 /* Hover state of the stars */
 .rating-stars ul > li.star.hover > i.fa {
   color:#FFCC36;
 }
+
 /* Selected state of the stars */
 .rating-stars ul > li.star.selected > i.fa {
   color:#FF912C;
 }
+
 .feedback-status{
   color: #afaf00;
   font-weight: 600;

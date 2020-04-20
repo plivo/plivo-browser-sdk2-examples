@@ -4,15 +4,13 @@
 	<title>plivo webphone</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="icon" type="image/png" href="img/favicon.png">
-	<script src="lib/jquery.min.js"></script>
+	<link rel="icon" type="image/png" href="beta_assets/img/favicon.png">
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<link rel="stylesheet" href="/css/intlTelInput.css">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/hmac-sha256.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64-min.js"></script>
-	<link rel="stylesheet" href="/css/notify.css">
-	<link rel="stylesheet" type="text/css" href="css/newstyle.css"> 
+	<link rel="stylesheet" href="beta_assets/css/notify.css">
+  <link rel="stylesheet" href="beta_assets/css/intlTelInput.css">
+  <link rel="stylesheet" type="text/css" href="beta_assets/css/newstyle.css">
 </head>
 <body>
 	<div class="loader"></div>
@@ -804,7 +802,6 @@
 		
 	</div>
 
-
 	<div id="oncallalertmsg" class="oncallalertmsg">
 		<!-- on call notification and messages comes here -->
 	</div>
@@ -812,22 +809,22 @@
 		<!-- alert message comes here -->
 	</div>
 
-	<script src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script>
-	<script src="/lib/notify.js"></script>
-	<script src="lib/intlTelInput.min.js"></script>
-	<script src="js/utils.js"></script>
-	<script src="js/customclient.js"></script>
+	<script src="https://cdn.plivo.com/sdk/browser/v2/plivobeta.min.js"></script>
+	<script src="beta_assets/lib/notify.js"></script>
+	<script src="beta_assets/lib/intlTelInput.min.js"></script>
+	<script src="beta_assets/js/utils.js"></script>
+	<script src="beta_assets/js/customclient.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			console.log( "HTML ready!" );
 			$('[data-toggle="tooltip"]').tooltip();
 			initPhone();
 		});
-		
+
 		var input = document.querySelector("#toNumber");
 		var iti = window.intlTelInput(input,({
 		}));
 		setIti(iti);
-	</script>
+  </script>
 </body>
 </html>
