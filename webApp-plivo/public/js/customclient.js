@@ -11,7 +11,7 @@ var inputVolumeBar = document.getElementById('input-volume');
 var volumeIndicators = document.getElementById('volume-indicators');
 volumeIndicators.style.display = 'none';
 var isJWTLogin = false;
-var tokenGenServerURI = "https://jwttokengen.herokuapp.com/jwttoken";
+
 
 String.prototype.calltimer = function () {
     var sec_num = parseInt(this, 10);
@@ -650,18 +650,10 @@ function implementToken(){
 	//Define  the logic to fetch the JWT token
 	JwtToken.prototype.getToken = async function() {
 		//get JWT Token
+		var tokenGenServerURI = "https://jwttokengen.herokuapp.com/fetchtokenqa";
 		var requestBody = {
-			"auth_id" : $('#authId').val(),
-			"auth_token" : $('#authToken').val(),
-			"start_time":parseInt(Date.now()/1000),
-			"end_time":parseInt(Date.now()/1000) + Math.round(Number($('#tokenExpiry').val())),
-			"is_incoming_grant":$('#isIncomingGrant').is(':checked'),
-			"is_outgoing_grant":$('#isOutgoingGrant').is(':checked'),
-			"env":"qa",
+			"username":$('#endpointName').val(),
 		}	
-		if (!$('#randomEndpoint').is(':checked')){
-			requestBody['endpoint'] = $('#endpointName').val()
-		}
 		const response = await fetch(tokenGenServerURI, {
 						method: 'POST',
 						body: JSON.stringify(requestBody),
