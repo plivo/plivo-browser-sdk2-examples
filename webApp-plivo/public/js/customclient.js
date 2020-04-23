@@ -31,7 +31,7 @@ var isIncomingCallPresent = false
 
 var outputVolumeBar = document.getElementById('output-volume');
 var inputVolumeBar = document.getElementById('input-volume');
-var tokenGenServerURI = "https://jwttokengen.herokuapp.com/jwttoken";
+
 
 String.prototype.calltimer = function () {
     var sec_num = parseInt(this, 10);
@@ -631,22 +631,17 @@ function colorPids(vol, volumeType) {
 }
 
 function implementToken(username){
-	var JwtToken = function() {
-		Token.apply();
+	var jwtToken = function() {
+		accessToken.apply();
 	};
-	JwtToken.prototype = Object.create(Token.prototype);
-	JwtToken.prototype.constructor = JwtToken;
+	jwtToken.prototype = Object.create(accessToken.prototype);
+	jwtToken.prototype.constructor = jwtToken;
 	  
-	JwtToken.prototype.getToken = async function() {
+	jwtToken.prototype.getAccessToken = async function() {
 		//get JWT Token
+		var tokenGenServerURI = "https://jwttokengen.herokuapp.com/fetchtoken";
 		const requestBody = {
-			"auth_id" : "mmmmmm",
-			"auth_token" : "mmmmmm",
-			"start_time":parseInt(Date.now()/1000),
-			"end_time":parseInt(Date.now()/1000) + 1000,
-			"is_incoming_grant":true,
-			"is_outgoing_grant":true,
-			"endpoint":username
+			"username":username
 		}	
 		const response = await fetch(tokenGenServerURI, {
 						method: 'POST',
@@ -664,7 +659,7 @@ function implementToken(username){
 			return(null);
 		}		
 	}
-	var jwtTokenObject = new JwtToken();
+	var jwtTokenObject = new jwtToken();
 	return jwtTokenObject;
 }
 
@@ -1095,14 +1090,14 @@ function starFeedback(){
 // variables to declare 
 
 var plivoWebSdk; // this will be retrived from settings in UI
-var Token;
+var accessToken;
 
 function initPhone(username, password){
 	var options = refreshSettings();
 	plivoWebSdk = new window.Plivo(options);
 
 	//initialise Token object
-	Token = plivoWebSdk.client.token;
+	accessToken = plivoWebSdk.client.token;
 
 	plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported); 
 	plivoWebSdk.client.on('onLogin', onLogin);
