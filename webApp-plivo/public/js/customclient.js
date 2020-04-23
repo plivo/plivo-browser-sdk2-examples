@@ -643,14 +643,15 @@ window.onbeforeunload = function () {
 //Implementing the Token structure
 function implementToken(){
 	var JwtToken = function() {
-		Token.apply();
+		accessToken.apply();
 	};
-	JwtToken.prototype = Object.create(Token.prototype);
+	JwtToken.prototype = Object.create(accessToken.prototype);
 	JwtToken.prototype.constructor = JwtToken;
+	
 	//Define  the logic to fetch the JWT token
-	JwtToken.prototype.getToken = async function() {
+	JwtToken.prototype.getAccessToken = async function() {
 		//get JWT Token
-		var tokenGenServerURI = "https://jwttokengen.herokuapp.com/fetchtokenqa";
+		var tokenGenServerURI = "https://jwttokengen.herokuapp.com/fetchtoken";// template URL 
 		var requestBody = {
 			"username":$('#endpointName').val(),
 		}	
@@ -672,7 +673,7 @@ function implementToken(){
 	}
 	var jwtTokenObject = new JwtToken();
 	//pass the JWT token object to SDK loginJWT method.
-    loginJWTObject(jwtTokenObject);
+	loginJWTObject(jwtTokenObject);
 }
 
 function loginJWTObject(jwtTokenObject){
@@ -1087,21 +1088,20 @@ function starFeedback(){
 // variables to declare 
 
 var plivoWebSdk; // this will be retrived from settings in UI
-var Token;
+var accessToken;
 
 function initPhone(username, password){
 	var options = refreshSettings();
 	plivoWebSdk = new window.Plivo(options);
 
 	//initialise Token object
-	Token = plivoWebSdk.client.token;
+	accessToken = plivoWebSdk.client.token;
 
 	plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported); 
 	plivoWebSdk.client.on('onLogin', onLogin);
 	// plivoWebSdk.client.on('onTokenRegister',onLogin);
 	plivoWebSdk.client.on('onLogout', onLogout);
 	plivoWebSdk.client.on('onLoginFailed', onLoginFailed);
-	plivoWebSdk.client.on('onTokenEvent', onLoginFailed);
 	plivoWebSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
 	plivoWebSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
     plivoWebSdk.client.on('onIncomingCallIgnored', onIncomingCallCanceled);
