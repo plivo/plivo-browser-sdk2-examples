@@ -108,10 +108,10 @@ function implementToken(username){
   jwtToken.prototype.constructor = jwtToken;
 
   /*
-  Implement the abstarct method 'getAccessToken'
+  Implement the abstract method 'getAccessToken'
   Customers need to define their own logic to fetch accessToken
   They may like to have their own app server to generate accessTokens.
-  This method gets re-called (SDk takes care of it) just before the expiry of ongoing access token and fetches a new valid token
+  This method gets re-called (SDK takes care of it) just before the expiry of ongoing access token and fetches a new valid token
   */
   jwtToken.prototype.getAccessToken = async function() {
     //get JWT Token
@@ -144,8 +144,8 @@ function loginJWTObject(jwtTokenObject){
     //start UI load spinner
     kickStartNow();     
     /*
-    Calling SDK login with token Object, method.
-    Pass the token Object which would be used by the SDK to call 'getAccessToken' method
+    Calling SDK login with token object, method.
+    Pass the token object which would be used by the SDK to call 'getAccessToken' method
     */
     plivoWebSdk.client.loginWithAccessTokenGenerator(jwtTokenObject);
     $('#sipUserName').html('Successfully logged in with access token');
