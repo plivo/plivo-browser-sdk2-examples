@@ -107,10 +107,12 @@ function implementToken(username){
   jwtToken.prototype = Object.create(accessToken.prototype);
   jwtToken.prototype.constructor = jwtToken;
 
-  //Implement the abstarct method 'getAccessToken'
-  //Customer's need to define their own logic to fetch accessToken
-  //They may like to have their own app server to generate accessTokens.
-  //This method gets re-called (SDk takes care of it) just before the expiry of ongoing access token and fetches a new valid token
+  /*
+  Implement the abstarct method 'getAccessToken'
+  Customers need to define their own logic to fetch accessToken
+  They may like to have their own app server to generate accessTokens.
+  This method gets re-called (SDk takes care of it) just before the expiry of ongoing access token and fetches a new valid token
+  */
   jwtToken.prototype.getAccessToken = async function() {
     //get JWT Token
     var tokenGenServerURI = "https://api/url/to/fetch/accessToken"
@@ -141,8 +143,10 @@ function loginJWTObject(jwtTokenObject){
   if(jwtTokenObject!=null) {
     //start UI load spinner
     kickStartNow();     
-    //Calling SDK login with token Object, method.
-    //Pass the token Object which would be used by the SDK to call 'getAccessToken' method
+    /*
+    Calling SDK login with token Object, method.
+    Pass the token Object which would be used by the SDK to call 'getAccessToken' method
+    */
     plivoWebSdk.client.loginWithAccessTokenGenerator(jwtTokenObject);
     $('#sipUserName').html('Successfully logged in with access token');
   }else {
@@ -154,10 +158,12 @@ function loginJWTAccessToken(accessToken){
   if(accessToken!=null) {
     //start UI load spinner
     kickStartNow();     
-    //Calling SDK login with access token, method.
-    //Pass the access token for logging in
-    //User's session would be logged out as soon as the token expires.
-    //User will have to explicitly re login with new valid access token when existing access token expires
+    /*
+    Calling SDK login with access token, method.
+    Pass the access token for logging in
+    User's session would be logged out as soon as the token expires.
+    User will have to explicitly re login with new valid access token when existing access token expires
+    */
     plivoWebSdk.client.loginWithAccessToken(accessToken);
     $('#sipUserName').html('Successfully logged in with access token');
   }else {
