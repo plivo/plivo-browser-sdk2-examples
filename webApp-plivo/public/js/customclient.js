@@ -663,13 +663,13 @@ function implementToken(username){
 	return jwtTokenObject;
 }
 
-function loginJWT(jwtTokenObject){
+function loginJWTObject(jwtTokenObject){
 	if(jwtTokenObject!=null){
 		//start UI load spinner
 		kickStartNow();			
 		//Calling SDK loginJWT method
 		plivoWebSdk.client.loginWithAccessTokenGenerator(jwtTokenObject);
-		$('#sipUserName').html('Successfully logged in with JWT token');
+		$('#sipUserName').html('Successfully logged in with access token');
 	}else{
 		console.error('JWT Object found null')
 	}
@@ -947,7 +947,7 @@ $('#clickLogin').click(function(e){
 $('#clickLoginJWT').click(function(e){
 	let userName = $('#loginJwtUser').val();
 	let jwtTokenObject = implementToken(userName);
-	loginJWT(jwtTokenObject);
+	loginJWTObject(jwtTokenObject);
 });
 
 // Audio device selection
