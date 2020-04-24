@@ -675,6 +675,23 @@ function loginJWTObject(jwtTokenObject){
 	}
 }
 
+function loginJWTAccessToken(accessToken){
+	if(accessToken!=null) {
+	  //start UI load spinner
+	  kickStartNow();     
+	  /*
+	  Calling SDK login with access token, method.
+	  Pass the access token for logging in
+	  User's session would be logged out as soon as the token expires.
+	  User will have to explicitly re login with new valid access token when existing access token expires
+	  */
+      console.log(accessToken);	 
+	  plivoWebSdk.client.loginWithAccessToken(accessToken);
+	}else {
+	  console.error('JWT Object found null')
+	}
+  }
+
 function refreshAudioDevices() {
 	_forEach.call(document.querySelectorAll('#popAudioDevices option'), e=>e.remove());
 	plivoWebSdk.client.audio.revealAudioDevices()
@@ -945,9 +962,8 @@ $('#clickLogin').click(function(e){
 });
 
 $('#clickLoginJWT').click(function(e){
-	let userName = $('#loginJwtUser').val();
-	let jwtTokenObject = implementToken(userName);
-	loginJWTObject(jwtTokenObject);
+	let jwtAccessToken = $('#accessToken').val();
+	loginJWTAccessToken(jwtAccessToken);
 });
 
 // Audio device selection
