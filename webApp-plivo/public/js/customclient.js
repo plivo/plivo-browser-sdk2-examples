@@ -521,7 +521,7 @@ function clearStars(){
 
 function checkBrowserComplaince(client){
 	if(client.browserDetails.browser != "chrome"){
-		document.querySelector('[href="#popAudioDevices"]').remove();
+		document.querySelectorAll('[href="#popAudioDevices"]').forEach(el => el.remove());
 	}
 }
 
