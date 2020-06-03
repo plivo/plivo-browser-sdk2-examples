@@ -6,6 +6,7 @@ const incomingNotifications = new Map();
 var speakerSourceNode;
 var ringtoneSourceNode;
 let incomingNotificationAlert = null;
+var logoutAfterHangup = false;
 
 var defaultSettings = {
 	"debug":"INFO",
@@ -28,6 +29,7 @@ var defaultSettings = {
 var iti;
 var incomingCallInfo;
 var isIncomingCallPresent = false
+var isLoggedInwithAccessTokenObject= null;
 
 var outputVolumeBar = document.getElementById('output-volume');
 var inputVolumeBar = document.getElementById('input-volume');
@@ -63,13 +65,13 @@ function kickStartNow(){
 }
 
 function login(username, password) {
-	if(username && password){
+	//if(username && password){
 		//start UI load spinner
 		kickStartNow();			
 		plivoWebSdk.client.login(username, password);
-	}else{
+	//}else{
 		console.error('username/password missing!')
-	}
+	//}
 }
 
 function audioDeviceChange(e){
@@ -85,9 +87,9 @@ function audioDeviceChange(e){
 	}
 }
 
-function onPermissionNeeded(obj){
-	console.log('onPermissionNeeded: ',obj);
-	customAlert(obj.desc,obj.settings,'warn');
+function onPermissionDenied(cause,callinfo){
+	console.log('onPermissionDenied: ',cause);
+	customAlert(cause,'warn');
 }
 
 function onConnectionChange(obj){
@@ -151,7 +153,10 @@ function onReady(){
 	console.info('Ready');
 }
 
-function onLogin(){
+function onLogin(uname,time){
+	console.log("onLogin called");
+	console.log(uname,time)
+	logoutAfterHangup=false;
 	$('#loginContainer').hide();
 	$('#callContainer').show();
 	document.body.style.backgroundImage = 'none';
@@ -179,8 +184,16 @@ function onLoginFailed(reason){
 	$('.loader').hide()	
 }
 
-function onLogout(){
-	console.info('onLogout');
+function onLoginFailedWithError(reason){
+	console.info('onLoginFailedWithError ',reason);
+	if(Object.prototype.toString.call(reason) == "[object Object]"){
+		reason = JSON.stringify(reason);
+	}
+	customAlert('Login failure :',reason, 'warn');
+	$('.loader').hide()	
+}
+
+function performLogout(){
 	document.body.style.backgroundImage = 'url(../img/background.svg)';
 	$('#loginContainer').show();
 	$('#callContainer').hide();
@@ -188,6 +201,18 @@ function onLogout(){
 	$('#toNumber').val("");
 	iti.setCountry("us");
 }
+function onLogout(cause){
+	console.info('onLogout', cause);
+	if(cause){
+		customAlert('onLogout :',cause, 'warn');
+	}
+	if((cause=="ACCESS_TOKEN_EXPIRED" || cause=="RELOGIN_FAILED_WITH_INVALID_TOKEN" ) && plivoWebSdk.client._currentSession){
+		logoutAfterHangup=true;
+	}else{
+		performLogout();
+	}
+}
+
 
 function onCalling(){
 	$('#callstatus').html('Progress...');	
@@ -237,7 +262,9 @@ function onCallTerminated(evt, callInfo){
 	$('#callstatus').html('Call Ended');
 	console.info(`onCallTerminated ${evt}`);
 	clearStars();
-	$('#sendQualityFeedback').modal('show');
+	//if(logoutAfterHangup!=true){
+		$('#sendQualityFeedback').modal('show');
+	//}
 	if (callInfo && callInfo.callUUID === plivoWebSdk.client.getCallUUID()) {
 		console.info(JSON.stringify(callInfo));
 		callOff(evt);
@@ -364,6 +391,11 @@ function callOff(reason){
 	$('#callstatus').html('Idle');
 	callStorage={}; // reset callStorage
 	timer = "00:00:00"; //reset the timer
+	if(logoutAfterHangup == true){
+		logoutAfterHangup = false;
+		performLogout();
+	}
+
 }
 
 
@@ -664,6 +696,7 @@ function implementToken(username){
 }
 
 function loginJWTObject(jwtTokenObject){
+	isLoggedInwithAccessTokenObject = true;
 	if(jwtTokenObject!=null){
 		//start UI load spinner
 		kickStartNow();			
@@ -883,7 +916,8 @@ $('#makecall').click(function(e){
 });
 
 $('#updateSettings').click(function(e){
-	updateSettings(defaultSettings);
+	updateSettings(defaultSettings);	
+
 });
 
 $('#resetSettings').click(function(e){
@@ -964,6 +998,9 @@ $('#clickLogin').click(function(e){
 $('#clickLoginJWT').click(function(e){
 	let jwtAccessToken = $('#accessToken').val();
 	loginJWTAccessToken(jwtAccessToken);
+	// let userName = $('#loginJwtUser').val();
+  	// let jwtTokenObject = implementToken("newone180628100344");
+  	// loginJWTObject(jwtTokenObject);
 });
 
 // Audio device selection
@@ -1119,6 +1156,7 @@ function initPhone(username, password){
 	plivoWebSdk.client.on('onLogin', onLogin);
 	plivoWebSdk.client.on('onLogout', onLogout);
 	plivoWebSdk.client.on('onLoginFailed', onLoginFailed);
+	plivoWebSdk.client.on('onLoginFailedWithError', onLoginFailedWithError);
 	plivoWebSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
 	plivoWebSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
     plivoWebSdk.client.on('onIncomingCallIgnored', onIncomingCallCanceled);
@@ -1131,9 +1169,10 @@ function initPhone(username, password){
 	plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
 	plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
 	plivoWebSdk.client.on('audioDeviceChange',audioDeviceChange);
-	plivoWebSdk.client.on('onPermissionNeeded', onPermissionNeeded); 
+	plivoWebSdk.client.on('onPermissionDenied', onPermissionDenied); 
 	plivoWebSdk.client.on('onConnectionChange', onConnectionChange); // To show connection change events
 	plivoWebSdk.client.on('volume', volume);
+	//onSessionExpired
 
 	// Methods 
 	plivoWebSdk.client.setRingTone(true);
