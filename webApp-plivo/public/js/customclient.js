@@ -65,13 +65,13 @@ function kickStartNow(){
 }
 
 function login(username, password) {
-	//if(username && password){
+	if(username && password){
 		//start UI load spinner
 		kickStartNow();			
 		plivoWebSdk.client.login(username, password);
-	//}else{
+	}else{
 		console.error('username/password missing!')
-	//}
+	}
 }
 
 function audioDeviceChange(e){
@@ -262,9 +262,7 @@ function onCallTerminated(evt, callInfo){
 	$('#callstatus').html('Call Ended');
 	console.info(`onCallTerminated ${evt}`);
 	clearStars();
-	//if(logoutAfterHangup!=true){
-		$('#sendQualityFeedback').modal('show');
-	//}
+	$('#sendQualityFeedback').modal('show');
 	if (callInfo && callInfo.callUUID === plivoWebSdk.client.getCallUUID()) {
 		console.info(JSON.stringify(callInfo));
 		callOff(evt);
