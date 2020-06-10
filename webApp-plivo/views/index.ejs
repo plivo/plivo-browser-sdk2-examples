@@ -4,6 +4,8 @@
 	<title>plivo webphone</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="HandheldFriendly" content="true">
 	<link rel="icon" type="image/png" href="img/favicon.png">
 	<script src="lib/jquery.min.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -586,135 +588,133 @@
 				<div class="container">
 					<div id="loginkeypad">
 						<div class="col-md-4 phone" id="phone">
-							<div class="row1">
-								<div class="col-md-12 white-shadow">
-									<input type="tel" class="form-control tel" id="toNumber">
-									<div class="num-pad">			                    
-										<div class="span4">
-											<div class="num">
-												<div class="txt">
-													1
-												</div>
-											</div>
-										</div>
-										<div class="span4">
-											<div class="num">
-												<div class="txt">
-													2 <span class="small">
-														<p>
-															ABC</p>
-													</span>
-												</div>
-											</div>
-										</div>
-										<div class="span4">
-											<div class="num">
-												<div class="txt">
-													3 <span class="small">
-														<p>
-															DEF</p>
-													</span>
-												</div>
-											</div>
-										</div>
-										<div class="span4">
-											<div class="num">
-												<div class="txt">
-													4 <span class="small">
-														<p>
-															GHI</p>
-													</span>
-												</div>
-											</div>
-										</div>
-										<div class="span4">
-											<div class="num">
-												<div class="txt">
-													5 <span class="small">
-														<p>
-															JKL</p>
-													</span>
-												</div>
-											</div>
-										</div>
-										<div class="span4">
-											<div class="num">
-												<div class="txt">
-													6 <span class="small">
-														<p>
-															MNO</p>
-													</span>
-												</div>
-											</div>
-										</div>
-										<div class="span4">
-											<div class="num">
-												<div class="txt">
-													7 <span class="small">
-														<p>
-															PQRS</p>
-													</span>
-												</div>
-											</div>
-										</div>
-										<div class="span4">
-											<div class="num">
-												<div class="txt">
-													8 <span class="small">
-														<p>
-															TUV</p>
-													</span>
-												</div>
-											</div>
-										</div>
-										<div class="span4">
-											<div class="num">
-												<div class="txt">
-													9 <span class="small">
-														<p>
-															WXYZ</p>
-													</span>
-												</div>
-											</div>
-										</div>
-										<div class="span4">
-											<div class="num">
-												<div class="txt num-star">
-													*
-												</div>
-											</div>
-										</div>
-										<div class="span4">
-											<div class="num">
-												<div class="txt">
-													0 <span class="small">
-														<p>
-															+</p>
-													</span>
-												</div>
-											</div>
-										</div>
-										<div class="span4">
-											<div class="num">
-												<div class="txt">
-													#
-												</div>
+							<div class="col-md-12 white-shadow">
+								<input type="tel" class="form-control tel" id="toNumber">
+								<div class="num-pad">			                    
+									<div class="span4">
+										<div class="num">
+											<div class="txt">
+												1
 											</div>
 										</div>
 									</div>
-									<div class="clearfix">
+									<div class="span4">
+										<div class="num">
+											<div class="txt">
+												2 <span class="small">
+													<p>
+														ABC</p>
+												</span>
+											</div>
+										</div>
 									</div>
-									<div class="form-inline calleridinfo">
-										<label for="calleridlabel" class="control-label">CALLER ID: 
-											<input type="text" name="callerid" class="form-control" id="callerid" placeholder="SET CALLER ID">
-											<span id="saveCallerId" class="glyphicon glyphicon-ok-circle fa-lg" style="cursor:pointer;" data-toggle="tooltip" title="Save Caller ID"></span>
-											<span id="removeCallerId" class="glyphicon glyphicon-remove-circle fa-lg calleridRemove" data-toggle="tooltip" title="Remove Caller ID"></span>
-										</label>
+									<div class="span4">
+										<div class="num">
+											<div class="txt">
+												3 <span class="small">
+													<p>
+														DEF</p>
+												</span>
+											</div>
+										</div>
 									</div>
-									<button id=makecall class="btn btn-success makecall">CALL</button>
-									<div class="micsettingslink text-center">
-										<a id="micsettingslink" data-toggle="modal" href="#popAudioDevices">MIC/SPEAKER SETTINGS</a>
+									<div class="span4">
+										<div class="num">
+											<div class="txt">
+												4 <span class="small">
+													<p>
+														GHI</p>
+												</span>
+											</div>
+										</div>
 									</div>
+									<div class="span4">
+										<div class="num">
+											<div class="txt">
+												5 <span class="small">
+													<p>
+														JKL</p>
+												</span>
+											</div>
+										</div>
+									</div>
+									<div class="span4">
+										<div class="num">
+											<div class="txt">
+												6 <span class="small">
+													<p>
+														MNO</p>
+												</span>
+											</div>
+										</div>
+									</div>
+									<div class="span4">
+										<div class="num">
+											<div class="txt">
+												7 <span class="small">
+													<p>
+														PQRS</p>
+												</span>
+											</div>
+										</div>
+									</div>
+									<div class="span4">
+										<div class="num">
+											<div class="txt">
+												8 <span class="small">
+													<p>
+														TUV</p>
+												</span>
+											</div>
+										</div>
+									</div>
+									<div class="span4">
+										<div class="num">
+											<div class="txt">
+												9 <span class="small">
+													<p>
+														WXYZ</p>
+												</span>
+											</div>
+										</div>
+									</div>
+									<div class="span4">
+										<div class="num">
+											<div class="txt num-star">
+												*
+											</div>
+										</div>
+									</div>
+									<div class="span4">
+										<div class="num">
+											<div class="txt">
+												0 <span class="small">
+													<p>
+														+</p>
+												</span>
+											</div>
+										</div>
+									</div>
+									<div class="span4">
+										<div class="num">
+											<div class="txt">
+												#
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="clearfix">
+								</div>
+								<div class="form-inline calleridinfo">
+									<label for="calleridlabel" class="control-label">CALLER ID: 
+										<input type="text" name="callerid" class="form-control" id="callerid" placeholder="SET CALLER ID">
+										<span id="saveCallerId" class="glyphicon glyphicon-ok-circle fa-lg" style="cursor:pointer;" data-toggle="tooltip" title="Save Caller ID"></span>
+										<span id="removeCallerId" class="glyphicon glyphicon-remove-circle fa-lg calleridRemove" data-toggle="tooltip" title="Remove Caller ID"></span>
+									</label>
+								</div>
+								<button id=makecall class="btn btn-success makecall">CALL</button>
+								<div class="micsettingslink text-center">
+									<a id="micsettingslink" data-toggle="modal" href="#popAudioDevices">MIC/SPEAKER SETTINGS</a>
 								</div>
 							</div>
 							<div class="clearfix">
@@ -773,7 +773,7 @@
 							</div>
 						</div>
 						<div class="col-md-4 incomingCallDefault" id="incomingCallDefault" style="display: none;">
-							<div class="row1">
+							<div class="row2">
 								<div class="col-md-12 white-shadow">
 									<div class="text-center">
 										<h2>INCOMING CALL</h2>
