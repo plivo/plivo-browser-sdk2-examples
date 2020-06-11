@@ -172,11 +172,11 @@ function loginJWTAccessToken(accessToken){
 }
 
 $('#clickLoginJWT').click(function(e){
-	let jwtAccessToken = $('#accessToken').val();
-	loginJWTAccessToken(jwtAccessToken);
-	// let userName = $('#loginJwtUser').val();
-	// let jwtTokenObject = implementToken("username");
-	// loginJWTObject(jwtTokenObject);
+  let jwtAccessToken = $('#accessToken').val();
+  loginJWTAccessToken(jwtAccessToken);
+  // let userName = $('#loginJwtUser').val();
+  // let jwtTokenObject = implementToken("username");
+  // loginJWTObject(jwtTokenObject);
 });
 ``` 
 ### Options
