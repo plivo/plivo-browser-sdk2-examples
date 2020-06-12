@@ -194,7 +194,7 @@ function onLoginFailedWithError(reason){
 }
 
 function performLogout(){
-	document.body.style.backgroundImage = 'url(../img/background.svg)';
+	document.body.style.backgroundImage = 'url(img/background.svg)';
 	$('#loginContainer').show();
 	$('#callContainer').hide();
 	$('.loader').hide();
