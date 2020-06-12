@@ -24,7 +24,7 @@ npm start
 ### Initialization
 Include 
 ```js
-<script type="text/javascript" src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script>
+<script type="text/javascript" src="https://cdn.plivo.com/sdk/browser/v2/plivobeta.min.js"></script>
 ```
 in the `<body>` tag before you include other javascript files dependent on the SDK. 
 
