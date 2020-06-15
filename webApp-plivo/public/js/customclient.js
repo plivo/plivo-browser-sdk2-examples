@@ -110,7 +110,7 @@ function onWebrtcNotSupported() {
 
 function preCallTestResults(error, results) {
 	if (error) {
-		console.error('Error in performing pre-call diagnostics', error);
+		console.error('Error in performing pre-call diagnostics:', error.message);
 	} else {
 		console.log("App side results", results);
 		if (results.networkQuality < 5) {
