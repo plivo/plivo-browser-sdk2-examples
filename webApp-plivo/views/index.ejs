@@ -581,6 +581,7 @@
 				<span class="lead text-success">CALL STATUS: </span>
 				<span id=callstatus class="label-value">Idle</span>
 				<span class="config pull-right" data-toggle="modal" data-target="#configparams" style="margin-right: 4px;">Config</span><span class="glyphicon glyphicon-cog fa-lg pull-right config-cog" data-toggle="modal" data-target="#configparams"></span>
+				<button type="submit" class="btn btn-success" id=clickTemp data-dismiss="modal">Pre-Call</button>
 			</div>
 			<div class="panel-body">
 				<div class="container">
@@ -810,7 +811,8 @@
 		<!-- alert message comes here -->
 	</div>
 
-	<script src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script>
+	<!-- <script src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script> -->
+	<script src="http://localhost:9000/plivowebsdk.js"></script>
 	<script src="lib/notify.js"></script>
 	<script src="lib/intlTelInput.min.js"></script>
 	<script src="js/utils.js"></script>

@@ -108,6 +108,17 @@ function onWebrtcNotSupported() {
 	alert('Webrtc is not supported in this broswer, Please use latest version of chrome/firefox/opera/IE Edge');
 }
 
+function preCallTestResults(error, results) {
+	if (error) {
+		console.error('Error in performing pre-call diagnostics', error);
+	} else {
+		console.log("App side results", results);
+		if (results.networkQuality < 5) {
+			customAlert('Network quality is bad');
+		}
+	}
+}
+
 function mediaMetrics(obj){
 	/**
 	* Set a trigger for Quality FB popup when there is an warning druing call using sessionStorage
@@ -987,6 +998,21 @@ $('.logout').click(function(e) {
 
 });
 
+$('#clickTemp').click(function(e){
+	let audio = new Audio('media/us-ring.mp3');
+    audio.crossOrigin = "anonymous";
+    audio.loop = true;
+	plivoWebSdk.client.performPreCallDiagnostics(getAudioStream(audio), audio);
+});
+
+var getAudioStream = function(audio) {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const stream_dest = ctx.createMediaStreamDestination();
+    const source = ctx.createMediaElementSource(audio);
+    source.connect(stream_dest);
+    return stream_dest.stream;
+}
+
 $('#clickLogin').click(function(e){
 	var userName = $('#loginUser').val();
 	var password = $('#loginPwd').val();
@@ -1170,6 +1196,7 @@ function initPhone(username, password){
 	plivoWebSdk.client.on('onPermissionDenied', onPermissionDenied); 
 	plivoWebSdk.client.on('onConnectionChange', onConnectionChange); // To show connection change events
 	plivoWebSdk.client.on('volume', volume);
+	plivoWebSdk.client.on('preCallTestResults', preCallTestResults);
 	//onSessionExpired
 
 	// Methods 
