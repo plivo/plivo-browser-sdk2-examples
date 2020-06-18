@@ -999,10 +999,7 @@ $('.logout').click(function(e) {
 });
 
 $('#clickTemp').click(function(e){
-	let audio = new Audio('media/us-ring.mp3');
-    audio.crossOrigin = "anonymous";
-    audio.loop = true;
-	plivoWebSdk.client.performPreCallDiagnostics(getAudioStream(audio), audio);
+	plivoWebSdk.client.performPreCallDiagnostics();
 });
 
 var getAudioStream = function(audio) {
