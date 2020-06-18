@@ -1,4 +1,4 @@
-## Plivo Web SDK v2.0 Example
+## Plivo Browser SDK v2.2 Example
 *This Plivo example shows how to use all the features in Plivo WebSDK 2.0 using a simple webphone demo. This demo helps in making phone calls from web browser to both sip addresses and PSTN phone numbers without installing any plugins.*
 
 ![plivo-websdk-2.0-example](img/callscreen.png)
