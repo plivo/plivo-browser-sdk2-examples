@@ -4,7 +4,7 @@
 ![plivo-websdk-2.0-example](img/callscreen.png)
 
 ---
-*To use the [live web phone demo](https://s3.amazonaws.com/plivowebrtc/v2-1.html)*
+*To use the [live web phone demo](https://s3.amazonaws.com/plivobrowsersdk/v2/example.html)*
 
 *a. Sign up for a Plivo account here: https://manage.plivo.com/accounts/register/*
 
@@ -24,7 +24,7 @@ npm start
 ### Initialization
 Include 
 ```js
-<script type="text/javascript" src="https://cdn.plivo.com/sdk/browser/v2/plivobeta.min.js"></script>
+<script type="text/javascript" src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script>
 ```
 in the `<body>` tag before you include other javascript files dependent on the SDK. 
 
@@ -97,88 +97,7 @@ $('#clickLogin').click(function(e){
   login(userName, password);
 });
 ```
-#### Login with username/jwt. 
-![plivo-websdk-2.0-example](img/login_jwt.png)
-```js
-function implementToken(username){
 
-  //Implement SDK's Abstract class 'accessToken'
-  var jwtToken = function() { accessToken.apply(); };
-  jwtToken.prototype = Object.create(accessToken.prototype);
-  jwtToken.prototype.constructor = jwtToken;
-
-  /*
-  Implement the abstract method 'getAccessToken'
-  Customers need to define their own logic to fetch accessToken
-  They may like to have their own app server to generate accessTokens.
-  This method gets re-called (SDK takes care of it) just before the expiry of ongoing access token and fetches a new valid token
-  */
-  jwtToken.prototype.getAccessToken = async function() {
-    //get JWT Token
-    var tokenGenServerURI = "https://api/url/to/fetch/accessToken"
-    const requestBody = {
-      "username":username
-    }   
-    const response = await fetch(tokenGenServerURI, {
-            method: 'POST',
-            body: JSON.stringify(requestBody),
-            headers: {'Content-Type' : 'application/json'}
-          }).catch(function (err) {
-            console.error("Error in fetching the token ", err);
-            return null;
-          });
-    try{  
-      const myJson = await response.json();
-      return (myJson['token'])
-    }catch(error){
-      console.error("Error : "+error);  
-      return(null);
-    }     
-  }
-  var jwtTokenObject = new jwtToken();
-  return jwtTokenObject;
-}
-
-function loginJWTObject(jwtTokenObject){
-  if(jwtTokenObject!=null) {
-    //start UI load spinner
-    kickStartNow();     
-    /*
-    Calling SDK login with token object, method.
-    Pass the token object which would be used by the SDK to call 'getAccessToken' method
-    */
-    plivoWebSdk.client.loginWithAccessTokenGenerator(jwtTokenObject);
-    $('#sipUserName').html('Successfully logged in with access token');
-  }else {
-    console.error('JWT Object found null')
-  }
-}
-
-function loginJWTAccessToken(accessToken){
-  if(accessToken!=null) {
-    //start UI load spinner
-    kickStartNow();     
-    /*
-    Calling SDK login with access token, method.
-    Pass the access token for logging in
-    User's session would be logged out as soon as the token expires.
-    User will have to explicitly re login with new valid access token when existing access token expires
-    */
-    plivoWebSdk.client.loginWithAccessToken(accessToken);
-    $('#sipUserName').html('Successfully logged in with access token');
-  }else {
-    console.error('JWT Object found null')
-  }
-}
-
-$('#clickLoginJWT').click(function(e){
-  let jwtAccessToken = $('#accessToken').val();
-  loginJWTAccessToken(jwtAccessToken);
-  // let userName = $('#loginJwtUser').val();
-  // let jwtTokenObject = implementToken("username");
-  // loginJWTObject(jwtTokenObject);
-});
-``` 
 ### Options
 *Options allow to disable tracking, setting codec type, enabling and disabling AEC/AGC etc. The list of all the settings can be found in the documentation page.*
 ![plivo-websdk-2.0-example](img/settings.png)
