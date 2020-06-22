@@ -4,7 +4,7 @@
 ![plivo-websdk-2.0-example](img/callscreen.png)
 
 ---
-*To use the [live web phone demo](https://s3.amazonaws.com/plivowebrtc/v2-1.html)*
+*To use the [live web phone demo](https://s3.amazonaws.com/plivobrowsersdk/v2-beta/example.html)*
 
 *a. Sign up for a Plivo account here: https://manage.plivo.com/accounts/register/*
 
