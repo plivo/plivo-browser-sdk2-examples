@@ -78,7 +78,6 @@ In the demo, `options` can be set from UI in the CONFIG menu. Once the CONFIG is
   </script>
 ```
 ### Login 
-#### Login with username/password. 
 ![plivo-websdk-2.0-example](img/plivobrowserSdKLogin.png)
 ```js
 function login(username, password) {

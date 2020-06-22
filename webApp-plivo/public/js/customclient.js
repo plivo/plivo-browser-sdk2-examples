@@ -6,7 +6,6 @@ const incomingNotifications = new Map();
 var speakerSourceNode;
 var ringtoneSourceNode;
 let incomingNotificationAlert = null;
-var logoutAfterHangup = false;
 
 var defaultSettings = {
 	"debug":"INFO",
@@ -153,10 +152,7 @@ function onReady(){
 	console.info('Ready');
 }
 
-function onLogin(uname,time){
-	console.log("onLogin called");
-	console.log(uname,time)
-	logoutAfterHangup=false;
+function onLogin(){
 	$('#loginContainer').hide();
 	$('#callContainer').show();
 	document.body.style.backgroundImage = 'none';
@@ -184,15 +180,6 @@ function onLoginFailed(reason){
 	$('.loader').hide()	
 }
 
-function onLoginFailedWithError(reason){
-	console.info('onLoginFailedWithError ',reason);
-	if(Object.prototype.toString.call(reason) == "[object Object]"){
-		reason = JSON.stringify(reason);
-	}
-	customAlert('Login failure :',reason, 'warn');
-	$('.loader').hide()	
-}
-
 function performLogout(){
 	document.body.style.backgroundImage = 'url(img/background.svg)';
 	$('#loginContainer').show();
@@ -201,16 +188,9 @@ function performLogout(){
 	$('#toNumber').val("");
 	iti.setCountry("us");
 }
-function onLogout(cause){
-	console.info('onLogout', cause);
-	if(cause){
-		customAlert('onLogout :',cause, 'warn');
-	}
-	if((cause=="ACCESS_TOKEN_EXPIRED" || cause=="RELOGIN_FAILED_WITH_INVALID_TOKEN" ) && plivoWebSdk.client._currentSession){
-		logoutAfterHangup=true;
-	}else{
-		performLogout();
-	}
+function onLogout(){
+	console.info('onLogout');
+	performLogout();
 }
 
 
@@ -389,10 +369,6 @@ function callOff(reason){
 	$('#callstatus').html('Idle');
 	callStorage={}; // reset callStorage
 	timer = "00:00:00"; //reset the timer
-	if(logoutAfterHangup == true){
-		logoutAfterHangup = false;
-		performLogout();
-	}
 
 }
 
@@ -1154,7 +1130,6 @@ function initPhone(username, password){
 	plivoWebSdk.client.on('onLogin', onLogin);
 	plivoWebSdk.client.on('onLogout', onLogout);
 	plivoWebSdk.client.on('onLoginFailed', onLoginFailed);
-	plivoWebSdk.client.on('onLoginFailedWithError', onLoginFailedWithError);
 	plivoWebSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
 	plivoWebSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
     plivoWebSdk.client.on('onIncomingCallIgnored', onIncomingCallCanceled);
