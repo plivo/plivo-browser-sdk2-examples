@@ -273,8 +273,8 @@ p
     font-family: monospace;
 }
 
-#clickLogin, #clickLoginJWT{
-  width:20%;
+#clickLogin{
+  width:30%;
 }
 
 .white-shadow{

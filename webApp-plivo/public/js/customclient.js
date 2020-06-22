@@ -28,7 +28,6 @@ var defaultSettings = {
 var iti;
 var incomingCallInfo;
 var isIncomingCallPresent = false
-var isLoggedInwithAccessTokenObject= null;
 
 var outputVolumeBar = document.getElementById('output-volume');
 var inputVolumeBar = document.getElementById('input-volume');
@@ -636,68 +635,6 @@ function colorPids(vol, volumeType) {
 	}
 }
 
-function implementToken(username){
-	var jwtToken = function() {
-		accessToken.apply();
-	};
-	jwtToken.prototype = Object.create(accessToken.prototype);
-	jwtToken.prototype.constructor = jwtToken;
-	  
-	jwtToken.prototype.getAccessToken = async function() {
-		//get JWT Token
-		var tokenGenServerURI = "https://jwttokengen.herokuapp.com/fetchtoken";
-		const requestBody = {
-			"username":username
-		}	
-		const response = await fetch(tokenGenServerURI, {
-						method: 'POST',
-						body: JSON.stringify(requestBody),
-			  			headers: {'Content-Type' : 'application/json'}
-					}).catch(function (err) {
-						console.error("Error in fetching the token ", err);
-						return null;
-					});
-		try{	
-			const myJson = await response.json();
-			return (myJson['token'])
-		}catch(error){
-			console.error("Error : "+error);	
-			return(null);
-		}		
-	}
-	var jwtTokenObject = new jwtToken();
-	return jwtTokenObject;
-}
-
-function loginJWTObject(jwtTokenObject){
-	isLoggedInwithAccessTokenObject = true;
-	if(jwtTokenObject!=null){
-		//start UI load spinner
-		kickStartNow();			
-		//Calling SDK loginJWT method
-		plivoWebSdk.client.loginWithAccessTokenGenerator(jwtTokenObject);
-		$('#sipUserName').html('Successfully logged in with access token');
-	}else{
-		console.error('JWT Object found null')
-	}
-}
-
-function loginJWTAccessToken(accessToken){
-	if(accessToken!=null) {
-	  //start UI load spinner
-	  kickStartNow();     
-	  /*
-	  Calling SDK login with access token, method.
-	  Pass the access token for logging in
-	  User's session would be logged out as soon as the token expires.
-	  User will have to explicitly re login with new valid access token when existing access token expires
-	  */
-      console.log(accessToken);	 
-	  plivoWebSdk.client.loginWithAccessToken(accessToken);
-	}else {
-	  console.error('JWT Object found null')
-	}
-  }
 
 function refreshAudioDevices() {
 	_forEach.call(document.querySelectorAll('#popAudioDevices option'), e=>e.remove());
@@ -969,13 +906,7 @@ $('#clickLogin').click(function(e){
 	login(userName, password);
 });
 
-$('#clickLoginJWT').click(function(e){
-	let jwtAccessToken = $('#accessToken').val();
-	loginJWTAccessToken(jwtAccessToken);
-	// let userName = $('#loginJwtUser').val();
-  	// let jwtTokenObject = implementToken("username");
-  	// loginJWTObject(jwtTokenObject);
-});
+
 
 // Audio device selection
 $('#micDev').change(function(){
@@ -1117,14 +1048,10 @@ function starFeedback(){
 // variables to declare 
 
 var plivoWebSdk; // this will be retrived from settings in UI
-var accessToken;
 
 function initPhone(username, password){
 	var options = refreshSettings();
 	plivoWebSdk = new window.Plivo(options);
-
-	//initialise Token object
-	accessToken = plivoWebSdk.client.token;
 
 	plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported); 
 	plivoWebSdk.client.on('onLogin', onLogin);

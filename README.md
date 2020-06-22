@@ -33,13 +33,10 @@ This is where we initialise a new Plivo object by passing `options` as `plivoWeb
 
 ```js
 var plivoWebSdk; 
-var accessToken;
 function initPhone(username, password){
   var options = refreshSettings();
   plivoWebSdk = new window.Plivo(options);
 
-  //initialise Token object
-  accessToken = plivoWebSdk.client.token;
   
   plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
   plivoWebSdk.client.on('onLogin', onLogin);
