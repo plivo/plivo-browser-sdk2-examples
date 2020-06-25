@@ -65,7 +65,12 @@ function Message (text, type, delay) {
 
   this.element.setAttribute('role', this.type)
   this.element.children[1].innerHTML = this.text
-  document.body.appendChild(this.element)
+  var metrics = document.getElementsByClassName("metrics")[0];
+  if(metrics != null) {
+    document.getElementById('oncallalertmsg').insertBefore(this.element, metrics);
+  } else {
+    document.getElementById('oncallalertmsg').appendChild(this.element);
+  }
   this.element.style.opacity = '0.0'
   this.element.style.transition = 'all ' + Message.speed + 'ms ease-in-out'
   this.element.offsetWidth // eslint-disable-line no-unused-expressions
@@ -84,6 +89,7 @@ function Message (text, type, delay) {
 
 Message.prototype.show = function () {
   this.element.style.opacity = '1.0'
+  this.element.style.marginBottom = '7px'
   Message.reposition()
 
   if (this.delay) {
