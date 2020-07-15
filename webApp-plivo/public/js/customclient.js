@@ -21,7 +21,6 @@ var defaultSettings = {
 	"enableTracking":true,
 	"closeProtection":false,
 	"maxAverageBitrate":48000,
-	"dialType":"conference",
 	"allowMultipleIncomingCalls":false
   };
 
@@ -802,15 +801,13 @@ $('#tmute').click(function(e){
 
 $('#makecall').click(function(e){
 	var to = iti.getNumber(),
-		extraHeaders={}, dialType,
+		extraHeaders={},
 		customCallerId= localStorage.getItem('callerId');
 	if(customCallerId){
 		customCallerId = customCallerId.replace("+","");
 		extraHeaders = {'X-PH-callerId': customCallerId};		
 	}
-	if(uioptions.dialType == "conference"){
-		extraHeaders["X-PH-conference"] = "true";
-	}
+	extraHeaders["X-PH-conference"] = "true";
 	var callEnabled = $('#makecall').attr('class').match('disabled');
 	if(!to || !plivoBrowserSdk || !!callEnabled){return};
 	if(!plivoBrowserSdk.client.isLoggedIn){alert('You\'re not Logged in!')}
