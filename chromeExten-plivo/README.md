@@ -1,4 +1,4 @@
-# PlivoWebSDK for Chrome-Extension/Packaged app
+# PlivoBrowserSdk for Chrome-Extension/Packaged app
 
 ### Setup
 Got to chrome extension in a new tab

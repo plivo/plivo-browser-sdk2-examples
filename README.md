@@ -28,34 +28,34 @@ Include
 ```
 in the `<body>` tag before you include other javascript files dependent on the SDK. 
 
-Lets create a `customclient.js` file and declare a variable `var plivoWebSdk;`
-This is where we initialise a new Plivo object by passing `options` as `plivoWebSdk = new window.Plivo(options);`. The application can set up listeners for events as shown in the `initPhone` function below. 
+Lets create a `customclient.js` file and declare a variable `var plivoBrowserSdk;`
+This is where we initialise a new Plivo object by passing `options` as `plivoBrowserSdk = new window.Plivo(options);`. The application can set up listeners for events as shown in the `initPhone` function below. 
 
 ```js
-var plivoWebSdk; 
+var plivoBrowserSdk; 
 function initPhone(username, password){
   var options = refreshSettings();
-  plivoWebSdk = new window.Plivo(options);
+  plivoBrowserSdk = new window.Plivo(options);
 
   
-  plivoWebSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
-  plivoWebSdk.client.on('onLogin', onLogin);
-  plivoWebSdk.client.on('onLogout', onLogout);
-  plivoWebSdk.client.on('onLoginFailed', onLoginFailed);
-  plivoWebSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
-  plivoWebSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
-  plivoWebSdk.client.on('onCallFailed', onCallFailed);
-  plivoWebSdk.client.on('onCallAnswered', onCallAnswered);
-  plivoWebSdk.client.on('onCallTerminated', onCallTerminated);
-  plivoWebSdk.client.on('onCalling', onCalling);
-  plivoWebSdk.client.on('onIncomingCall', onIncomingCall);
-  plivoWebSdk.client.on('onMediaPermission', onMediaPermission);
-  plivoWebSdk.client.on('mediaMetrics',mediaMetrics);
-  plivoWebSdk.client.on('audioDeviceChange',audioDeviceChange);
-  plivoWebSdk.client.on('onConnectionChange', onConnectionChange);
-  plivoWebSdk.client.on('volume', volume);
-  plivoWebSdk.client.setRingTone(true);
-  plivoWebSdk.client.setRingToneBack(true);
+  plivoBrowserSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
+  plivoBrowserSdk.client.on('onLogin', onLogin);
+  plivoBrowserSdk.client.on('onLogout', onLogout);
+  plivoBrowserSdk.client.on('onLoginFailed', onLoginFailed);
+  plivoBrowserSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
+  plivoBrowserSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
+  plivoBrowserSdk.client.on('onCallFailed', onCallFailed);
+  plivoBrowserSdk.client.on('onCallAnswered', onCallAnswered);
+  plivoBrowserSdk.client.on('onCallTerminated', onCallTerminated);
+  plivoBrowserSdk.client.on('onCalling', onCalling);
+  plivoBrowserSdk.client.on('onIncomingCall', onIncomingCall);
+  plivoBrowserSdk.client.on('onMediaPermission', onMediaPermission);
+  plivoBrowserSdk.client.on('mediaMetrics',mediaMetrics);
+  plivoBrowserSdk.client.on('audioDeviceChange',audioDeviceChange);
+  plivoBrowserSdk.client.on('onConnectionChange', onConnectionChange);
+  plivoBrowserSdk.client.on('volume', volume);
+  plivoBrowserSdk.client.setRingTone(true);
+  plivoBrowserSdk.client.setRingToneBack(true);
   console.log('initPhone ready!')
 }
 ```
@@ -81,7 +81,7 @@ function login(username, password) {
   if(username && password) {
     //start UI load spinner
     kickStartNow();     
-    plivoWebSdk.client.login(username, password);
+    plivoBrowserSdk.client.login(username, password);
   } else {
     console.error('username/password missing!')
   }
@@ -171,9 +171,9 @@ Given a number or SIP URI, this snippet shows how to make an outgoing call. The 
 $('#makecall').click(function(e){
   var to = $('#toNumber').val().replace(" ","");
   var callEnabled = $('#makecall').attr('class').match('disabled');
-  if(!to || !plivoWebSdk || !!callEnabled){return};
+  if(!to || !plivoBrowserSdk || !!callEnabled){return};
   console.info('Click make call : ',to);
-  plivoWebSdk.client.call(to);
+  plivoBrowserSdk.client.call(to);
   $('.phone').hide();
   $('.AfterAnswer').show();
   $('#boundType').html('Outgoing : '+to);
@@ -193,14 +193,14 @@ $('#makecall').click(function(e){
     extraHeaders = {'X-PH-callerId': customCallerId};
   }
   console.info('Click make call : ',to);
-  plivoWebSdk.client.call(to, extraHeaders);
+  plivoBrowserSdk.client.call(to, extraHeaders);
 });
 ```
 Capture this extraHeader in application side and use `callerId` attribute to set the callerId in [Dial](https://www.plivo.com/docs/xml/dial/) Element
 
 
 ### Handling Incoming calls
-By creating the `onIncomingCall` listener, the `plivoWebSdk` object can handle incoming calls to the Plivo Endpoint.
+By creating the `onIncomingCall` listener, the `plivoBrowserSdk` object can handle incoming calls to the Plivo Endpoint.
 
 ```js
 function onIncomingCall(callerName, extraHeaders){
@@ -221,7 +221,7 @@ The following snippet shows how to answer an incoming call
 ```js
 $('.answerIncoming').click(function(){
   console.info('Call accept clicked');
-  plivoWebSdk.client.answer();
+  plivoBrowserSdk.client.answer();
   $('.incomingCallDefault').hide();
   $('.callinfo').show();
 });
@@ -230,7 +230,7 @@ The following snippet shows how to reject an incoming call
 ```js
 $('.rejectIncoming').click(function(){
   console.info('Call rejected');
-  plivoWebSdk.client.reject();
+  plivoBrowserSdk.client.reject();
   $('.incomingCallDefault').hide();
 });
 ```
@@ -238,7 +238,7 @@ The following snippet shows how to ignore an incoming call
 ```js
 $('.ignoreIncoming').click(function(){
   console.info('Call ignored');
-  plivoWebSdk.client.ignore();
+  plivoBrowserSdk.client.ignore();
   $('.incomingCallDefault').hide();
 });
 ```
@@ -247,8 +247,8 @@ This code may be used to terminate a call.
 ```js
 $('.hangup').click(function(){
   console.info('Hangup');
-  if(plivoWebSdk.client.callSession) {
-    plivoWebSdk.client.hangup();
+  if(plivoBrowserSdk.client.callSession) {
+    plivoBrowserSdk.client.hangup();
   }else {
     callOff();
   }
@@ -286,19 +286,19 @@ The following snippet uses this API to demonstrate how to handle device selectio
 // Audio device selection
 $('#micDev').change(function(){
   var selectDev = $('#micDev').val();
-  plivoWebSdk.client.audio.microphoneDevices.set(selectDev);
+  plivoBrowserSdk.client.audio.microphoneDevices.set(selectDev);
   console.debug('Microphone device set to : ',selectDev);
 });
 
 $('#speakerDev').change(function(){
   var selectDev = $('#speakerDev').val();
-  plivoWebSdk.client.audio.speakerDevices.set(selectDev);
+  plivoBrowserSdk.client.audio.speakerDevices.set(selectDev);
   console.debug('Speaker device set to : ',selectDev);
 });
 
 $('#ringtoneDev').change(function(){
   var selectDev = $('#ringtoneDev').val();
-  plivoWebSdk.client.audio.ringtoneDevices.set(selectDev);
+  plivoBrowserSdk.client.audio.ringtoneDevices.set(selectDev);
   console.debug('Ringtone dev set to : ',selectDev);
 });
 ```
@@ -340,7 +340,7 @@ function updateAudioDevices(){
   // Remove existing options if any
   document.querySelectorAll('#micDev option').forEach(e=>e.remove())
   document.querySelectorAll('#ringtoneDev option').forEach(e=>e.remove())
-  plivoWebSdk.client.audio.availableDevices()
+  plivoBrowserSdk.client.audio.availableDevices()
   .then(function(e){
   e.forEach(function(dev){
     if(dev.label && dev.kind == "audioinput")
@@ -363,7 +363,7 @@ $('#allowAudioDevices').click(function(){
 
 function refreshAudioDevices() {
   _forEach.call(document.querySelectorAll('#popAudioDevices option'), e=>e.remove());
-  plivoWebSdk.client.audio.revealAudioDevices()
+  plivoBrowserSdk.client.audio.revealAudioDevices()
   .then(function(e){
     updateAudioDevices();
     console.log('Media permission ',e)
@@ -403,7 +403,7 @@ The following snippet shows how to collect feedback using the SDK. There is a pr
 $('#sendFeedback').click(function(){
   var score = $('#stars li.selected').last().data('value');
   score = Number(score);
-  var lastCallid = plivoWebSdk.client.getLastCallUUID();
+  var lastCallid = plivoBrowserSdk.client.getLastCallUUID();
   var issues=[];
   _forEach.call(document.querySelectorAll('[name="callqualitycheck"]'), e=>{
     if(e.checked) {
@@ -413,7 +413,7 @@ $('#sendFeedback').click(function(){
   var note = sendFeedbackComment.value;
   var sendConsoleLogs = document.getElementById("sendConsoleLogs").checked;
   // submitCallQualityFeedback takes parameteres callUUId, starRating, issues, note, sendConsoleLogs
-  plivoWebSdk.client.submitCallQualityFeedback(lastCallid, score, issues, note, sendConsoleLogs)
+  plivoBrowserSdk.client.submitCallQualityFeedback(lastCallid, score, issues, note, sendConsoleLogs)
   .then((result) => {
     $('#feedbackStatus').html('Feedback sent');
     $('#ignoreFeedback').click();
