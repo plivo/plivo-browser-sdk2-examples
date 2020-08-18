@@ -60,9 +60,15 @@
 			
 		</div>
 
-		<nav class="navbar navbar-fixed-bottom">
-			<div class="container text-center">
-				<p class="navbar-text col-md-12 col-sm-12 col-xs-12">© Plivo Inc. 2020 - All Rights Reserved</p>
+				        		<div id=recPlayerLayout>
+				        			<audio id=recPlayer></audio>
+				        			<a class="btn btn-info btn-sm" id=audioDownload>Download</a>
+				        			<a class="btn btn-default btn-sm" id="clearRecPlayer"> Ignore</a>	                
+						</div>
+							  </div>
+						</div>           			        	
+			        </div>
+			    </div>
 			</div>
 		</nav>
 	</div>
@@ -70,140 +76,73 @@
 	<!-- settings div -->
 	<div class="modal fade" id="configparams" role="dialog">
 		<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header text-center">
-			<button type="button" class="close" data-dismiss="modal">&times;</button>
-			<h4 class="modal-title"><strong>OPTIONS FOR INITIALIZING THE PLIVO WEBSDK OBJECT</strong></h4>
-			</div>
-			<div class="modal-body">
+		  <div class="modal-content">
+		    <div class="modal-header">
+			  <button type="button" class="close" data-dismiss="modal">&times;</button>
+			  <div class="row">
+					<div class="form-group col-xs-4">
+						<h4 class="modal-title">Please enter your plivo credentials</h4>
+					</div>
+					<div class="form-group col-xs-4">
+						<label><input type="checkbox" id="jwtFlag" >Log in with JWT</label>
+					</div>	
+			  </div>
+		    </div>
+		    <div class="modal-body">
 				<div class="container">
-					<form>
-						<div class="row">
-							<div class="form-group col-md-1">
+				<div id="loginWindow">	
+				  <form>
+							
+				  	<div class="row">
+					    <div class="form-group col-xs-4">
+					      	<label for="loginUser">Username</label>
+					      	<input type="text" onblur="trimSpace(this)" class="form-control " id="loginUser" name="loginUser" placeholder="plivo userId" value="">
+					    </div>
+					    <div class="form-group col-xs-4">
+					      	<label for="loginPwd">Password</label>
+					      	<input type="password" class="form-control" id="loginPwd" placeholder="password" name="loginPwd">
+							<div class="checkbox" id=showPass>
+							  <label><input type="checkbox">Show password</label>
 							</div>
-							<div class="form-group col-sm-4">
-								<label for="loglevel" class="middleLabel">LOG LEVEL</label>
-								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Enable log level in JS log"></span>
-							</div>
-							<div class="form-group col-sm-2">
-								<select class="form-control jcf-hidden" name="loglevelbtn" id="loglevelbtn">
-									<option value="INFO">INFO</option>
-									<option value="OFF">OFF</option>
-									<option value="ERROR">ERROR</option>
-									<option value="WARN">WARN</option>
-									<option value="DEBUG">DEBUG</option>
-									<option value="ALL">ALL</option>
-								</select>
-							</div>
-						</div>
-						<div class="row">
-							<div class="form-group col-md-1">
-							</div>
-							<div class="form-group col-sm-4">
-								<label for="micaccess">ASK FOR MIC ACCESS</label>
-								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Request for mic access before login or call initiation"></span>
-							</div>
-							<div class="form-group col-sm-2">
-								<input type="radio" name="micaccess" id="onpageload" checked> ON PAGE LOAD
-							</div>
-							<div class="form-group col-sm-2">
-								<input type="radio" name="micaccess" id="oncallinit"> ON CALL INITIATION
-							</div>
-						</div>
-						<div class="row">
-							<div class="form-group col-md-1">
-							</div>
-							<div class="form-group col-sm-4">
-								<label for="callquality">MONITOR CALL QUALITY</label>
-								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Enable media metrics and call quality tracking"></span>
-							</div>
-							<div class="form-group col-sm-2">
-								<input type="radio" name="callquality" id="monitorquality" checked> YES
-							</div>
-							<div class="form-group col-sm-2">
-								<input type="radio" name="callquality" id="dontmonitorquality"> NO
-							</div>
-						</div>
-						<div class="row">
-							<div class="form-group col-md-1">
-							</div>
-							<div class="form-group col-sm-4">
-								<label for="closeprotection">BROWSER TAB CLOSE PROTECTION</label>
-								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Show dialog prompt while closing the app when call is in progress"></span>
-							</div>
-							<div class="form-group col-sm-2">
-								<input type="radio" name="closeprotection" id="closeprotect"> YES
-							</div>
-							<div class="form-group col-sm-2">
-								<input type="radio" name="closeprotection" id="dontcloseprotect" checked> NO
-							</div>
-						</div>
-						<div class="row">
-							<div class="form-group col-md-1">
-							</div>
-							<div class="form-group col-sm-4">
-								<label for="dscp">DSCP</label>
-								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Enable QoS in voice traffic"></span>
-							</div>
-							<div class="form-group col-sm-2">
-								<input type="radio" name="dscp" id="allowdscp" checked> ENABLED
-							</div>
-							<div class="form-group col-sm-2">
-								<input type="radio" name="dscp" id="nodscp"> DISABLED
-							</div>
-						</div>
-						<div class="row">
-							<div class="form-group col-md-1">
-							</div>
-							<div class="form-group col-sm-4">
-								<label for="multipleincoming">MULTIPLE INCOMING CALLS</label>
-								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Enable multiple incoming calls to the endpoint at same time"></span>
-							</div>
-							<div class="form-group col-sm-2">
-								<input type="radio" name="multipleincoming" id="allowincoming"> ALLOWED
-							</div>
-							<div class="form-group col-sm-2">
-								<input type="radio" name="multipleincoming" id="noincoming" checked> RESTRICTED
-							</div>
-						</div>
-						<div class="row">
-							<div class="form-group col-md-1">
-							</div>
-							<div class="form-group col-sm-4">
-								<label for="msregion" class="middleLabel">PLIVO MS REGION</label>
-								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Route calls to specific MediaServer POPs"></span>
-							</div>
-							<div class="form-group col-sm-2">
-								<select class="form-control jcf-hidden" name="msregionbtn" id="msregionbtn">
-									<option value="AUTO">AUTO</option>
-									<option value="usa_west">USA-WEST</option>
-									<option value="usa_east">USA-EAST</option>
-									<option value="australia">AUSTRALIA</option>
-									<option value="europe">EUROPE</option>
-									<option value="asia">ASIA</option>
-									<option value="south_america">SOUTH-AMERICA</option>
-								</select>
-							</div>
-						</div>
-						<div class="row">
-							<div class="form-group col-md-1">
-							</div>
-							<div class="form-group col-sm-4">
-								<label for="bitrate" class="middleLabel">MAX AVERAGE BITRATE</label>
-								<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Controls your application’s bandwidth consumption for calls"></span>
-							</div>
-							<div class="form-group col-sm-2">
-								<input type="text" onblur="trimSpace(this)" class="form-control" id="averagebitrate" name="averagebitrate" value=48000>
-							</div>
-						</div>
-					</form>
-				</div>		    
-			</div>
-			<div class="modal-footer">	    
-				<button type="button" id="updateSettings" class="btn btn-primary config-update" data-dismiss="modal" data-toggle="tooltip" title="Please reload the page to update options in SDK">Update</button>
-				<button type="button" id="resetSettings" class="btn btn-outline-primary config-reset">Reset</button>	
-			</div>
-		</div>
+					    </div>
+					</div>
+					<label><input type="checkbox">Remember Me</label>
+				  </form>
+				  </div>
+				  <div id="jwtLoginWindow" style="display:none">	
+				  <form>
+					<div class="row">  
+						<div class="form-group col-xs-8">
+						<label for="authToken">Auth Token</label>
+						<input type="text" onblur="trimSpace(this)" class="form-control " id="authToken" name="authToken" placeholder="Enter valid Auth token">						      
+						</div class="form-group">
+					  </div>
+					  <div class="row">  
+							<div class="form-group col-xs-4">
+								<label for="authId">Auth Id</label>
+								<input type="text" onblur="trimSpace(this)" class="form-control " id="authId" name="authId" placeholder="Enter valid Auth Id">						      
+							</div class="form-group">
+							<div class="form-group col-xs-4">
+								<label for="tokenExpiry">Token Expiry</label>
+								<input type="text" onblur="trimSpace(this)" class="form-control " id="tokenExpiry" name="tokenExpiry" placeholder="Token expiry from now in seconds">						      
+								</div class="form-group">
+						  </div>
+						<div class="row">  
+							<div class="form-group col-xs-2">
+									<label><input type="checkbox" id="isIncomingGrant">Incoming Grant </label>
+							</div class="form-group">
+							<div class="form-group col-xs-2">
+									<label><input type="checkbox" id="isOutgoingGrant">Outgoing Grant </label>
+							</div class="form-group">
+					  </div>
+				  </form>
+				  </div>
+				</div>
+		    </div>
+		    <div class="modal-footer">
+		   		<button type="submit" class="btn btn-success" id=clickLogin data-dismiss="modal">Login</button>
+		    </div>
+		  </div>
 		</div>
 	</div>
 
@@ -753,22 +692,35 @@
 		<!-- alert message comes here -->
 	</div>
 
-	<script src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script>
-	<script src="lib/notify.js"></script>
-	<script src="lib/intlTelInput.min.js"></script>
-	<script src="js/utils.js"></script>
-	<script src="js/customclient.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			console.log( "HTML ready!" );
-			$('[data-toggle="tooltip"]').tooltip();
-			initPhone();
-		});
+<script src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script>
+<script src="js/audiovisual.js"></script>
+<script src="js/customclient.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+	    console.log( "HTML ready!" );
+	    $('[data-toggle="tooltip"]').tooltip();
+	    resetSettings();
+	    initPhone();
+	});
+
+	function toggleCheckbox(element){
+   		element.checked = !element.checked;
+ 	}
+
+	function base64url(source) {
+		// Encode in classical base64
+		encodedSource = CryptoJS.enc.Base64.stringify(source);
 		
-		var input = document.querySelector("#toNumber");
-		var iti = window.intlTelInput(input,({
-		}));
-		setIti(iti);
-	</script>
+		// Remove padding equal characters
+		encodedSource = encodedSource.replace(/=+$/, '');
+		
+		// Replace characters according to base64url specifications
+		encodedSource = encodedSource.replace(/\+/g, '-');
+		encodedSource = encodedSource.replace(/\//g, '_');
+		
+		return encodedSource;
+	}
+
+</script>
 </body>
 </html>
