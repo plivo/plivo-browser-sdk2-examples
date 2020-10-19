@@ -752,6 +752,13 @@ $('.hangup').click(function(){
 	}
 });
 
+$('#screenBtn').click(function(){
+	console.info('Screen sharing started');
+	if(plivoBrowserSdk.client.callSession){
+		plivoBrowserSdk.client.startScreenShare();
+	}
+});
+
 $('.answerIncoming').click(function(){
 	isIncomingCallPresent = false;
 	console.info('Call accept clicked');
@@ -1073,7 +1080,7 @@ function initPhone(username, password){
 
 	// Methods 
 	plivoBrowserSdk.client.setRingTone(true);
-	plivoBrowserSdk.client.setRingToneBack(false);
+	plivoBrowserSdk.client.setRingToneBack(true);
 	plivoBrowserSdk.client.setConnectTone(true); // Dial beep will play till we get alert response from network. 
 	plivoBrowserSdk.client.setDebug("ALL"); // Allowed values are OFF, ERROR, WARN, INFO, DEBUG, ALL
 
