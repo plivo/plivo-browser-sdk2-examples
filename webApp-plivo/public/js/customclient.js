@@ -476,9 +476,6 @@ function updateAudioDevices(){
 	plivoBrowserSdk.client.audio.availableDevices()
 	.then(function(e){
 		e.forEach(function(dev){
-			if (dev.label.startsWith('Default')) {
-				removeDevice = dev.label.substring(10);
-			}
 			if(dev.label && dev.kind == "audioinput" && dev.label != removeDevice){
 				if (currentSetMicDeviceId == "" || currentSetMicDeviceId != dev.deviceId){
 					$('#micDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
