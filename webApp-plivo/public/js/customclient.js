@@ -472,14 +472,10 @@ function updateAudioDevices(){
 	currentSetMicDeviceId = plivoBrowserSdk.client.audio.microphoneDevices.get();
 	currentSetRingToneDeviceId = plivoBrowserSdk.client.audio.ringtoneDevices.get();
 	currentSetSpeakerDeviceId = plivoBrowserSdk.client.audio.speakerDevices.get();
-	var removeDevice = "";
 	plivoBrowserSdk.client.audio.availableDevices()
 	.then(function(e){
 		e.forEach(function(dev){
-			if (dev.label.startsWith('Default')) {
-				removeDevice = dev.label.substring(10);
-			}
-			if(dev.label && dev.kind == "audioinput" && dev.label != removeDevice){
+			if(dev.label && dev.kind == "audioinput"){
 				if (currentSetMicDeviceId == "" || currentSetMicDeviceId != dev.deviceId){
 					$('#micDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
 					$('#inputDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
@@ -489,7 +485,7 @@ function updateAudioDevices(){
 					$('#inputDev').append('<option value='+dev.deviceId+' selected >'+dev.label+'</option>')
 				}
 			}
-			if(dev.label && dev.kind == "audiooutput" && dev.label != removeDevice){
+			if(dev.label && dev.kind == "audiooutput"){
 				if (currentSetRingToneDeviceId == "" || currentSetRingToneDeviceId != dev.deviceId){
 					$('#ringtoneDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>');
 				}else if(currentSetRingToneDeviceId == dev.deviceId){
