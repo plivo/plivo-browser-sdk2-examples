@@ -232,7 +232,8 @@ function onCallAnswered(callInfo){
 		$('.callinfo').show();
 		if (incomingNotifications.has(callInfo.callUUID)) {
 		const incomingCall = incomingNotifications.get(callInfo.callUUID)
-		incomingCall.hide();
+		if (incomingCall)
+			incomingCall.hide();
 		incomingNotifications.delete(callInfo.callUUID);
 		}
 	}
