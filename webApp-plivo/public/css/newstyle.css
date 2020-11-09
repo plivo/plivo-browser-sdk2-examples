@@ -39,10 +39,10 @@ p
   box-shadow: 0 0 14px 0 #dee5eb;
   border: solid 1px #d7e1ec;
   display: inline-block;
-  left: 27%;
   padding-left: 80px;
   padding-right: 80px;
   margin-top:5%;
+  margin-bottom: 120px;
 }
 
 .span4
@@ -499,7 +499,6 @@ a, a:focus, a:hover, a:visited {
 .config-login{
   cursor: pointer;
   margin-bottom: 10px;
-  margin-right: 2px;
 }
 
 .config-div{
