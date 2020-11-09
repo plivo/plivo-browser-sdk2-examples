@@ -94,7 +94,15 @@ function onConnectionChange(obj){
 	if(obj.state === "connected" ){
 		console.log( obj.state , "info", 'info');
 	}else if(obj.state === "disconnected"){
-		customAlert( obj.state + " "+ obj.eventCode +" "+ obj.eventReason  , "info");
+		if(obj.eventCode && obj.eventReason){
+			customAlert( obj.state + " "+ obj.eventCode +" "+ obj.eventReason  , "info");
+		}else if(obj.eventCode && !obj.eventReason){
+			customAlert( obj.state + " "+ obj.eventCode, "info");
+		}else if(!obj.eventCode && obj.eventReason){
+			customAlert( obj.state + " "+ obj.eventReason  , "info");
+		}else{
+			customAlert( obj.state , "info");
+		}
 	}else{
 		console.log("unknown connection state ");
 	}
@@ -224,7 +232,8 @@ function onCallAnswered(callInfo){
 		$('.callinfo').show();
 		if (incomingNotifications.has(callInfo.callUUID)) {
 		const incomingCall = incomingNotifications.get(callInfo.callUUID)
-		incomingCall.hide();
+		if (incomingCall)
+			incomingCall.hide();
 		incomingNotifications.delete(callInfo.callUUID);
 		}
 	}
@@ -264,9 +273,11 @@ function onCallFailed(reason, callInfo){
 		callOff(reason);
 		return;
 	}
-	if (incomingNotifications.has(callInfo.callUUID)) {
+	if (incomingNotifications.has(callInfo.callUUID)) {	
 		const incomingCall = incomingNotifications.get(callInfo.callUUID)
-		incomingCall.hide();
+		if(incomingCall){ 
+			incomingCall.hide();
+		}
 		incomingNotifications.delete(callInfo.callUUID);
 	}
 	if (incomingNotifications.size === 0  && !plivoBrowserSdk.client.getCallUUID()) {
@@ -298,6 +309,9 @@ function onIncomingCall(callerName, extraHeaders, callInfo){
 		$('#callstatus').html('Ringing...');
 		$('#callernum').html(callerName);
 		incomingCallInfo = callInfo;
+		if (callInfo) {
+			incomingNotifications.set(callInfo.callUUID, null);
+		} 
 	} else {
 		$('#callstatus').html('Ringing...');
 		const incomingNotification = Notify.success(`Incoming Call: ${callerName}`)
@@ -308,8 +322,8 @@ function onIncomingCall(callerName, extraHeaders, callInfo){
 			plivoBrowserSdk.client.answer(callInfo.callUUID);
 			} else {
 			plivoBrowserSdk.client.answer();
-			}
-		})
+			}  	
+  	})
 		.button('Reject', () => {
 			isIncomingCallPresent = false;
 			console.info('callReject');
@@ -339,19 +353,19 @@ function onIncomingCall(callerName, extraHeaders, callInfo){
 
 function onIncomingCallCanceled(callInfo){
 	if (callInfo) console.info(JSON.stringify(callInfo));
-  let incomingCallNotification;
-  if (callInfo) {
-    incomingCallNotification = incomingNotifications.get(callInfo.callUUID);
-    incomingNotifications.delete(callInfo.callUUID);
-  } else if(incomingNotificationAlert) {
-    incomingCallNotification = incomingNotificationAlert;
-  }
-  if (incomingCallNotification) {
-    incomingCallNotification.hide();
-  }
-  if (incomingNotifications.size === 0 && !plivoBrowserSdk.client.getCallUUID()) {
-    callOff();
-  }
+	let incomingCallNotification; 
+  	if (callInfo) {
+		incomingCallNotification = incomingNotifications.get(callInfo.callUUID);
+		incomingNotifications.delete(callInfo.callUUID);
+	} else if(incomingNotificationAlert) {
+		incomingCallNotification = incomingNotificationAlert;
+	}
+	if (incomingCallNotification) {
+		incomingCallNotification.hide();
+	}
+	if (incomingNotifications.size === 0 && !plivoBrowserSdk.client.getCallUUID()) {
+		callOff();
+	}
 }
 
 function callOff(reason){
@@ -472,14 +486,10 @@ function updateAudioDevices(){
 	currentSetMicDeviceId = plivoBrowserSdk.client.audio.microphoneDevices.get();
 	currentSetRingToneDeviceId = plivoBrowserSdk.client.audio.ringtoneDevices.get();
 	currentSetSpeakerDeviceId = plivoBrowserSdk.client.audio.speakerDevices.get();
-	var removeDevice = "";
 	plivoBrowserSdk.client.audio.availableDevices()
 	.then(function(e){
 		e.forEach(function(dev){
-			if (dev.label.startsWith('Default')) {
-				removeDevice = dev.label.substring(10);
-			}
-			if(dev.label && dev.kind == "audioinput" && dev.label != removeDevice){
+			if(dev.label && dev.kind == "audioinput"){
 				if (currentSetMicDeviceId == "" || currentSetMicDeviceId != dev.deviceId){
 					$('#micDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
 					$('#inputDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
@@ -489,7 +499,7 @@ function updateAudioDevices(){
 					$('#inputDev').append('<option value='+dev.deviceId+' selected >'+dev.label+'</option>')
 				}
 			}
-			if(dev.label && dev.kind == "audiooutput" && dev.label != removeDevice){
+			if(dev.label && dev.kind == "audiooutput"){
 				if (currentSetRingToneDeviceId == "" || currentSetRingToneDeviceId != dev.deviceId){
 					$('#ringtoneDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>');
 				}else if(currentSetRingToneDeviceId == dev.deviceId){
