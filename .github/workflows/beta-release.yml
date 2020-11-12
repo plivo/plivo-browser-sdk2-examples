@@ -1,0 +1,56 @@
+name: csdk-example-beta-release-pipeline
+on:
+  push:
+    branches:
+      - test-ghactions
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Release to S3
+      run: bash scripts/pipeline/release.sh "plivobrowsersdk" "v2-beta-folder/example.html" ${{secrets.AWS_ACCESS_KEY}} ${{secrets.AWS_SECRET_ACCESS_KEY}} "example.html"
+  css-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: shallwefootball/upload-s3-action@v1.1.2
+        with:
+          aws_key_id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: 'plivobrowsersdk'
+          source_dir: 'webApp-plivo/public/css'
+          destination_dir: 'v2-beta-folder/beta_assets/css'
+  img-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: shallwefootball/upload-s3-action@v1.1.2
+        with:
+          aws_key_id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: 'plivobrowsersdk'
+          source_dir: 'webApp-plivo/public/img'
+          destination_dir: 'v2-beta-folder/beta_assets/img'
+  js-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: shallwefootball/upload-s3-action@v1.1.2
+        with:
+          aws_key_id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: 'plivobrowsersdk'
+          source_dir: 'webApp-plivo/public/js'
+          destination_dir: 'v2-beta-folder/beta_assets/js'
+  lib-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: shallwefootball/upload-s3-action@v1.1.2
+        with:
+          aws_key_id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: 'plivobrowsersdk'
+          source_dir: 'webApp-plivo/public/lib'
+          destination_dir: 'v2-beta-folder/beta_assets/lib'
