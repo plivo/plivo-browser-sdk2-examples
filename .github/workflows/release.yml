@@ -55,7 +55,6 @@ jobs:
           source_dir: 'webApp-plivo/public/lib'
           destination_dir: 'v2-beta-folder/beta_assets/lib'
           
-name: csdk-example-prod-release-pipeline
 on:
   push:
     branches:
