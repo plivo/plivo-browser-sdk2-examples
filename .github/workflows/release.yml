@@ -13,6 +13,12 @@ jobs:
   css-push:
     runs-on: ubuntu-latest
     steps:
+      - name: Upload S3
       - uses: actions/checkout@v2
-      - name: CSS folder to S3
-        run: bash scripts/pipeline/release.sh "plivobrowsersdk" "v2-beta-folder/example.html" ${{secrets.AWS_ACCESS_KEY}} ${{secrets.AWS_SECRET_ACCESS_KEY}} "example.html"
+      - uses: shallwefootball/upload-s3-action@v1.1.2
+        with:
+          aws_key_id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: 'plivobrowsersdk'
+          source_dir: 'webApp-plivo/public/css'
+          destination_dir: ''      
