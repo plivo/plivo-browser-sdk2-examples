@@ -9,4 +9,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Release to S3
-      run: bash scripts/pipeline/release.sh "plivobrowsersdk" "v2-beta-folder/example.html" ${{secrets.AWS_ACCESS_KEY}} ${{secrets.AWS_SECRET_ACCESS_KEY}} "example.html" && bash scripts/pipeline/release.sh "plivobrowsersdk" "v2-beta-folder/beta_assets/css/notify.css" ${{secrets.AWS_ACCESS_KEY}} ${{secrets.AWS_SECRET_ACCESS_KEY}} "webApp-plivo/public/css/notify.css"
+      run: bash scripts/pipeline/release.sh "plivobrowsersdk" "v2-beta-folder/example.html" ${{secrets.AWS_ACCESS_KEY}} ${{secrets.AWS_SECRET_ACCESS_KEY}} "example.html" && bash scripts/pipeline/release.sh "plivobrowsersdk" ('v2-beta-folder/beta_assets/css/notify.css', 'v2-beta-folder/beta_assets/css/newstyle.css', 'v2-beta-folder/beta_assets/css/intlTelInput.css') ${{secrets.AWS_ACCESS_KEY}} ${{secrets.AWS_SECRET_ACCESS_KEY}} "webApp-plivo/public/css/notify.css"
