@@ -2,7 +2,7 @@ name: ReleaseCI
 on:
   push:
     branches:
-      - beta
+      - test-ghactions
 jobs:
   build:
     runs-on: ubuntu-latest
