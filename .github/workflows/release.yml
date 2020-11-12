@@ -9,6 +9,6 @@ jobs:
     steps:
     - name: Release to S3
     - id: step1 
-      run: bash scripts/pipeline/release.sh "plivobrowsersdk" "v2-beta-folder/example.html" ${{secrets.AWS_ACCESS_KEY}} ${{secrets.AWS_SECRET_ACCESS_KEY}} "example.html"
+    -  run: bash scripts/pipeline/release.sh "plivobrowsersdk" "v2-beta-folder/example.html" ${{secrets.AWS_ACCESS_KEY}} ${{secrets.AWS_SECRET_ACCESS_KEY}} "example.html"
     - id: step2
-      run: bash scripts/pipeline/release.sh "plivobrowsersdk" "v2-beta-folder/beta_assets/css/notify.css" ${{secrets.AWS_ACCESS_KEY}} ${{secrets.AWS_SECRET_ACCESS_KEY}} "webApp-plivo/public/css/notify.css"
+    - run: bash scripts/pipeline/release.sh "plivobrowsersdk" "v2-beta-folder/beta_assets/css/notify.css" ${{secrets.AWS_ACCESS_KEY}} ${{secrets.AWS_SECRET_ACCESS_KEY}} "webApp-plivo/public/css/notify.css"
