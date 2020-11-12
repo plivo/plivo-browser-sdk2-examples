@@ -6,15 +6,113 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="HandheldFriendly" content="true">
-
+	<link rel="icon" type="image/png" href="assets/img/favicon.png">
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="assets/css/notify.css">
+  <link rel="stylesheet" href="assets/css/intlTelInput.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/newstyle.css"> 
 </head>
 <body>
-	<div class="loader"></div>
+  <div class="loader"></div>
 	<!-- login page div -->
 	<div id="loginContainer" class="container">
 		<div class="text-center" style="margin-top:7%;">
 			<figure>
+				<img src="assets/img/plivo-logo.png" style="margin-bottom: -1%;">
+				<figcaption class="caption">Plivo Web Client</figcaption>
+			</figure>
+		</div>
+		<div class="text-center loginscreen">
+			<span class="black">
+				<h2>Log In to your Plivo account</h2>
+			</span>
+			<span class="row">
+				<button id=loginwithpassword class="btn btn-success btn-lg" data-toggle="modal" data-target="#loginwithcreds">With Username/Password</button>
+			</span>
+			<h4 class="black">OR</h4>
+			<span class="row">
+				<button id=loginwithjwtbtn class="btn btn-success btn-lg" data-toggle="modal" data-target="#loginwithjwt">With JWT Access Token</button>
+			</span>
+		</div>
 
+		<!-- login username and password div -->
+		<div class="modal fade" id="loginwithcreds" role="dialog">
+			<div class="modal-dialog modal-lg">
+			<div class="modal-content text-center">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title"><strong>LOGIN WITH USERNAME AND PASSWORD</strong></h4>
+				</div>
+				<div class="modal-body">
+					<div class="container">
+						<div class="config-div">
+							<span class="glyphicon glyphicon-cog fa-lg config-login" data-toggle="modal" href="#configparams"></span><span class="config-login" data-toggle="modal" href="#configparams">Config</span>
+						</div>
+						<form>
+							<div class="row">
+								<div class="form-group col-sm-2">
+								</div>
+								<div class="form-group col-sm-1">
+									<label for="loginUser" class="loginUser middleLabel">USERNAME</label>
+								</div>
+								<div class="form-group col-sm-4">
+									<input type="text" onblur="trimSpace(this)" class="form-control text-center" id="loginUser" name="loginUser" placeholder="plivo userId" value="">
+								</div>
+							</div>
+							<div class="row">
+								<div class="form-group col-sm-2">
+								</div>
+								<div class="form-group col-sm-1">
+									<label for="loginPwd" class="loginPwd middleLabel">PASSWORD</label>
+								</div>
+								<div class="form-group col-sm-4">
+									<input type="password" class="form-control text-center" id="loginPwd" placeholder="password" name="loginPwd">
+								</div> 
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-success" id=clickLogin data-dismiss="modal">Login</button>
+				</div>
+			</div>
+			</div>
+		</div>
+
+		<!-- login JWT div -->
+		<div class="modal fade" id="loginwithjwt" role="dialog">
+			<div class="modal-dialog modal-lg">
+			<div class="modal-content text-center">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title"><strong>LOGIN WITH JWT ACCESS TOKEN</strong></h4>
+				</div>
+				<div class="modal-body">
+					<div class="container">
+						<div>
+							<div class="config-div">
+								<span class="glyphicon glyphicon-cog fa-lg config-login" data-toggle="modal" href="#configparams"></span><span class="config-login" data-toggle="modal" href="#configparams">Config</span>
+							</div>
+						</div>
+						<form>
+							<div class="row">
+								<div class="form-group col-sm-3" style="text-align:right;">
+									<label for="accessToken" class="loginUser middleLabel" >JWT ACCESS TOKEN</label>
+								</div>
+								<div class="form-group col-sm-4">
+									<input type="text" class="form-control text-center" id="accessToken" name="accessToken" placeholder="JWT access token" value="">
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-success" id=clickLoginJWT data-dismiss="modal">Login</button>
+				</div>
+			</div>
+			</div>
 		</div>
 
 		<nav class="navbar navbar-fixed-bottom">
@@ -287,7 +385,7 @@
 		    </div>
 		    <div class="modal-body">
 				<div class="container">          
-
+				  <img src="assets/img/micdenied.png" class="img-rounded" width="304" height="236"> 
 				</div>
 		    </div>
 		    <div class="modal-footer">
@@ -461,7 +559,7 @@
 		<div class="page-header borderline">
 			<div class="text-center" style="margin-top: -35px;">
 				<figure>
-
+					<img src="assets/img/plivo-logo.png" style="margin-bottom: -1%;">
 					<figcaption class="caption">Plivo Web Client</figcaption>
 				</figure>
 			</div>
@@ -699,7 +797,6 @@
 				</div>
 			</div>
 		</div>
-		
 	</div>
 
 	<div id="oncallalertmsg" class="oncallalertmsg">
@@ -709,18 +806,22 @@
 		<!-- alert message comes here -->
 	</div>
 
+  <script src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script>
+  <script src="assets/lib/notify.js"></script>
+  <script src="assets/lib/intlTelInput.min.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/customclient.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      console.log( "HTML ready!" );
+      $('[data-toggle="tooltip"]').tooltip();
+      initPhone();
+    });
 
-	<script type="text/javascript">
-		$(document).ready(function() {
-			console.log( "HTML ready!" );
-			$('[data-toggle="tooltip"]').tooltip();
-			initPhone();
-		});
-
-		var input = document.querySelector("#toNumber");
-		var iti = window.intlTelInput(input,({
-		}));
-		setIti(iti);
+    var input = document.querySelector("#toNumber");
+    var iti = window.intlTelInput(input,({
+    }));
+    setIti(iti);
   </script>
 </body>
 </html>
