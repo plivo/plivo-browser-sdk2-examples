@@ -1,4 +1,4 @@
-name: ReleaseCI
+name: csdk-example-release-pipeline
 on:
   push:
     branches:
