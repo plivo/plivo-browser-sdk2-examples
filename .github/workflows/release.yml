@@ -9,4 +9,4 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Release to S3
-      run: bash scripts/pipeline/release.sh "plivobrowsersdk" "test.txt" ${{secrets.AWS_ACCESS_KEY}} ${{secrets.AWS_SECRET_ACCESS_KEY}} "test.txt"
+      run: bash scripts/pipeline/release.sh "plivobrowsersdk" "test.html" ${{secrets.AWS_ACCESS_KEY}} ${{secrets.AWS_SECRET_ACCESS_KEY}} "test.html"
