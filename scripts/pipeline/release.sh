@@ -8,7 +8,7 @@ local_path=$5
 rm -rf $local_path
 
 # Create a zip of the current directory.
-echo $local_path
+echo "$local_path"
 zip -r $local_path . -x .git/ .git/*** .github/workflows/release.yml scripts/pipeline/release.sh scripts/pipeline/upload_file_to_s3.py .DS_Store
 
 # Install required dependencies for Python script.
