@@ -20,4 +20,4 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
           aws_bucket: 'plivobrowsersdk'
           source_dir: 'webApp-plivo/public/css'
-          destination_dir: ''      
+          destination_dir: 'v2-beta-folder/beta_assets/css'      
