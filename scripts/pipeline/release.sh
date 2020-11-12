@@ -4,11 +4,8 @@ aws_access_key=$3
 aws_access_secret=$4
 local_path=$5
 
-# Remove any existing versions of files
-rm -rf $local_path
-
-# Create a zip of the current directory.
-zip -r $local_path . -x .git/ .git/*** .github/workflows/release.yml scripts/pipeline/release.sh scripts/pipeline/upload_file_to_s3.py .DS_Store
+# echo/print the current directory.
+echo "$local_path"
 
 # Install required dependencies for Python script.
 pip3 install boto3
