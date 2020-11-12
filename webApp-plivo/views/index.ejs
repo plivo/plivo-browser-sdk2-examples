@@ -19,7 +19,7 @@
 <body>
 	<div class="loader"></div>
 	<!-- login page div -->
-	<div id="loginContainer" class="container">
+	<div id="loginContainer" class="container text-center">
 		<div class="text-center" style="margin-top:7%;">
 			<figure>
 				<img src="img/plivo-logo.png" style="margin-bottom: -1%;">
@@ -31,97 +31,42 @@
 				<h2>Log In to your Plivo account</h2>
 			</span>
 			<span class="row">
-				<button id=loginwithpassword class="btn btn-success btn-lg" data-toggle="modal" data-target="#loginwithcreds">With Username/Password</button>
-			</span>
-			<h4 class="black">OR</h4>
-			<span class="row">
-				<button id=loginwithjwtbtn class="btn btn-success btn-lg" data-toggle="modal" data-target="#loginwithjwt">With JWT Access Token</button>
-			</span>
-		</div>
-
-		<!-- login username and password div -->
-		<div class="modal fade" id="loginwithcreds" role="dialog">
-			<div class="modal-dialog modal-lg">
-			<div class="modal-content text-center">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title"><strong>LOGIN WITH USERNAME AND PASSWORD</strong></h4>
+				<div class="config-div" style="text-align: right;">
+					<span class="glyphicon glyphicon-cog fa-lg config-login" style="margin-right: 1px;" data-toggle="modal" href="#configparams">	</span>
+					<span class="config-login" data-toggle="modal" href="#configparams">Config</span>
 				</div>
-				<div class="modal-body">
-					<div class="container">
-						<div class="config-div">
-							<span class="glyphicon glyphicon-cog fa-lg config-login" data-toggle="modal" href="#configparams"></span><span class="config-login" data-toggle="modal" href="#configparams">Config</span>
+				<form>
+					<div class="row">
+						<div class="form-group col-sm-3">
+							<label for="loginUser" class="loginUser">USERNAME</label>
 						</div>
-						<form>
-							<div class="row">
-								<div class="form-group col-sm-2">
-								</div>
-								<div class="form-group col-sm-1">
-									<label for="loginUser" class="loginUser middleLabel">USERNAME</label>
-								</div>
-								<div class="form-group col-sm-4">
-									<input type="text" onblur="trimSpace(this)" class="form-control text-center" id="loginUser" name="loginUser" placeholder="plivo userId" value="" autocomplete="username">
-								</div>
-							</div>
-							<div class="row">
-								<div class="form-group col-sm-2">
-								</div>
-								<div class="form-group col-sm-1">
-									<label for="loginPwd" class="loginPwd middleLabel">PASSWORD</label>
-								</div>
-								<div class="form-group col-sm-4">
-									<input type="password" class="form-control text-center" id="loginPwd" placeholder="password" name="loginPwd" autocomplete="current-password">
-								</div> 
-							</div>
-						</form>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="submit" class="btn btn-success" id=clickLogin data-dismiss="modal">Login</button>
-				</div>
-			</div>
-			</div>
-		</div>
-
-		<!-- login JWT div -->
-		<div class="modal fade" id="loginwithjwt" role="dialog">
-			<div class="modal-dialog modal-lg">
-			<div class="modal-content text-center">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title"><strong>LOGIN WITH JWT ACCESS TOKEN</strong></h4>
-				</div>
-				<div class="modal-body">
-					<div class="container">
-						<div>
-							<div class="config-div">
-								<span class="glyphicon glyphicon-cog fa-lg config-login" data-toggle="modal" href="#configparams"></span><span class="config-login" data-toggle="modal" href="#configparams">Config</span>
-							</div>
+						<div class="form-group col-sm-9">
+							<input type="text" onblur="trimSpace(this)" class="form-control text-center" id="loginUser" name="loginUser" placeholder="plivo userId" value="" autocomplete="username">
 						</div>
-						<form>
-							<div class="row">
-								<div class="form-group col-sm-3" style="text-align:right;">
-									<label for="accessToken" class="loginUser middleLabel" >JWT ACCESS TOKEN</label>
-								</div>
-								<div class="form-group col-sm-4">
-									<input type="text" class="form-control text-center" id="accessToken" name="accessToken" placeholder="JWT access token" value="">
-								</div>
-							</div>
-						</form>
+
 					</div>
+					<div class="row">
+						<div class="form-group col-sm-3">
+							<label for="loginPwd" class="loginPwd">PASSWORD</label>
+						</div>
+						<div class="form-group col-sm-9">
+							<input type="password" class="form-control text-center" id="loginPwd" placeholder="password" name="loginPwd" autocomplete="current-password">
+						</div> 
+					</div>
+				</form>
+				<div class="row">
+					<button type="submit" class="btn btn-success" id=clickLogin>Login</button>
 				</div>
-				<div class="modal-footer">
-					<button type="submit" class="btn btn-success" id=clickLoginJWT data-dismiss="modal">Login</button>
-				</div>
-			</div>
-			</div>
+			</span>
+			
 		</div>
 
-		<nav class="navbar navbar-fixed-bottom">
-			<div class="container text-center">
-				<p class="navbar-text col-md-12 col-sm-12 col-xs-12">© Plivo Inc. 2020 - All Rights Reserved</p>
-			</div>
-		</nav>
+		<nav class="navbar navbar-fixed-bottom" style="position: relative;">
+            <div class="container text-center">
+                <p class="navbar-text col-md-12 col-sm-12 col-xs-12">© Plivo Inc. 2020 - All Rights Reserved</p>
+            </div>
+        </nav>
+
 	</div>
 
 	<!-- settings div -->

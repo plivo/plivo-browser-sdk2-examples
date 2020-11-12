@@ -1,10 +1,13 @@
+
 ## Plivo Browser SDK v2.2 Example
-*This Plivo example shows how to use all the features in Plivo Browser SDK 2.2 using a simple webphone demo. This demo helps in making phone calls from web browser to both sip addresses and PSTN phone numbers without installing any plugins.*
+*This Plivo example shows how to use all the features in Plivo Browser SDK 2.2 using a simple webphone demo. This demo helps in making phone calls from web browser to both sip addresses and PSTN phone numbers without installing any plugins.*>`>>>> test-ghactions
 
 ![plivo-websdk-2.0-example](img/callscreen.png)
 
 ---
-*To use the [live web phone demo](https://s3.amazonaws.com/plivobrowsersdk/v2-beta/example.html)*
+
+*To use the [live web phone demo](https://s3.amazonaws.com/plivobrowsersdk/v2/example.html)*
+
 
 *a. Sign up for a Plivo account here: https://manage.plivo.com/accounts/register/*
 
@@ -16,7 +19,8 @@
 ### Deploying the application
 
 ```
-git clone --single-branch --branch beta https://github.com/plivo/plivo-browser-sdk2-examples.git
+git clone https://github.com/plivo/plivo-browser-sdk2-examples.git
+
 npm install
 npm start
 ```
@@ -24,7 +28,7 @@ npm start
 ### Initialization
 Include 
 ```js
-<script type="text/javascript" src="https://cdn.plivo.com/sdk/browser/v2/plivobeta.min.js"></script>
+<script type="text/javascript" src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script>
 ```
 in the `<body>` tag before you include other javascript files dependent on the SDK. 
 
@@ -33,13 +37,18 @@ This is where we initialise a new Plivo object by passing `options` as `plivoBro
 
 ```js
 var plivoBrowserSdk; 
+
+
 var accessToken;
+
 function initPhone(username, password){
   var options = refreshSettings();
   plivoBrowserSdk = new window.Plivo(options);
 
+
   //initialise Token object
   accessToken = plivoBrowserSdk.client.token;
+
   
   plivoBrowserSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
   plivoBrowserSdk.client.on('onLogin', onLogin);
@@ -78,8 +87,7 @@ In the demo, `options` can be set from UI in the CONFIG menu. Once the CONFIG is
   </script>
 ```
 ### Login 
-#### Login with username/password. 
-![plivo-websdk-2.0-example](img/login.png)
+![plivo-websdk-2.0-example](img/plivobrowserSdKLogin.png)
 ```js
 function login(username, password) {
   if(username && password) {
@@ -171,14 +179,6 @@ function loginJWTAccessToken(accessToken){
   }
 }
 
-$('#clickLoginJWT').click(function(e){
-  let jwtAccessToken = $('#accessToken').val();
-  loginJWTAccessToken(jwtAccessToken);
-  // let userName = $('#loginJwtUser').val();
-  // let jwtTokenObject = implementToken("username");
-  // loginJWTObject(jwtTokenObject);
-});
-``` 
 ### Options
 *Options allow to disable tracking, setting codec type, enabling and disabling AEC/AGC etc. The list of all the settings can be found in the documentation page.*
 ![plivo-websdk-2.0-example](img/settings.png)

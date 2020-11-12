@@ -1,0 +1,12 @@
+name: ReleaseCI
+on:
+  push:
+    branches:
+      - test-ghactions
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Release to S3
+      run: bash scripts/pipeline/release.sh "plivobrowsersdk" "folder1/test" ${{secrets.AWS_Access_Key}} ${{secrets.AWS_Access_Secret}} "test"

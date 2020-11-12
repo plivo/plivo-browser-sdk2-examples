@@ -6,7 +6,6 @@ const incomingNotifications = new Map();
 var speakerSourceNode;
 var ringtoneSourceNode;
 let incomingNotificationAlert = null;
-var logoutAfterHangup = false;
 
 var defaultSettings = {
 	"debug":"INFO",
@@ -28,7 +27,6 @@ var defaultSettings = {
 var iti;
 var incomingCallInfo;
 var isIncomingCallPresent = false
-var isLoggedInwithAccessTokenObject= null;
 
 var outputVolumeBar = document.getElementById('output-volume');
 var inputVolumeBar = document.getElementById('input-volume');
@@ -96,7 +94,15 @@ function onConnectionChange(obj){
 	if(obj.state === "connected" ){
 		console.log( obj.state , "info", 'info');
 	}else if(obj.state === "disconnected"){
-		customAlert( obj.state + " "+ obj.eventCode +" "+ obj.eventReason  , "info");
+		if(obj.eventCode && obj.eventReason){
+			customAlert( obj.state + " "+ obj.eventCode +" "+ obj.eventReason  , "info");
+		}else if(obj.eventCode && !obj.eventReason){
+			customAlert( obj.state + " "+ obj.eventCode, "info");
+		}else if(!obj.eventCode && obj.eventReason){
+			customAlert( obj.state + " "+ obj.eventReason  , "info");
+		}else{
+			customAlert( obj.state , "info");
+		}
 	}else{
 		console.log("unknown connection state ");
 	}
@@ -152,10 +158,7 @@ function onReady(){
 	console.info('Ready');
 }
 
-function onLogin(uname,time){
-	console.log("onLogin called");
-	console.log(uname,time)
-	logoutAfterHangup=false;
+function onLogin(){
 	$('#loginContainer').hide();
 	$('#callContainer').show();
 	document.body.style.backgroundImage = 'none';
@@ -183,15 +186,6 @@ function onLoginFailed(reason){
 	$('.loader').hide()	
 }
 
-function onLoginFailedWithError(reason){
-	console.info('onLoginFailedWithError ',reason);
-	if(Object.prototype.toString.call(reason) == "[object Object]"){
-		reason = JSON.stringify(reason);
-	}
-	customAlert('Login failure :',reason, 'warn');
-	$('.loader').hide()	
-}
-
 function performLogout(){
 	document.body.style.backgroundImage = 'url(img/background.svg)';
 	$('#loginContainer').show();
@@ -200,16 +194,7 @@ function performLogout(){
 	$('#toNumber').val("");
 	iti.setCountry("us");
 }
-function onLogout(cause){
-	console.info('onLogout', cause);
-	if(cause){
-		customAlert('onLogout :',cause, 'warn');
-	}
-	if((cause=="ACCESS_TOKEN_EXPIRED" || cause=="RELOGIN_FAILED_WITH_INVALID_TOKEN" ) && plivoBrowserSdk.client._currentSession){
-		logoutAfterHangup=true;
-	}else{
-		performLogout();
-	}
+
 }
 
 
@@ -245,7 +230,8 @@ function onCallAnswered(callInfo){
 		$('.callinfo').show();
 		if (incomingNotifications.has(callInfo.callUUID)) {
 		const incomingCall = incomingNotifications.get(callInfo.callUUID)
-		incomingCall.hide();
+		if (incomingCall)
+			incomingCall.hide();
 		incomingNotifications.delete(callInfo.callUUID);
 		}
 	}
@@ -285,9 +271,11 @@ function onCallFailed(reason, callInfo){
 		callOff(reason);
 		return;
 	}
-	if (incomingNotifications.has(callInfo.callUUID)) {
+	if (incomingNotifications.has(callInfo.callUUID)) {	
 		const incomingCall = incomingNotifications.get(callInfo.callUUID)
-		incomingCall.hide();
+		if(incomingCall){ 
+			incomingCall.hide();
+		}
 		incomingNotifications.delete(callInfo.callUUID);
 	}
 	if (incomingNotifications.size === 0  && !plivoBrowserSdk.client.getCallUUID()) {
@@ -319,6 +307,9 @@ function onIncomingCall(callerName, extraHeaders, callInfo){
 		$('#callstatus').html('Ringing...');
 		$('#callernum').html(callerName);
 		incomingCallInfo = callInfo;
+		if (callInfo) {
+			incomingNotifications.set(callInfo.callUUID, null);
+		} 
 	} else {
 		$('#callstatus').html('Ringing...');
 		const incomingNotification = Notify.success(`Incoming Call: ${callerName}`)
@@ -329,8 +320,7 @@ function onIncomingCall(callerName, extraHeaders, callInfo){
 			plivoBrowserSdk.client.answer(callInfo.callUUID);
 			} else {
 			plivoBrowserSdk.client.answer();
-			}
-		})
+
 		.button('Reject', () => {
 			isIncomingCallPresent = false;
 			console.info('callReject');
@@ -360,19 +350,6 @@ function onIncomingCall(callerName, extraHeaders, callInfo){
 
 function onIncomingCallCanceled(callInfo){
 	if (callInfo) console.info(JSON.stringify(callInfo));
-  let incomingCallNotification;
-  if (callInfo) {
-    incomingCallNotification = incomingNotifications.get(callInfo.callUUID);
-    incomingNotifications.delete(callInfo.callUUID);
-  } else if(incomingNotificationAlert) {
-    incomingCallNotification = incomingNotificationAlert;
-  }
-  if (incomingCallNotification) {
-    incomingCallNotification.hide();
-  }
-  if (incomingNotifications.size === 0 && !plivoBrowserSdk.client.getCallUUID()) {
-    callOff();
-  }
 }
 
 function callOff(reason){
@@ -388,10 +365,6 @@ function callOff(reason){
 	$('#callstatus').html('Idle');
 	callStorage={}; // reset callStorage
 	timer = "00:00:00"; //reset the timer
-	if(logoutAfterHangup == true){
-		logoutAfterHangup = false;
-		performLogout();
-	}
 
 }
 
@@ -497,14 +470,11 @@ function updateAudioDevices(){
 	currentSetMicDeviceId = plivoBrowserSdk.client.audio.microphoneDevices.get();
 	currentSetRingToneDeviceId = plivoBrowserSdk.client.audio.ringtoneDevices.get();
 	currentSetSpeakerDeviceId = plivoBrowserSdk.client.audio.speakerDevices.get();
-	var removeDevice = "";
+
 	plivoBrowserSdk.client.audio.availableDevices()
 	.then(function(e){
 		e.forEach(function(dev){
-			if (dev.label.startsWith('Default')) {
-				removeDevice = dev.label.substring(10);
-			}
-			if(dev.label && dev.kind == "audioinput" && dev.label != removeDevice){
+			if(dev.label && dev.kind == "audioinput"){
 				if (currentSetMicDeviceId == "" || currentSetMicDeviceId != dev.deviceId){
 					$('#micDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
 					$('#inputDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
@@ -514,7 +484,7 @@ function updateAudioDevices(){
 					$('#inputDev').append('<option value='+dev.deviceId+' selected >'+dev.label+'</option>')
 				}
 			}
-			if(dev.label && dev.kind == "audiooutput" && dev.label != removeDevice){
+			if(dev.label && dev.kind == "audiooutput"){
 				if (currentSetRingToneDeviceId == "" || currentSetRingToneDeviceId != dev.deviceId){
 					$('#ringtoneDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>');
 				}else if(currentSetRingToneDeviceId == dev.deviceId){
@@ -659,68 +629,7 @@ function colorPids(vol, volumeType) {
 	}
 }
 
-function implementToken(username){
-	var jwtToken = function() {
-		accessToken.apply();
-	};
-	jwtToken.prototype = Object.create(accessToken.prototype);
-	jwtToken.prototype.constructor = jwtToken;
-	  
-	jwtToken.prototype.getAccessToken = async function() {
-		//get JWT Token
-		var tokenGenServerURI = "https://jwttokengen.herokuapp.com/fetchtoken";
-		const requestBody = {
-			"username":username
-		}	
-		const response = await fetch(tokenGenServerURI, {
-						method: 'POST',
-						body: JSON.stringify(requestBody),
-			  			headers: {'Content-Type' : 'application/json'}
-					}).catch(function (err) {
-						console.error("Error in fetching the token ", err);
-						return null;
-					});
-		try{	
-			const myJson = await response.json();
-			return (myJson['token'])
-		}catch(error){
-			console.error("Error : "+error);	
-			return(null);
-		}		
-	}
-	var jwtTokenObject = new jwtToken();
-	return jwtTokenObject;
-}
 
-function loginJWTObject(jwtTokenObject){
-	isLoggedInwithAccessTokenObject = true;
-	if(jwtTokenObject!=null){
-		//start UI load spinner
-		kickStartNow();			
-		//Calling SDK loginJWT method
-		plivoBrowserSdk.client.loginWithAccessTokenGenerator(jwtTokenObject);
-		$('#sipUserName').html('Successfully logged in with access token');
-	}else{
-		console.error('JWT Object found null')
-	}
-}
-
-function loginJWTAccessToken(accessToken){
-	if(accessToken!=null) {
-	  //start UI load spinner
-	  kickStartNow();     
-	  /*
-	  Calling SDK login with access token, method.
-	  Pass the access token for logging in
-	  User's session would be logged out as soon as the token expires.
-	  User will have to explicitly re login with new valid access token when existing access token expires
-	  */
-      console.log(accessToken);	 
-	  plivoBrowserSdk.client.loginWithAccessToken(accessToken);
-	}else {
-	  console.error('JWT Object found null')
-	}
-  }
 
 function refreshAudioDevices() {
 	_forEach.call(document.querySelectorAll('#popAudioDevices option'), e=>e.remove());
@@ -990,13 +899,7 @@ $('#clickLogin').click(function(e){
 	login(userName, password);
 });
 
-$('#clickLoginJWT').click(function(e){
-	let jwtAccessToken = $('#accessToken').val();
-	loginJWTAccessToken(jwtAccessToken);
-	// let userName = $('#loginJwtUser').val();
-  	// let jwtTokenObject = implementToken("username");
-  	// loginJWTObject(jwtTokenObject);
-});
+
 
 // Audio device selection
 $('#micDev').change(function(){
@@ -1138,20 +1041,18 @@ function starFeedback(){
 // variables to declare 
 
 var plivoBrowserSdk; // this will be retrived from settings in UI
-var accessToken;
+
 
 function initPhone(username, password){
 	var options = refreshSettings();
 	plivoBrowserSdk = new window.Plivo(options);
 
-	//initialise Token object
-	accessToken = plivoBrowserSdk.client.token;
 
 	plivoBrowserSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported); 
 	plivoBrowserSdk.client.on('onLogin', onLogin);
 	plivoBrowserSdk.client.on('onLogout', onLogout);
 	plivoBrowserSdk.client.on('onLoginFailed', onLoginFailed);
-	plivoBrowserSdk.client.on('onLoginFailedWithError', onLoginFailedWithError);
+
 	plivoBrowserSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
 	plivoBrowserSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
     plivoBrowserSdk.client.on('onIncomingCallIgnored', onIncomingCallCanceled);
