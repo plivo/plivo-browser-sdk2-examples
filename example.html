@@ -6,21 +6,21 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="HandheldFriendly" content="true">
-	<link rel="icon" type="image/png" href="assets/img/favicon.png">
+	<link rel="icon" type="image/png" href="beta_assets/img/favicon.png">
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<link rel="stylesheet" href="assets/css/notify.css">
-  <link rel="stylesheet" href="assets/css/intlTelInput.css">
-	<link rel="stylesheet" type="text/css" href="assets/css/newstyle.css"> 
+	<link rel="stylesheet" href="beta_assets/css/notify.css">
+  <link rel="stylesheet" href="beta_assets/css/intlTelInput.css">
+  <link rel="stylesheet" type="text/css" href="beta_assets/css/newstyle.css">
 </head>
 <body>
-  <div class="loader"></div>
+	<div class="loader"></div>
 	<!-- login page div -->
 	<div id="loginContainer" class="container">
 		<div class="text-center" style="margin-top:7%;">
 			<figure>
-				<img src="assets/img/plivo-logo.png" style="margin-bottom: -1%;">
+				<img src="beta_assets/img/plivo-logo.png" style="margin-bottom: -1%;">
 				<figcaption class="caption">Plivo Web Client</figcaption>
 			</figure>
 		</div>
@@ -385,7 +385,7 @@
 		    </div>
 		    <div class="modal-body">
 				<div class="container">          
-				  <img src="assets/img/micdenied.png" class="img-rounded" width="304" height="236"> 
+				  <img src="beta_assets/img/micdenied.png" class="img-rounded" width="304" height="236"> 
 				</div>
 		    </div>
 		    <div class="modal-footer">
@@ -559,7 +559,7 @@
 		<div class="page-header borderline">
 			<div class="text-center" style="margin-top: -35px;">
 				<figure>
-					<img src="assets/img/plivo-logo.png" style="margin-bottom: -1%;">
+					<img src="beta_assets/img/plivo-logo.png" style="margin-bottom: -1%;">
 					<figcaption class="caption">Plivo Web Client</figcaption>
 				</figure>
 			</div>
@@ -797,6 +797,7 @@
 				</div>
 			</div>
 		</div>
+		
 	</div>
 
 	<div id="oncallalertmsg" class="oncallalertmsg">
@@ -806,23 +807,22 @@
 		<!-- alert message comes here -->
 	</div>
 
-  <script src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script>
-  <script src="assets/lib/notify.js"></script>
-  <script src="assets/lib/intlTelInput.min.js"></script>
-  <script src="assets/js/utils.js"></script>
-  <script src="assets/js/customclient.js"></script>
-  <script type="text/javascript">
-    $(document).ready(function() {
-      console.log( "HTML ready!" );
-      $('[data-toggle="tooltip"]').tooltip();
-      initPhone();
-    });
+	<script src="https://cdn.plivo.com/sdk/browser/v2/plivobeta.min.js"></script>
+	<script src="beta_assets/lib/notify.js"></script>
+	<script src="beta_assets/lib/intlTelInput.min.js"></script>
+	<script src="beta_assets/js/utils.js"></script>
+	<script src="beta_assets/js/customclient.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			console.log( "HTML ready!" );
+			$('[data-toggle="tooltip"]').tooltip();
+			initPhone();
+		});
 
-    var input = document.querySelector("#toNumber");
-    var iti = window.intlTelInput(input,({
-    }));
-    setIti(iti);
+		var input = document.querySelector("#toNumber");
+		var iti = window.intlTelInput(input,({
+		}));
+		setIti(iti);
   </script>
 </body>
 </html>
-####
