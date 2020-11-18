@@ -1,0 +1,9 @@
+---
+parent: csdk
+serviceName: csdk-browser-example
+build:
+    command: |
+        echo "nothing to do"
+publish_artifacts_to_s3:
+  buckets: plivo-prod-build-artifacts
+  files: 'example.html'
