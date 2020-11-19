@@ -9,3 +9,6 @@ build:
             mkdir test
             cp example.html test/
             cp -r webApp-plivo/public/css test/
+            cp -r webApp-plivo/public/img test/
+            cp -r webApp-plivo/public/js test/
+            cp -r webApp-plivo/public/lib test/
