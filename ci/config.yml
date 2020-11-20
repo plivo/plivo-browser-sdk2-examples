@@ -8,6 +8,7 @@ build:
         command: |
             mkdir csdk
             cp example.html csdk
+            echo "copying folders"
             cp -r webApp-plivo/public/img csdk/assets/
             cp -r webApp-plivo/public/js csdk/assets/
             cp -r webApp-plivo/public/lib csdk/assets/
