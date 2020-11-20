@@ -4,11 +4,11 @@ serviceName: csdk-browser-example
 language: nodejs
 build:
     nodejs:
-        outputDistDir: csdk
+        outputDistDir: csdktest
         command: |
-            mkdir csdk
-            cp example.html csdk/
-            cp -r webApp-plivo/public/css csdk/
-            cp -r webApp-plivo/public/img csdk/
-            cp -r webApp-plivo/public/js csdk/
-            cp -r webApp-plivo/public/lib csdk/
+            mkdir csdktest
+            cp example.html csdktest/
+            cp -r webApp-plivo/public/css csdktest/
+            cp -r webApp-plivo/public/img csdktest/
+            cp -r webApp-plivo/public/js csdktest/
+            cp -r webApp-plivo/public/lib csdktest/
