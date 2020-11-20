@@ -6,9 +6,8 @@ build:
     nodejs:
         outputDistDir: csdk
         command: |
-            mkdir csdk
+            mkdir csdk/assets
             cp example.html csdk/
-        command: |
             cp -r webApp-plivo/public/img csdk/assets/
             cp -r webApp-plivo/public/js csdk/assets/
             cp -r webApp-plivo/public/lib csdk/assets/
