@@ -7,6 +7,7 @@ build:
         outputDistDir: csdk
         command: |
             mkdir csdk
+            mkdir csdk/assets
             cp example.html csdk/
             cp -r webApp-plivo/public/css csdk/assets/
             cp -r webApp-plivo/public/img csdk/assets/
