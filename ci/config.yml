@@ -1,0 +1,14 @@
+---
+parent: csdk
+serviceName: csdk-browser-example
+language: nodejs
+build:
+    nodejs:
+        outputDistDir: csdkprod
+        command: |
+            mkdir csdkprod
+            cp example.html csdkprod/
+            cp -r webApp-plivo/public/css csdkprod/
+            cp -r webApp-plivo/public/img csdkprod/
+            cp -r webApp-plivo/public/js csdkprod/
+            cp -r webApp-plivo/public/lib csdkprod/
