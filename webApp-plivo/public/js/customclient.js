@@ -194,6 +194,8 @@ function performLogout(){
 	$('#toNumber').val("");
 	iti.setCountry("us");
 }
+
+	
 function onLogout(){
 	console.info('onLogout');
 	performLogout();
@@ -319,11 +321,11 @@ function onIncomingCall(callerName, extraHeaders, callInfo){
 			isIncomingCallPresent = false;
 			console.info('Call accept clicked');
 			if (callInfo) {
-			plivoBrowserSdk.client.answer(callInfo.callUUID);
+				plivoBrowserSdk.client.answer(callInfo.callUUID);
 			} else {
-			plivoBrowserSdk.client.answer();
-			}  	
-  	})
+				plivoBrowserSdk.client.answer();
+			}          
+		})
 		.button('Reject', () => {
 			isIncomingCallPresent = false;
 			console.info('callReject');
@@ -353,19 +355,6 @@ function onIncomingCall(callerName, extraHeaders, callInfo){
 
 function onIncomingCallCanceled(callInfo){
 	if (callInfo) console.info(JSON.stringify(callInfo));
-	let incomingCallNotification; 
-  	if (callInfo) {
-		incomingCallNotification = incomingNotifications.get(callInfo.callUUID);
-		incomingNotifications.delete(callInfo.callUUID);
-	} else if(incomingNotificationAlert) {
-		incomingCallNotification = incomingNotificationAlert;
-	}
-	if (incomingCallNotification) {
-		incomingCallNotification.hide();
-	}
-	if (incomingNotifications.size === 0 && !plivoBrowserSdk.client.getCallUUID()) {
-		callOff();
-	}
 }
 
 function callOff(reason){
@@ -486,6 +475,7 @@ function updateAudioDevices(){
 	currentSetMicDeviceId = plivoBrowserSdk.client.audio.microphoneDevices.get();
 	currentSetRingToneDeviceId = plivoBrowserSdk.client.audio.ringtoneDevices.get();
 	currentSetSpeakerDeviceId = plivoBrowserSdk.client.audio.speakerDevices.get();
+
 	plivoBrowserSdk.client.audio.availableDevices()
 	.then(function(e){
 		e.forEach(function(dev){
@@ -643,6 +633,7 @@ function colorPids(vol, volumeType) {
 	  elem_range[j].style.backgroundColor="#69ce2b";
 	}
 }
+
 
 
 function refreshAudioDevices() {
@@ -1056,14 +1047,17 @@ function starFeedback(){
 
 var plivoBrowserSdk; // this will be retrived from settings in UI
 
+
 function initPhone(username, password){
 	var options = refreshSettings();
 	plivoBrowserSdk = new window.Plivo(options);
+
 
 	plivoBrowserSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported); 
 	plivoBrowserSdk.client.on('onLogin', onLogin);
 	plivoBrowserSdk.client.on('onLogout', onLogout);
 	plivoBrowserSdk.client.on('onLoginFailed', onLoginFailed);
+
 	plivoBrowserSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
 	plivoBrowserSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
     plivoBrowserSdk.client.on('onIncomingCallIgnored', onIncomingCallCanceled);

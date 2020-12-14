@@ -1,10 +1,13 @@
-## Plivo Browser SDK v2.1 Example
-*This Plivo example shows how to use all the features in Plivo Browser SDK 2.1 using a simple webphone demo. This demo helps in making phone calls from web browser to both sip addresses and PSTN phone numbers without installing any plugins.*
+
+## Plivo Browser SDK v2.2 Example
+*This Plivo example shows how to use all the features in Plivo Browser SDK 2.2 using a simple webphone demo. This demo helps in making phone calls from web browser to both sip addresses and PSTN phone numbers without installing any plugins.*>`>>>> test-ghactions
 
 ![plivo-websdk-2.0-example](img/callscreen.png)
 
 ---
+
 *To use the [live web phone demo](https://s3.amazonaws.com/plivobrowsersdk/v2/example.html)*
+
 
 *a. Sign up for a Plivo account here: https://manage.plivo.com/accounts/register/*
 
@@ -17,6 +20,7 @@
 
 ```
 git clone https://github.com/plivo/plivo-browser-sdk2-examples.git
+
 npm install
 npm start
 ```
@@ -33,9 +37,17 @@ This is where we initialise a new Plivo object by passing `options` as `plivoBro
 
 ```js
 var plivoBrowserSdk; 
+
+
+var accessToken;
+
 function initPhone(username, password){
   var options = refreshSettings();
   plivoBrowserSdk = new window.Plivo(options);
+
+
+  //initialise Token object
+  accessToken = plivoBrowserSdk.client.token;
 
   
   plivoBrowserSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
@@ -93,6 +105,79 @@ $('#clickLogin').click(function(e){
   login(userName, password);
 });
 ```
+#### Login with username/jwt. 
+![plivo-websdk-2.0-example](img/login_jwt.png)
+```js
+function implementToken(username){
+
+  //Implement SDK's Abstract class 'accessToken'
+  var jwtToken = function() { accessToken.apply(); };
+  jwtToken.prototype = Object.create(accessToken.prototype);
+  jwtToken.prototype.constructor = jwtToken;
+
+  /*
+  Implement the abstract method 'getAccessToken'
+  Customers need to define their own logic to fetch accessToken
+  They may like to have their own app server to generate accessTokens.
+  This method gets re-called (SDK takes care of it) just before the expiry of ongoing access token and fetches a new valid token
+  */
+  jwtToken.prototype.getAccessToken = async function() {
+    //get JWT Token
+    var tokenGenServerURI = "https://api/url/to/fetch/accessToken"
+    const requestBody = {
+      "username":username
+    }   
+    const response = await fetch(tokenGenServerURI, {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {'Content-Type' : 'application/json'}
+          }).catch(function (err) {
+            console.error("Error in fetching the token ", err);
+            return null;
+          });
+    try{  
+      const myJson = await response.json();
+      return (myJson['token'])
+    }catch(error){
+      console.error("Error : "+error);  
+      return(null);
+    }     
+  }
+  var jwtTokenObject = new jwtToken();
+  return jwtTokenObject;
+}
+
+function loginJWTObject(jwtTokenObject){
+  if(jwtTokenObject!=null) {
+    //start UI load spinner
+    kickStartNow();     
+    /*
+    Calling SDK login with token object, method.
+    Pass the token object which would be used by the SDK to call 'getAccessToken' method
+    */
+    plivoBrowserSdk.client.loginWithAccessTokenGenerator(jwtTokenObject);
+    $('#sipUserName').html('Successfully logged in with access token');
+  }else {
+    console.error('JWT Object found null')
+  }
+}
+
+function loginJWTAccessToken(accessToken){
+  if(accessToken!=null) {
+    //start UI load spinner
+    kickStartNow();     
+    /*
+    Calling SDK login with access token, method.
+    Pass the access token for logging in
+    User's session would be logged out as soon as the token expires.
+    User will have to explicitly re login with new valid access token when existing access token expires
+    */
+    plivoBrowserSdk.client.loginWithAccessToken(accessToken);
+    $('#sipUserName').html('Successfully logged in with access token');
+  }else {
+    console.error('JWT Object found null')
+  }
+}
 
 ### Options
 *Options allow to disable tracking, setting codec type, enabling and disabling AEC/AGC etc. The list of all the settings can be found in the documentation page.*
