@@ -195,6 +195,10 @@ function performLogout(){
 	iti.setCountry("us");
 }
 
+	
+function onLogout(){
+	console.info('onLogout');
+	performLogout();
 }
 
 
@@ -317,10 +321,11 @@ function onIncomingCall(callerName, extraHeaders, callInfo){
 			isIncomingCallPresent = false;
 			console.info('Call accept clicked');
 			if (callInfo) {
-			plivoBrowserSdk.client.answer(callInfo.callUUID);
+				plivoBrowserSdk.client.answer(callInfo.callUUID);
 			} else {
-			plivoBrowserSdk.client.answer();
-
+				plivoBrowserSdk.client.answer();
+			}          
+		})
 		.button('Reject', () => {
 			isIncomingCallPresent = false;
 			console.info('callReject');
