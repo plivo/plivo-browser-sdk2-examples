@@ -806,17 +806,17 @@
 		<!-- alert message comes here -->
 	</div>
 
-  <script src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script>
-  <script src="assets/lib/notify.js"></script>
-  <script src="assets/lib/intlTelInput.min.js"></script>
-  <script src="assets/js/utils.js"></script>
-  <script src="assets/js/customclient.js"></script>
-  <script type="text/javascript">
-    $(document).ready(function() {
-      console.log( "HTML ready!" );
-      $('[data-toggle="tooltip"]').tooltip();
-      initPhone();
-    });
+	<script src="https://cdn.plivo.com/sdk/browser/v2/plivobeta.min.js"></script>
+	<script src="assets/lib/notify.js"></script>
+	<script src="assets/lib/intlTelInput.min.js"></script>
+	<script src="assets/js/utils.js"></script>
+	<script src="assets/js/customclient.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			console.log( "HTML ready!" );
+			$('[data-toggle="tooltip"]').tooltip();
+			initPhone();
+		});
 
     var input = document.querySelector("#toNumber");
     var iti = window.intlTelInput(input,({
