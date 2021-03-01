@@ -6,9 +6,9 @@
 ---
 *To use the [live web phone demo](https://s3.amazonaws.com/plivobrowsersdk/v2/example.html)*
 
-*a. Sign up for a Plivo account here: https://manage.plivo.com/accounts/register/*
+*a. Sign up for a Plivo account here: https://console.plivo.com/accounts/register/*
 
-*b. Create a Plivo Endpoint here: https://manage.plivo.com/endpoint/create/.*
+*b. Create a Plivo Endpoint here: https://console.plivo.com/voice/endpoints/add/*
 
 *c. Use this Plivo endpoint to login after deploying the application*
 
