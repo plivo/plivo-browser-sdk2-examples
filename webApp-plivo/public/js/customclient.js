@@ -21,7 +21,8 @@ var defaultSettings = {
 	"enableTracking":true,
 	"closeProtection":false,
 	"maxAverageBitrate":48000,
-	"allowMultipleIncomingCalls":false
+	"allowMultipleIncomingCalls":false,
+	"dtmfOptions":{sendDtmfType:["outband","inband"]} 
   };
 
 var iti;
@@ -296,25 +297,25 @@ function onMediaPermission(evt){
 	}
 }
 
-function onIncomingCall(callerName, extraHeaders, callInfo){
-	console.info('onIncomingCall : ', callerName, extraHeaders);
+function onIncomingCall(callerName, extraHeaders, callInfo, caller_Name){
+	console.info('onIncomingCall : ', callerName, extraHeaders, callInfo,caller_Name);
 	let prevIncoming = isIncomingCallPresent;
 	isIncomingCallPresent = true;
 	callStorage.startTime = date();
 	callStorage.mode = 'in';
-	callStorage.num = callerName;
+	callStorage.num = caller_Name;
 	if (document.getElementById('callstatus').innerHTML == 'Idle' && !prevIncoming) {
 		$('#incomingCallDefault').show();
 		$('#phone').hide();
 		$('#callstatus').html('Ringing...');
-		$('#callernum').html(callerName);
+		$('#callernum').html(caller_Name);
 		incomingCallInfo = callInfo;
 		if (callInfo) {
 			incomingNotifications.set(callInfo.callUUID, null);
 		} 
 	} else {
 		$('#callstatus').html('Ringing...');
-		const incomingNotification = Notify.success(`Incoming Call: ${callerName}`)
+		const incomingNotification = Notify.success(`Incoming Call: ${caller_Name}`)
 		.button('Answer', () => {
 			isIncomingCallPresent = false;
 			console.info('Call accept clicked');
