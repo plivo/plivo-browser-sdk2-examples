@@ -13,6 +13,9 @@
 *c. Use this Plivo endpoint to login after deploying the application*
 
 ---
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 ### Deploying the application
 
 ```
