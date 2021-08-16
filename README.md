@@ -13,7 +13,6 @@
 *c. Use this Plivo endpoint to login after deploying the application*
 
 ---
-# Looking to self-host?
 
 ### Automatically Deploy to Heroku
 
