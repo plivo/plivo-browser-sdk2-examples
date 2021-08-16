@@ -448,8 +448,8 @@ $('#sendFeedback').click(function(){
 });
 
 $('#clickLogin').click(function(e){
-	var userName = $('#loginUser').val() || process.env.usernmae;
-	var password = $('#loginPwd').val() || process.env.password;
+	var userName = $('#loginUser').val();
+	var password = $('#loginPwd').val();
 	login(userName, password);
 });
 
