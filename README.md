@@ -21,7 +21,7 @@
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
-### Deploying the application
+### Deploying the application on your local setup
 
 ```
 git clone https://github.com/plivo/plivo-browser-sdk2-examples.git
