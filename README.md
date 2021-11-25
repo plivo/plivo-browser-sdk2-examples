@@ -13,7 +13,15 @@
 *c. Use this Plivo endpoint to login after deploying the application*
 
 ---
-### Deploying the application
+
+### Automatically Deploy to Heroku
+
+- Create a [Plivo account](https://console.plivo.com/accounts/register/)
+- Create and **verify** a Heroku account if you don't have one then click the button below.
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
+### Deploying the application on your local setup
 
 ```
 git clone https://github.com/plivo/plivo-browser-sdk2-examples.git

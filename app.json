@@ -1,0 +1,14 @@
+{
+  "name":"Plivo Browser SDK",
+  "description":"Example app for the Plivo Browser SDK v2",
+  "keywords":[
+     "plivo",
+     "browser SDK",
+     "webrtc",
+     "telephony"
+  ],
+  "website":"https://www.plivo.com/",
+  "repository":"https://github.com/plivo/plivo-browser-sdk2-examples",
+  "image":"heroku/node",
+  "logo":"https://www.plivo.com/assets/dist/new-design/branding/plivo-icon.svg"
+}
