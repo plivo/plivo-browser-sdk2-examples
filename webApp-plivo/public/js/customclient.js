@@ -194,6 +194,7 @@ function performLogout(){
 	$('.loader').hide();
 	$('#toNumber').val("");
 	iti.setCountry("us");
+	localStorage.clear();
 }
 function onLogout(){
 	console.info('onLogout');
