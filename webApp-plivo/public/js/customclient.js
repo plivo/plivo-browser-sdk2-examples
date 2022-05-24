@@ -662,6 +662,7 @@ function colorPids(vol, volumeType) {
 }
 
 function implementToken(username){
+	console.log("Implement token called");
 	var jwtToken = function() {
 		accessToken.apply();
 	};
@@ -670,7 +671,7 @@ function implementToken(username){
 	  
 	jwtToken.prototype.getAccessToken = async function() {
 		//get JWT Token
-		var tokenGenServerURI = "https://jwttokengen.herokuapp.com/fetchtoken";
+		var tokenGenServerURI = "https://api-qa.voice.plivodev.com/v1/Account/MADCHANDRESH02TANK06/JWT/Token";
 		const requestBody = {
 			"username":username
 		}	
@@ -682,6 +683,7 @@ function implementToken(username){
 						console.error("Error in fetching the token ", err);
 						return null;
 					});
+		console.log("Implement token : "+response);
 		try{	
 			const myJson = await response.json();
 			return (myJson['token'])
@@ -718,11 +720,18 @@ function loginJWTAccessToken(accessToken){
 	  User will have to explicitly re login with new valid access token when existing access token expires
 	  */
       console.log(accessToken);	 
-	  plivoBrowserSdk.client.loginWithAccessToken(accessToken);
+	  const pattern = /^([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-\+\/=]*)/gi.test(accessToken)
+		if (pattern) {
+			plivoBrowserSdk.client.loginWithAccessToken(accessToken);
+		} else {
+			plivoBrowserSdk.client.loginWithAccessTokenGenerator(implementToken(accessToken));
+		}
+	  
 	}else {
 	  console.error('JWT Object found null')
 	}
   }
+
 
 function refreshAudioDevices() {
 	_forEach.call(document.querySelectorAll('#popAudioDevices option'), e=>e.remove());
@@ -994,7 +1003,13 @@ $('#clickLogin').click(function(e){
 
 $('#clickLoginJWT').click(function(e){
 	let jwtAccessToken = $('#accessToken').val();
-	loginJWTAccessToken(jwtAccessToken);
+
+	if(jwtAccessToken!==""){
+		loginJWTAccessToken(jwtAccessToken);	
+	}else{
+		customAlert('Login failure :','Please input Username/JWT', 'warn');
+	}
+	
 });
 
 // Audio device selection
@@ -1145,7 +1160,7 @@ function initPhone(username, password){
 	plivoBrowserSdk = new window.Plivo(options);
 
 	//initialise Token object
-	accessToken = plivoBrowserSdk.client.token;
+	accessToken = plivoBrowserSdk.client.accessTokenInterface;
 
 	plivoBrowserSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported); 
 	plivoBrowserSdk.client.on('onLogin', onLogin);
