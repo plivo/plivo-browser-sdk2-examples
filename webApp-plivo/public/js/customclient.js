@@ -86,9 +86,10 @@ function audioDeviceChange(e){
 	}
 }
 
-function onPermissionDenied(cause,callinfo){
+function onPermissionDenied(cause ,callinfo){
 	console.log('onPermissionDenied: ',cause);
-	customAlert(cause,'warn');
+	callOff(cause);
+	customAlert(cause, 'warn', 'warn');
 }
 
 function onConnectionChange(obj){
@@ -900,16 +901,17 @@ $('#makecall').click(function(e){
 	var callEnabled = $('#makecall').attr('class').match('disabled');
 	if(!to || !plivoBrowserSdk || !!callEnabled){return};
 	if(!plivoBrowserSdk.client.isLoggedIn){alert('You\'re not Logged in!')}
-	plivoBrowserSdk.client.call(to,extraHeaders);
-	console.info('Click make call : ',to);
-	callStorage.mode = "out";
-	callStorage.startTime = date();
-	callStorage.num = to; 
-	$('.phone').hide();
-	$('.AfterAnswer').show();
-	$('#boundType').html('Outgoing : '+to);
-	$('#callDuration').html('00:00:00');
-	$('.callinfo').show();
+	if(plivoBrowserSdk.client.call(to,extraHeaders)) {
+		console.info('Click make call : ',to);
+		callStorage.mode = "out";
+		callStorage.startTime = date();
+		callStorage.num = to; 
+		$('.phone').hide();
+		$('.AfterAnswer').show();
+		$('#boundType').html('Outgoing : '+to);
+		$('#callDuration').html('00:00:00');
+		$('.callinfo').show();
+	}
 });
 
 $('#updateSettings').click(function(e){
