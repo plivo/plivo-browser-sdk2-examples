@@ -161,7 +161,7 @@ function onLogin(uname, time) {
 	$('#callContainer').show();
 	document.body.style.backgroundImage = 'none';
 	let username = plivoBrowserSdk.client.userName;
-	if (accessToken != null) {
+	if (plivoBrowserSdk.client.isAccessToken) {
 		const usernameArray = username.split("_");
 		username = usernameArray[0];
 	}
