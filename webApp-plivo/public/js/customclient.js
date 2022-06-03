@@ -674,6 +674,8 @@ function implementToken(username) {
 		//get JWT Token
 		var tokenGenServerURI = new URL("https://api-qa.voice.plivodev.com/v1/Account/MADCHANDRESH02TANK06/JWT/Token");
 
+		console.log(getExpiryEpoch(5));
+
 		const payload = {
 			"iss": "MADCHANDRESH02TANK06",
 			"per": {
@@ -682,8 +684,10 @@ function implementToken(username) {
 					"outgoing_allow": true,
 				}
 			},
+			"exp": getExpiryEpoch(5),
 			"sub": username
 		}
+		console.log(getExpiryEpoch());
 		let requestBody = {
 			method: 'POST',
 			headers: new Headers({
@@ -709,10 +713,9 @@ function implementToken(username) {
 	return jwtTokenObject;
 }
 
-function expiryEpoch(minuts) {
-	var currentDate = new Date();
-	var futureDate = new Date(currentDate.getTime() + minuts * 60);
-	return futureDate.getTime();
+function getExpiryEpoch(minuts) {
+	let futureDate = Math.floor((new Date()).getTime() / 1000) + minuts * 60;
+	return futureDate.toString();
 }
 function loginJWTObject(jwtTokenObject) {
 	isLoggedInwithAccessTokenObject = true;
@@ -1215,5 +1218,4 @@ function initPhone(username, password) {
 	checkBrowserComplaince(plivoBrowserSdk.client);
 	starFeedback();
 	console.log('initPhone ready!')
-	console.log(expiryEpoch(4).toString());
 }
