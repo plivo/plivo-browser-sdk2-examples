@@ -678,7 +678,7 @@ function implementToken(username) {
         //get JWT Token
         var tokenGenServerURI = new URL("https://api-qa.voice.plivodev.com/v1/Account/MADCHANDRESH02TANK06/JWT/Token");
         
-        console.log(getExpiryEpoch(5));
+        console.log(getFutureExpiryEpoch(4));
         
         const payload = {
             "iss": "MADCHANDRESH02TANK06",
@@ -688,10 +688,10 @@ function implementToken(username) {
                     "outgoing_allow": true,
                 }
             },
-            "exp": getExpiryEpoch(5),
+			"nbf": getNbf(),
+            "exp": getFutureExpiryEpoch(4),
             "sub": username
         }
-        console.log(getExpiryEpoch());
         let requestBody = {
         method: 'POST',
         headers: new Headers({
@@ -717,9 +717,13 @@ function implementToken(username) {
     return jwtTokenObject;
 }
 
-function getExpiryEpoch(minuts) {
+function getFutureExpiryEpoch(minuts) {
     let futureDate = Math.floor((new Date()).getTime() / 1000) + minuts * 60;
     return futureDate.toString();
+}
+function getNbf() {
+    let nbf = Math.floor((new Date()).getTime() / 1000) - 1 * 60;
+    return nbf.toString();
 }
 
 
