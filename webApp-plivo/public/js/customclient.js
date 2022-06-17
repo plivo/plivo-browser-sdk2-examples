@@ -667,37 +667,65 @@ function colorPids(vol, volumeType) {
 }
 
 function implementToken(username) {
-	var jwtToken = function () {
-		accessToken.apply();
-	};
-	jwtToken.prototype = Object.create(accessToken.prototype);
-	jwtToken.prototype.constructor = jwtToken;
-
-	jwtToken.prototype.getAccessToken = async function () {
-		//get JWT Token
-		var tokenGenServerURI = "https://jwttokengen.herokuapp.com/fetchtoken";
-		const requestBody = {
-			"username": username
-		}
-		const response = await fetch(tokenGenServerURI, {
-			method: 'POST',
-			body: JSON.stringify(requestBody),
-			headers: { 'Content-Type': 'application/json' }
-		}).catch(function (err) {
-			console.error("Error in fetching the token ", err);
-			return null;
-		});
-		try {
-			const myJson = await response.json();
-			return (myJson['token'])
-		} catch (error) {
-			console.error("Error : " + error);
-			return (null);
-		}
-	}
-	var jwtTokenObject = new jwtToken();
-	return jwtTokenObject;
+    console.log("Implement token called");
+    var jwtToken = function () {
+        accessToken.apply();
+    };
+    jwtToken.prototype = Object.create(accessToken.prototype);
+    jwtToken.prototype.constructor = jwtToken;
+    
+    jwtToken.prototype.getAccessToken = async function () {
+        //get JWT Token
+        var tokenGenServerURI = new URL("https://api-qa.voice.plivodev.com/v1/Account/MADCHANDRESH02TANK06/JWT/Token");
+        
+        console.log(getFutureExpiryEpoch(4));
+        
+        const payload = {
+            "iss": "MADCHANDRESH02TANK06",
+            "per": {
+                "voice": {
+                    "incoming_allow": true,
+                    "outgoing_allow": true,
+                }
+            },
+			"nbf": getNbf(),
+            "exp": getFutureExpiryEpoch(4),
+            "sub": username
+        }
+        let requestBody = {
+        method: 'POST',
+        headers: new Headers({
+                             'Content-Type': 'application/json',
+                             'Authorization': 'Basic TUFEQ0hBTkRSRVNIMDJUQU5LMDY6T1Rsak5tVm1PR1ZrTkdaaE5qSmxPV0l5TVdNMFpESTBaalF3WkRkaw=='
+                             }),
+        body: JSON.stringify(payload),
+        };
+        const response = await fetch(tokenGenServerURI, requestBody).catch(function (err) {
+                                                                           console.error("Error in fetching the token ", err);
+                                                                           return null;
+                                                                           });
+        console.log("Implement token : " + response);
+        try {
+            const myJson = await response.json();
+            return (myJson['token'])
+        } catch (error) {
+            console.error("Error : " + error);
+            return (null);
+        }
+    }
+    var jwtTokenObject = new jwtToken();
+    return jwtTokenObject;
 }
+
+function getFutureExpiryEpoch(minuts) {
+    let futureDate = Math.floor((new Date()).getTime() / 1000) + minuts * 60;
+    return futureDate.toString();
+}
+function getNbf() {
+    let nbf = Math.floor((new Date()).getTime() / 1000) - 1 * 60;
+    return nbf.toString();
+}
+
 
 function loginJWTObject(jwtTokenObject) {
 	isLoggedInwithAccessTokenObject = true;
@@ -722,8 +750,13 @@ function loginJWTAccessToken(accessToken) {
 		User's session would be logged out as soon as the token expires.
 		User will have to explicitly re login with new valid access token when existing access token expires
 		*/
-		console.log(accessToken);
-		plivoBrowserSdk.client.loginWithAccessToken(accessToken);
+        console.log(accessToken);
+        const pattern = /^([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-\+\/=]*)/gi.test(accessToken)
+        if (pattern) {
+            plivoBrowserSdk.client.loginWithAccessToken(accessToken);
+        } else {
+            plivoBrowserSdk.client.loginWithAccessTokenGenerator(implementToken(accessToken));
+        }
 	} else {
 		console.error('JWT Object found null')
 	}
@@ -1000,7 +1033,13 @@ $('#clickLogin').click(function (e) {
 
 $('#clickLoginJWT').click(function (e) {
 	let jwtAccessToken = $('#accessToken').val();
-	loginJWTAccessToken(jwtAccessToken);
+
+	if (jwtAccessToken !== "") {
+		loginJWTAccessToken(jwtAccessToken);
+	} else {
+		customAlert('Login failure :', 'Please input Username/JWT', 'warn');
+	}
+
 });
 
 // Audio device selection
@@ -1151,7 +1190,7 @@ function initPhone(username, password) {
 	plivoBrowserSdk = new window.Plivo(options);
 
 	//initialise Token object
-	accessToken = plivoBrowserSdk.client.token;
+	accessToken = plivoBrowserSdk.client.accessTokenInterface;
 
 	plivoBrowserSdk.client.on('onWebrtcNotSupported', onWebrtcNotSupported);
 	plivoBrowserSdk.client.on('onLogin', onLogin);
