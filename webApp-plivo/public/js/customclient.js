@@ -676,12 +676,12 @@ function implementToken(username) {
     
     jwtToken.prototype.getAccessToken = async function () {
         //get JWT Token
-        var tokenGenServerURI = new URL("https://api-qa.voice.plivodev.com/v1/Account/MADCHANDRESH02TANK06/JWT/Token");
+        var tokenGenServerURI = new URL("https://api.plivo.com/v1/Account/MAY2RJNZKZNJMWOTG4NT/JWT/Token");
         
         console.log(getFutureExpiryEpoch(4));
         
         const payload = {
-            "iss": "MADCHANDRESH02TANK06",
+            "iss": "MAY2RJNZKZNJMWOTG4NT",
             "per": {
                 "voice": {
                     "incoming_allow": true,
@@ -696,7 +696,7 @@ function implementToken(username) {
         method: 'POST',
         headers: new Headers({
                              'Content-Type': 'application/json',
-                             'Authorization': 'Basic TUFEQ0hBTkRSRVNIMDJUQU5LMDY6T1Rsak5tVm1PR1ZrTkdaaE5qSmxPV0l5TVdNMFpESTBaalF3WkRkaw=='
+                             'Authorization': 'Basic TUFZMlJKTlpLWk5KTVdPVEc0TlQ6WWpJM1pXVmpPV0poTW1Kak5USXhNakJtTkdJeVlUUmtZVGd3TUdSaA=='
                              }),
         body: JSON.stringify(payload),
         };
