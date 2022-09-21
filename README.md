@@ -30,14 +30,14 @@ npm start
 ```
 
 ### Initialization
-Include 
+Include
 ```js
 <script type="text/javascript" src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script>
 ```
-in the `<body>` tag before you include other javascript files dependent on the SDK. 
+in the `<body>` tag before you include other javascript files dependent on the SDK.
 
 Lets create a `customclient.js` file and declare a variable `var plivoBrowserSdk;`
-This is where we initialise a new Plivo object by passing `options` as `plivoBrowserSdk = new window.Plivo(options);`. The application can set up listeners for events as shown in the `initPhone` function below. 
+This is where we initialise a new Plivo object by passing `options` as `plivoBrowserSdk = new window.Plivo(options);`. The application can set up listeners for events as shown in the `initPhone` function below.
 
 ```js
 var plivoBrowserSdk; 
@@ -71,7 +71,7 @@ In the demo, `options` can be set from UI in the CONFIG menu. Once the CONFIG is
 
 ### Document ready state
 
->If you're directly calling login on page load, please make sure you do that only after HTML document ready. 
+>If you're directly calling login on page load, please make sure you do that only after HTML document ready.
 
 ```html
   <script type="text/javascript">
@@ -82,7 +82,9 @@ In the demo, `options` can be set from UI in the CONFIG menu. Once the CONFIG is
     }); 
   </script>
 ```
-### Login 
+### Login
+
+#### Using Endpoint
 ![plivo-websdk-2.0-example](img/plivobrowserSdKLogin.png)
 ```js
 function login(username, password) {
@@ -100,6 +102,31 @@ $('#clickLogin').click(function(e){
   var password = $('#loginPwd').val();
   login(userName, password);
 });
+```
+
+#### Using JWT Access token
+
+```js
+plivoBrowserSdk.client.loginWithAccessToken(accessToken);
+```
+#### Using JWT Access token generator
+```js
+var accessToken;
+
+var jwtToken = function() {
+  accessToken.apply();
+};
+
+jwtToken.prototype = Object.create(accessToken.prototype);
+jwtToken.prototype.constructor = jwtToken;
+
+jwtToken.prototype.getAccessToken = async function() {
+  //call server side api to generate the jwt token
+}
+
+var jwtTokenObject = new jwtToken();
+
+plivoBrowserSdk.client.loginWithAccessTokenGenerator(jwtTokenObject);
 ```
 
 ### Options
@@ -174,7 +201,7 @@ function onLogout(){
 }
 ```  
 ### Outgoing call
-Given a number or SIP URI, this snippet shows how to make an outgoing call. The following snippet takes input from the dial pad UI. 
+Given a number or SIP URI, this snippet shows how to make an outgoing call. The following snippet takes input from the dial pad UI.
 ```js
 $('#makecall').click(function(e){
   var to = $('#toNumber').val().replace(" ","");
@@ -251,7 +278,7 @@ $('.ignoreIncoming').click(function(){
 });
 ```
 ### Terminating a call
-This code may be used to terminate a call. 
+This code may be used to terminate a call.
 ```js
 $('.hangup').click(function(){
   console.info('Hangup');
@@ -268,17 +295,17 @@ This snippet shows how to handle network or media related events from the SDK. A
 
 ![plivo-websdk-2.0-example](img/metrics.png)
 
-Please check Chrome or Firefox console to see the complete info of the event. 
+Please check Chrome or Firefox console to see the complete info of the event.
 ```js
 function mediaMetrics(obj){
-  console.table([obj]); 
+  console.table([obj]);
   $(".alertmsg").prepend(
-  '<div class="metrics -'+obj.type+'">' +
-  '<span style="margin-left:20px;">'+obj.level+' | </span>' +
-  '<span style="margin-left:20px;">'+obj.group+' | </span>' +
-  '<span style="margin-left:20px;">'+message+' - '+obj.desc+' : </span><span >'+obj.value+'</span>'+
-  '<span aria-hidden="true" onclick="closeMetrics(this)" style="margin-left:25px;cursor:pointer;">X</span>' +
-  '</div>'
+          '<div class="metrics -'+obj.type+'">' +
+          '<span style="margin-left:20px;">'+obj.level+' | </span>' +
+          '<span style="margin-left:20px;">'+obj.group+' | </span>' +
+          '<span style="margin-left:20px;">'+message+' - '+obj.desc+' : </span><span >'+obj.value+'</span>'+
+          '<span aria-hidden="true" onclick="closeMetrics(this)" style="margin-left:25px;cursor:pointer;">X</span>' +
+          '</div>'
   );
 }
 ```
@@ -349,19 +376,19 @@ function updateAudioDevices(){
   document.querySelectorAll('#micDev option').forEach(e=>e.remove())
   document.querySelectorAll('#ringtoneDev option').forEach(e=>e.remove())
   plivoBrowserSdk.client.audio.availableDevices()
-  .then(function(e){
-  e.forEach(function(dev){
-    if(dev.label && dev.kind == "audioinput")
-    $('#micDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
-    if(dev.label && dev.kind == "audiooutput"){
-    $('#ringtoneDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>');
-    $('#speakerDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')  
-    }
-  });
-  })
-  .catch(function(error){
-  console.error(error);
-  })
+          .then(function(e){
+            e.forEach(function(dev){
+              if(dev.label && dev.kind == "audioinput")
+                $('#micDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
+              if(dev.label && dev.kind == "audiooutput"){
+                $('#ringtoneDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>');
+                $('#speakerDev').append('<option value='+dev.deviceId+'>'+dev.label+'</option>')
+              }
+            });
+          })
+          .catch(function(error){
+            console.error(error);
+          })
 }
 
 //revealAudioDevices
@@ -372,14 +399,14 @@ $('#allowAudioDevices').click(function(){
 function refreshAudioDevices() {
   _forEach.call(document.querySelectorAll('#popAudioDevices option'), e=>e.remove());
   plivoBrowserSdk.client.audio.revealAudioDevices()
-  .then(function(e){
-    updateAudioDevices();
-    console.log('Media permission ',e)
-  })
-  .catch(function(error){
-    console.error('media permission error :',error);
-    $('#mediaAccessBlock').modal('show');
-  })
+          .then(function(e){
+            updateAudioDevices();
+            console.log('Media permission ',e)
+          })
+          .catch(function(error){
+            console.error('media permission error :',error);
+            $('#mediaAccessBlock').modal('show');
+          })
 }
 ```
 ### Audio Device change
@@ -393,7 +420,7 @@ function audioDeviceChange(e){
   console.log('audioDeviceChange',e);
   if(e.change){
     if(e.change == "added") {
-      customAlert(e.change,e.device.kind +" - "+e.device.label,'info');   
+      customAlert(e.change,e.device.kind +" - "+e.device.label,'info');
     }else {
       customAlert(e.change,e.device.kind +" - "+e.device.label,'warn');
     }
@@ -422,16 +449,16 @@ $('#sendFeedback').click(function(){
   var sendConsoleLogs = document.getElementById("sendConsoleLogs").checked;
   // submitCallQualityFeedback takes parameteres callUUId, starRating, issues, note, sendConsoleLogs
   plivoBrowserSdk.client.submitCallQualityFeedback(lastCallid, score, issues, note, sendConsoleLogs)
-  .then((result) => {
-    $('#feedbackStatus').html('Feedback sent');
-    $('#ignoreFeedback').click();
-    customAlert('Feedback sent','','info');
-    $('.lowQualityRadios').hide();
-  })
-  .catch((error) => {
-    $('#feedbackStatus').html(error);
-    customAlert('Could not send feedback','','warn');
-  });
+          .then((result) => {
+            $('#feedbackStatus').html('Feedback sent');
+            $('#ignoreFeedback').click();
+            customAlert('Feedback sent','','info');
+            $('.lowQualityRadios').hide();
+          })
+          .catch((error) => {
+            $('#feedbackStatus').html(error);
+            customAlert('Could not send feedback','','warn');
+          });
 });
 ```
 ### Real-time volume indicator on UI
