@@ -29,6 +29,7 @@ var iti;
 var incomingCallInfo;
 var isIncomingCallPresent = false
 var isLoggedInwithAccessTokenObject = null;
+var isChecked = false;
 
 var outputVolumeBar = document.getElementById('output-volume');
 var inputVolumeBar = document.getElementById('input-volume');
@@ -666,7 +667,7 @@ function colorPids(vol, volumeType) {
 	}
 }
 
-function implementToken(username) {
+function implementToken(username, authId, authToken, expiry) {
     console.log("Implement token called");
     var jwtToken = function () {
         accessToken.apply();
@@ -676,12 +677,19 @@ function implementToken(username) {
     
     jwtToken.prototype.getAccessToken = async function () {
         //get JWT Token
-        var tokenGenServerURI = new URL("https://api.plivo.com/v1/Account/MAY2RJNZKZNJMWOTG4NT/JWT/Token");
+        var tokenGenServerURI = new URL("https://api.plivo.com/v1/Account/"+authId+"/JWT/Token");
         
-        console.log(getFutureExpiryEpoch(4));
+        // console.log(getFutureExpiryEpoch(4));
+		var exp = 4;
+		if(expiry != null && expiry >= 4) {
+			exp = expiry;
+		} else {
+			console.error("Error : Expiry should not be less than 4mins");
+            return (null);
+		}
         
         const payload = {
-            "iss": "MAY2RJNZKZNJMWOTG4NT",
+            "iss": authId,
             "per": {
                 "voice": {
                     "incoming_allow": true,
@@ -689,14 +697,14 @@ function implementToken(username) {
                 }
             },
 			"nbf": getNbf(),
-            "exp": getFutureExpiryEpoch(4),
+            "exp": getFutureExpiryEpoch(exp),
             "sub": username
         }
         let requestBody = {
         method: 'POST',
         headers: new Headers({
                              'Content-Type': 'application/json',
-                             'Authorization': 'Basic TUFZMlJKTlpLWk5KTVdPVEc0TlQ6WWpJM1pXVmpPV0poTW1Kak5USXhNakJtTkdJeVlUUmtZVGd3TUdSaA=='
+                             'Authorization': authToken
                              }),
         body: JSON.stringify(payload),
         };
@@ -740,23 +748,35 @@ function loginJWTObject(jwtTokenObject) {
 	}
 }
 
-function loginJWTAccessToken(accessToken) {
+function loginJWTAccessToken(accessToken, authId, authToken, expiry) {
 	if (accessToken != null) {
 		//start UI load spinner
-		kickStartNow();
+		
 		/*
 		Calling SDK login with access token, method.
 		Pass the access token for logging in
 		User's session would be logged out as soon as the token expires.
 		User will have to explicitly re login with new valid access token when existing access token expires
 		*/
-        console.log(accessToken);
+        // console.log(accessToken," | ",authId," | ",authToken," | ",expiry);
         const pattern = /^([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-\+\/=]*)/gi.test(accessToken)
-        if (pattern) {
-            plivoBrowserSdk.client.loginWithAccessToken(accessToken);
+	
+        if (!isChecked) {
+			
+			if(pattern){
+				kickStartNow();
+            	plivoBrowserSdk.client.loginWithAccessToken(accessToken);
+			}else{
+				console.error('Not a valid JWT token')
+			}
         } else {
-            plivoBrowserSdk.client.loginWithAccessTokenGenerator(implementToken(accessToken));
-        }
+			if(authId != null && authToken != null){
+				kickStartNow();
+           		plivoBrowserSdk.client.loginWithAccessTokenGenerator(implementToken(accessToken, authId, authToken, expiry));
+        	}else {
+				console.error('AuthId or AuthToken Object found null')	
+			}
+		} 
 	} else {
 		console.error('JWT Object found null')
 	}
@@ -1035,12 +1055,36 @@ $('#clickLoginJWT').click(function (e) {
 	let jwtAccessToken = $('#accessToken').val();
 
 	if (jwtAccessToken !== "") {
-		loginJWTAccessToken(jwtAccessToken);
+		let jwtAccessToken = $('#accessToken').val();
+		let authId = $('#authId').val();
+		let authToken = $('#basicAuth').val();
+		let expiry = $('#expiry').val();
+		loginJWTAccessToken(jwtAccessToken, authId, authToken, Number(expiry));
 	} else {
 		customAlert('Login failure :', 'Please input Username/JWT', 'warn');
 	}
 
 });
+
+$('#jwtSwitch').change(function(){
+	isChecked = $(this).is(':checked');
+	console.log(isChecked)
+
+	let authId = document.getElementById('authId');
+	let basicAuth = document.getElementById('basicAuth');
+	let expiry = document.getElementById('expiry');
+	authId.disabled = !isChecked;
+	basicAuth.disabled = !isChecked;
+	expiry.disabled = !isChecked;
+
+	if(isChecked){
+		$("#lbJWT").text("Username");
+	}else{
+		$("#lbJWT").text("JWT");
+	}
+	
+});
+
 
 // Audio device selection
 $('#micDev').change(function () {
