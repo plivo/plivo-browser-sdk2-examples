@@ -683,10 +683,7 @@ function implementToken(username, authId, authToken, expiry) {
 		var exp = 4;
 		if(expiry != null && expiry >= 4) {
 			exp = expiry;
-		} else {
-			console.error("Error : Expiry should not be less than 4mins");
-            return (null);
-		}
+		} 
         
         const payload = {
             "iss": authId,
@@ -1055,16 +1052,22 @@ $('#clickLoginJWT').click(function (e) {
 	let jwtAccessToken = $('#accessToken').val();
 
 	if (jwtAccessToken !== "") {
-		let jwtAccessToken = $('#accessToken').val();
-		let authId = $('#authId').val();
-		let authToken = $('#basicAuth').val();
-		let expiry = $('#expiry').val();
-		loginJWTAccessToken(jwtAccessToken, authId, authToken, Number(expiry));
+		processLogin();
 	} else {
 		customAlert('Login failure :', 'Please input Username/JWT', 'warn');
 	}
 
 });
+
+function processLogin(){
+	let jwtAccessToken = $('#accessToken').val();
+	let authId = $('#authId').val();
+	let expiry = $('#expiry').val();
+	let authToken = $('#basicAuth').val();
+	let basicAuth = btoa(`${authId}:${authToken}`);
+	basicAuth = `Basic ${basicAuth}`;
+	loginJWTAccessToken(jwtAccessToken, authId, basicAuth, Number(expiry));
+}
 
 $('#jwtSwitch').change(function(){
 	isChecked = $(this).is(':checked');
