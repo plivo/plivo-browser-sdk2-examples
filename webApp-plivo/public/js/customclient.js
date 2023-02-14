@@ -311,6 +311,10 @@ function onMediaPermission(evt) {
 	}
 }
 
+function onDtmfReceived(evt) {
+	console.info('onDtmfReceived in example app', evt);
+}
+
 function onIncomingCall(callerName, extraHeaders, callInfo) {
 	console.info('onIncomingCall : ', callerName, extraHeaders);
 	let prevIncoming = isIncomingCallPresent;
@@ -1135,8 +1139,8 @@ $('#showKeypad').click(function () {
 $('.num').click(function () {
 	var num = $(this);
 	var text = $.trim(num.find('.txt').clone().children().remove().end().text());
-	var telNumber = $('#toNumber');
-	$(telNumber).val(telNumber.val() + text);
+	// var telNumber = $('#toNumber');
+	// $(telNumber).val(telNumber.val() + text);
 	if (plivoBrowserSdk && plivoBrowserSdk.client.callSession) {
 		plivoBrowserSdk.client.sendDtmf(text);
 	}
@@ -1207,6 +1211,7 @@ function initPhone(username, password) {
 	plivoBrowserSdk.client.on('onCalling', onCalling);
 	plivoBrowserSdk.client.on('onIncomingCall', onIncomingCall);
 	plivoBrowserSdk.client.on('onMediaPermission', onMediaPermission);
+	plivoBrowserSdk.client.on('onDtmfReceived', onDtmfReceived);
 	plivoBrowserSdk.client.on('mediaMetrics', mediaMetrics);
 	plivoBrowserSdk.client.on('audioDeviceChange', audioDeviceChange);
 	plivoBrowserSdk.client.on('onPermissionDenied', onPermissionDenied);
