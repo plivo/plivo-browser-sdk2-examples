@@ -1,5 +1,5 @@
-## Plivo Browser SDK v2.1 Example
-*This Plivo example shows how to use all the features in Plivo Browser SDK 2.1 using a simple webphone demo. This demo helps in making phone calls from web browser to both sip addresses and PSTN phone numbers without installing any plugins.*
+## Plivo Browser SDK v3.0.1 Example
+*This Plivo example shows how to use all the features in Plivo Browser SDK 3.0.*.* using a simple webphone demo. This demo helps in making phone calls from web browser to both sip addresses and PSTN phone numbers without installing any plugins.*
 
 ![plivo-websdk-2.0-example](img/callscreen.png)
 
@@ -10,7 +10,7 @@
 
 *b. Create a Plivo Endpoint here: https://console.plivo.com/voice/endpoints/add/*
 
-*c. Use this Plivo endpoint to login after deploying the application*
+*c. Use this Plivo endpoint OR Access token to login after deploying the application*
 
 ---
 
@@ -26,13 +26,13 @@
 ```
 git clone https://github.com/plivo/plivo-browser-sdk2-examples.git
 npm install
-npm start
+npm run start
 ```
 
 ### Initialization
 Include 
 ```js
-<script type="text/javascript" src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script>
+<script type="text/javascript" src="https://cdn.plivo.com/sdk/browser/v2/plivobeta.min.js"></script>
 ```
 in the `<body>` tag before you include other javascript files dependent on the SDK. 
 
@@ -59,7 +59,9 @@ function initPhone(username, password){
   plivoBrowserSdk.client.on('onIncomingCall', onIncomingCall);
   plivoBrowserSdk.client.on('onMediaPermission', onMediaPermission);
   plivoBrowserSdk.client.on('mediaMetrics',mediaMetrics);
+  plivoBrowserSdk.client.on('onDtmfReceived', onDtmfReceived);
   plivoBrowserSdk.client.on('audioDeviceChange',audioDeviceChange);
+  plivoBrowserSdk.client.on('onPermissionDenied', onPermissionDenied);
   plivoBrowserSdk.client.on('onConnectionChange', onConnectionChange);
   plivoBrowserSdk.client.on('volume', volume);
   plivoBrowserSdk.client.setRingTone(true);
@@ -82,17 +84,77 @@ In the demo, `options` can be set from UI in the CONFIG menu. Once the CONFIG is
     }); 
   </script>
 ```
-### Login 
+### Login with username and password
 ![plivo-websdk-2.0-example](img/plivobrowserSdKLogin.png)
 ```js
 function login(username, password) {
   if(username && password) {
     //start UI load spinner
-    kickStartNow();     
+    kickStartNow();  
+    //To login with username and password. 
+    //Note: This is deprecated. We suggest using loginWithAccessToken/loginWithAccessTokenGenerator   
     plivoBrowserSdk.client.login(username, password);
   } else {
     console.error('username/password missing!')
   }
+}
+```
+### Login with JWT/AccessToken
+```js
+function loginJWTAccessToken(accessToken) {
+	if (accessToken != null) {
+		//start UI load spinner
+		kickStartNow();
+
+    const pattern = /^([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-\+\/=]*)/gi.test(accessToken)
+    if (pattern) {
+      plivoBrowserSdk.client.loginWithAccessToken(accessToken);
+    } else {
+      plivoBrowserSdk.client.loginWithAccessTokenGenerator(implementToken(accessToken));
+    }
+	} else {
+		console.error('JWT Object found null')
+	}
+}
+
+function implementToken(username) {
+    var jwtToken = function () {
+        accessToken.apply();
+    };
+    jwtToken.prototype = Object.create(accessToken.prototype);
+    jwtToken.prototype.constructor = jwtToken;
+    
+    jwtToken.prototype.getAccessToken = async function () {
+      //get JWT Token
+      var tokenGenServerURI = new URL("URL_HERE");
+      const payload = {
+        "iss": "",//YOUR_AUTH_ID,
+        "per": {
+            "voice": {
+                "incoming_allow": true,
+                "outgoing_allow": true,
+            }
+        },
+        "sub": username
+      }
+      let requestBody = {
+      method: 'POST',
+      headers: new Headers({'Content-Type': 'application/json','Authorization': "", //YOUR_AUTH_TOKEN_HERE}),
+      body: JSON.stringify(payload),
+      };
+      const response = await fetch(tokenGenServerURI, requestBody).catch(function (err) {
+          console.error("Error in fetching the token ", err);
+          return null;
+      });
+      try {
+        const myJson = await response.json();
+        return (myJson['token'])
+      } catch (error) {
+        return (null);
+      }
+    }
+    var jwtTokenObject = new jwtToken();
+    return jwtTokenObject;
 }
 
 $('#clickLogin').click(function(e){

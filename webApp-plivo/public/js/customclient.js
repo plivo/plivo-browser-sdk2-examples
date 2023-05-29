@@ -22,7 +22,8 @@ var defaultSettings = {
 	"enableTracking": true,
 	"closeProtection": false,
 	"maxAverageBitrate": 48000,
-	"allowMultipleIncomingCalls": false
+	"allowMultipleIncomingCalls": false,
+	registrationRefreshTimer: 100,
 };
 
 var iti;
@@ -146,6 +147,10 @@ function mediaMetrics(obj) {
 	if (obj.desc == "no access to your microphone") {
 		$('#micAccessBlock').modal({ show: true })
 	}
+}
+
+function onDtmfReceived(dtmfData) {
+	console.log("Received dtmf is ", dtmfData.tone)
 }
 
 function onReady() {
@@ -676,12 +681,12 @@ function implementToken(username) {
     
     jwtToken.prototype.getAccessToken = async function () {
         //get JWT Token
-        var tokenGenServerURI = new URL("https://api.plivo.com/v1/Account/MAY2RJNZKZNJMWOTG4NT/JWT/Token");
+        var tokenGenServerURI = new URL("URL_HERE");
         
         console.log(getFutureExpiryEpoch(4));
         
         const payload = {
-            "iss": "MAY2RJNZKZNJMWOTG4NT",
+            "iss": "",//YOUR_AUTH_ID,
             "per": {
                 "voice": {
                     "incoming_allow": true,
@@ -689,14 +694,13 @@ function implementToken(username) {
                 }
             },
 			"nbf": getNbf(),
-            "exp": getFutureExpiryEpoch(4),
             "sub": username
         }
         let requestBody = {
         method: 'POST',
         headers: new Headers({
                              'Content-Type': 'application/json',
-                             'Authorization': 'Basic TUFZMlJKTlpLWk5KTVdPVEc0TlQ6WWpJM1pXVmpPV0poTW1Kak5USXhNakJtTkdJeVlUUmtZVGd3TUdSaA=='
+                             'Authorization': "" //YOUR_AUTH_TOKEN_HERE
                              }),
         body: JSON.stringify(payload),
         };
@@ -1208,6 +1212,7 @@ function initPhone(username, password) {
 	plivoBrowserSdk.client.on('onIncomingCall', onIncomingCall);
 	plivoBrowserSdk.client.on('onMediaPermission', onMediaPermission);
 	plivoBrowserSdk.client.on('mediaMetrics', mediaMetrics);
+	plivoBrowserSdk.client.on('onDtmfReceived', onDtmfReceived);
 	plivoBrowserSdk.client.on('audioDeviceChange', audioDeviceChange);
 	plivoBrowserSdk.client.on('onPermissionDenied', onPermissionDenied);
 	plivoBrowserSdk.client.on('onConnectionChange', onConnectionChange); // To show connection change events
