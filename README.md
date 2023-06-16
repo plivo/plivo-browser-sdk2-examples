@@ -110,6 +110,7 @@ $('#clickLogin').click(function(e){
 ```
 
 #### Using JWT Access token
+![plivo-websdk-2.0-example](img/brwoserJWTLogin.png)
 
 ```js
 plivoBrowserSdk.client.loginWithAccessToken(accessToken);
