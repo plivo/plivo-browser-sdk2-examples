@@ -1,25 +1,24 @@
-## Plivo Browser SDK v2.1 Example
-*This Plivo example shows how to use all the features in Plivo Browser SDK 2.1 using a simple webphone demo. This demo helps in making phone calls from web browser to both sip addresses and PSTN phone numbers without installing any plugins.*
+# 📞 Plivo Browser SDK v2.1 Example
 
-![plivo-websdk-2.0-example](img/callscreen.png)
+🌐 This example demonstrates the capabilities of the Plivo Browser SDK 2.1. Discover how to make phone calls directly from your browser to SIP addresses and PSTN phone numbers, all without any plugin installations!
 
----
-*To use the [live web phone demo](https://s3.amazonaws.com/plivobrowsersdk/v2/example.html)*
-
-*a. Sign up for a Plivo account here: https://console.plivo.com/accounts/register/*
-
-*b. Create a Plivo Endpoint here: https://console.plivo.com/voice/endpoints/add/*
-
-*c. Use this Plivo endpoint to login after deploying the application*
+![Plivo WebSDK Example](img/callscreen.png)
 
 ---
 
-### Automatically Deploy to Heroku
+🚀 **Quick Start with the Live Web Phone Demo**:
+1. [Sign up for a Plivo account](https://console.plivo.com/accounts/register/)
+2. [Create a Plivo Endpoint](https://console.plivo.com/voice/endpoints/add/)
+3. Deploy the application and log in using your newly created Plivo endpoint.
 
-- Create a [Plivo account](https://console.plivo.com/accounts/register/)
-- Create and **verify** a Heroku account if you don't have one then click the button below.
+---
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+### 🚢 Automatically Deploy to Heroku
+
+1. [Create a Plivo account](https://console.plivo.com/accounts/register/) if you haven't already.
+2. Set up a Heroku account, verify it if it's your first time, then hit the deploy button below!
+
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 ### Deploying the application on your local setup
 
