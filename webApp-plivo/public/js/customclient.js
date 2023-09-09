@@ -249,7 +249,7 @@ function onCallAnswered(callInfo){
 
 function onCallTerminated(evt, callInfo){
 	$('#callstatus').html('Call Ended');
-	console.info(`onCallTerminated ${evt}`);
+	console.info('onCallTerminated', evt);
 	clearStars();
 	$('#sendQualityFeedback').modal('show');
 	if (callInfo && callInfo.callUUID === plivoBrowserSdk.client.getCallUUID()) {
