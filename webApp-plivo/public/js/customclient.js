@@ -13,9 +13,11 @@ var defaultSettings = {
 	"codecs":[  "OPUS", "PCMU" ],
 	"enableIPV6":false,
 	"audioConstraints":{
-	"optional":[ {
-	  "googAutoGainControl":false
-	  }]
+	"optional":[ 
+		{"googAutoGainControl": true},
+		{"googEchoCancellation": true},
+		{"googNoiseSuppression": true}
+	]
 	},
 	"dscp":true,
 	"enableTracking":true,
