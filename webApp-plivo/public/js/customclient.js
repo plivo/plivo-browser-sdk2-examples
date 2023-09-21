@@ -14,16 +14,18 @@ var defaultSettings = {
 	"codecs": ["OPUS", "PCMU"],
 	"enableIPV6": false,
 	"audioConstraints": {
-		"optional": [{
-			"googAutoGainControl": false
-		}]
+		"optional": [
+			{"googAutoGainControl": true},
+			{"googEchoCancellation": true},
+			{"googHighpassFilter": true},
+			{"googNoiseSuppression": true}
+		]
 	},
 	"dscp": true,
 	"enableTracking": true,
 	"closeProtection": false,
 	"maxAverageBitrate": 48000,
 	"allowMultipleIncomingCalls": false,
-	registrationRefreshTimer: 100,
 };
 
 var iti;
@@ -82,6 +84,20 @@ function audioDeviceChange(e) {
 		} else {
 			customAlert(e.change, e.device.kind + " - " + e.device.label, 'warn');
 		}
+		plivoBrowserSdk.client.audio.availableDevices().then((e) => {
+			console.log(e)
+			const microphoneDevices = e.filter((e) => e.kind === 'audioinput')
+			const speakerDevices = e.filter((e) => e.kind === 'audiooutput')
+			console.log('speaker devices are ', speakerDevices)
+			console.log('microphone devices are ', microphoneDevices)
+
+			const activeMicrophone = plivoBrowserSdk.client.audio.microphoneDevices.get()
+			const activeSpeaker = plivoBrowserSdk.client.audio.speakerDevices.get()
+
+			console.log("active micrphone is ", activeMicrophone)
+			console.log("active speaker is ", activeSpeaker)
+
+		})
 	} else {
 		customAlert('info', 'There is an audioDeviceChange but mediaPermission is not allowed yet');
 	}
@@ -311,7 +327,7 @@ function onMediaPermission(evt) {
 	console.info('onMediaPermission', evt);
 	if (evt.error) {
 		customAlert('Media permission error', evt.error, 'warn');
-		if (client.browserDetails.browser == "chrome")
+		if (plivoBrowserSdk.client.browserDetails.browser == "chrome")
 			$('#mediaAccessBlock').modal('show');
 	}
 }
