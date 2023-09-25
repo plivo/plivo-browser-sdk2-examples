@@ -79,6 +79,15 @@ function audioDeviceChange(e){
 	console.log('audioDeviceChange',e);
 	if(e.change){
 		if(e.change == "added"){
+			if (e.device.kind === 'audioinput') {
+				setTimeout(() => {
+					plivoBrowserSdk.client.audio.microphoneDevices.set(e.device.deviceId)
+				}, 1000)
+			} else {
+				setTimeout(() => {
+					plivoBrowserSdk.client.audio.speakerDevices.set(e.device.deviceId)
+				}, 1000)
+			}
 			customAlert(e.change,e.device.kind +" - "+e.device.label,'info');		
 		}else{
 			customAlert(e.change,e.device.kind +" - "+e.device.label,'warn');		
@@ -176,6 +185,7 @@ function onLogin(){
 		let callerid = document.getElementById("callerid");
 		callerid.value = customCallerId;
 	}
+	plivoBrowserSdk.client.audio.speakerDevices.set('default')
 	$('#makecall').attr('class', 'btn btn-success btn-block flatbtn makecall');
 	customAlert( "connected" , "info", 'info');
 	$('.loader').hide();
