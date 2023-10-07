@@ -366,10 +366,11 @@ function onIncomingCall(callerName, extraHeaders, callInfo, caller_Name){
 	}
 }
 
-function onIncomingCallCanceled(callInfo){
+function onIncomingCallCanceled(error,callInfo){
+	console.log("onIncomingCallCanceled ",JSON.stringify(callInfo), error)
 	if (callInfo) console.info(JSON.stringify(callInfo));
-	let incomingCallNotification; 
-  	if (callInfo) {
+	let incomingCallNotification;
+	if (callInfo) {
 		incomingCallNotification = incomingNotifications.get(callInfo.callUUID);
 		incomingNotifications.delete(callInfo.callUUID);
 	} else if(incomingNotificationAlert) {
@@ -381,7 +382,8 @@ function onIncomingCallCanceled(callInfo){
 	if (incomingNotifications.size === 0 && !plivoBrowserSdk.client.getCallUUID()) {
 		callOff();
 	}
-}
+ }
+ 
 
 function callOff(reason){
 	$('.callinfo').hide();
