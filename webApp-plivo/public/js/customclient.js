@@ -245,6 +245,8 @@ function onCallAnswered(callInfo){
 		$('#callNum').html(callInfo.src);
 		$('#callDuration').html('00:00:00');
 		$('.callinfo').show();
+		let noiseReduction = document.getElementById('ongoingNoiseReduction')
+		document.getElementById('callanswerpad').appendChild(noiseReduction)
 		if (incomingNotifications.has(callInfo.callUUID)) {
 		const incomingCall = incomingNotifications.get(callInfo.callUUID)
 		if (incomingCall)
@@ -757,6 +759,7 @@ function showKeypadInfo() {
 	$('.calleridinfo').show();
 	$('#makecall').show();
 	$('.micsettingslink').show();
+	document.getElementById('noiseReduction').appendChild(document.getElementById('ongoingNoiseReduction'))
 	document.getElementById('showKeypad').value = 'showKeypad';
 	$('#showKeypad').html('SHOW KEYPAD');
 }
@@ -842,6 +845,8 @@ $('#makecall').click(function(e){
 	callStorage.startTime = date();
 	callStorage.num = to; 
 	$('.phone').hide();
+	let noiseReduction = document.getElementById('ongoingNoiseReduction')
+		document.getElementById('callanswerpad').appendChild(noiseReduction)
 	$('.AfterAnswer').show();
 	$('#boundType').html('Outgoing : '+to);
 	$('#callDuration').html('00:00:00');
@@ -1101,6 +1106,15 @@ function initPhone(username, password){
 	plivoBrowserSdk.client.setRingToneBack(false);
 	plivoBrowserSdk.client.setConnectTone(true); // Dial beep will play till we get alert response from network. 
 	plivoBrowserSdk.client.setDebug("ALL"); // Allowed values are OFF, ERROR, WARN, INFO, DEBUG, ALL
+	$("#toggleButton").change(function () {
+		if (this.checked) {
+			// Button is checked (toggled on)
+			plivoBrowserSdk.client.startNoiseReduction()
+		} else {
+			// Button is not checked (toggled off)
+			plivoBrowserSdk.client.stopNoiseReduction()
+		}
+	});
 
 	/** Handle browser issues
 	* Sound devices won't work in firefox
