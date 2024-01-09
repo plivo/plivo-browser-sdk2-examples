@@ -153,6 +153,11 @@ function onDtmfReceived(dtmfData) {
 	console.log("Received dtmf is ", dtmfData.tone)
 }
 
+function remoteAudioStatus(hasAudio) {
+	console.log("Received remoteAudioStatus is ", hasAudio)
+}
+
+
 function onReady() {
 	$('#phonestatus').html('trying to login...');
 	console.info('Ready');
@@ -1213,6 +1218,7 @@ function initPhone(username, password) {
 	plivoBrowserSdk.client.on('onMediaPermission', onMediaPermission);
 	plivoBrowserSdk.client.on('mediaMetrics', mediaMetrics);
 	plivoBrowserSdk.client.on('onDtmfReceived', onDtmfReceived);
+	plivoBrowserSdk.client.on('remoteAudioStatus', remoteAudioStatus);
 	plivoBrowserSdk.client.on('audioDeviceChange', audioDeviceChange);
 	plivoBrowserSdk.client.on('onPermissionDenied', onPermissionDenied);
 	plivoBrowserSdk.client.on('onConnectionChange', onConnectionChange); // To show connection change events
