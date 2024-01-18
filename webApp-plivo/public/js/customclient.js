@@ -166,6 +166,12 @@ function mediaMetrics(obj){
 	}
 }
 
+
+function remoteAudioStatus(hasAudio) {
+	console.log("Received remoteAudioStatus is ", hasAudio)
+	customAlert( `remoteAudioStatus: ${hasAudio}`, "info", 'info');
+}
+
 function onReady(){
 	$('#phonestatus').html('trying to login...');
 	console.info('Ready');
@@ -1094,6 +1100,7 @@ function initPhone(username, password){
 	plivoBrowserSdk.client.on('onCalling', onCalling);
 	plivoBrowserSdk.client.on('onIncomingCall', onIncomingCall);
 	plivoBrowserSdk.client.on('onMediaPermission', onMediaPermission);
+	plivoBrowserSdk.client.on('remoteAudioStatus', remoteAudioStatus);
 	plivoBrowserSdk.client.on('mediaMetrics',mediaMetrics);
 	plivoBrowserSdk.client.on('audioDeviceChange',audioDeviceChange);
 	plivoBrowserSdk.client.on('onPermissionDenied', onPermissionDenied); 
