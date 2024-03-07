@@ -382,6 +382,24 @@ function onIncomingCallCanceled(callInfo){
 	}
 	if (incomingNotifications.size === 0 && !plivoBrowserSdk.client.getCallUUID()) {
 		callOff();
+	}	
+}
+
+function onIncomingCallIgnored(callInfo){
+	console.info("onIncomingCallIgnored",callInfo);
+	if (callInfo) console.info(JSON.stringify(callInfo));
+	let incomingCallNotification; 
+  	if (callInfo) {
+		incomingCallNotification = incomingNotifications.get(callInfo.callUUID);
+		incomingNotifications.delete(callInfo.callUUID);
+	} else if(incomingNotificationAlert) {
+		incomingCallNotification = incomingNotificationAlert;
+	}
+	if (incomingCallNotification) {
+		incomingCallNotification.hide();
+	}
+	if (incomingNotifications.size === 0 && !plivoBrowserSdk.client.getCallUUID()) {
+		callOff();
 	}
 }
 
@@ -1086,7 +1104,7 @@ function initPhone(username, password){
 	plivoBrowserSdk.client.on('onLoginFailed', onLoginFailed);
 	plivoBrowserSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
 	plivoBrowserSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
-    plivoBrowserSdk.client.on('onIncomingCallIgnored', onIncomingCallCanceled);
+    plivoBrowserSdk.client.on('onIncomingCallIgnored', onIncomingCallIgnored);
 	plivoBrowserSdk.client.on('onCallFailed', onCallFailed);
 	plivoBrowserSdk.client.on('onMediaConnected', onMediaConnected);
 	plivoBrowserSdk.client.on('onCallAnswered', onCallAnswered);
