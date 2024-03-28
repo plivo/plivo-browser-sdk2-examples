@@ -206,6 +206,13 @@ function onLoginFailed(reason){
 	$('.loader').hide()	
 }
 
+function onNoiseReductionReady()
+{
+	console.log("Noise Reduction is ready to be started")
+	// You can start the Noise Reduction process after this event.
+	// plivoBrowserSdk.client.startNoiseReduction();
+}
+
 function performLogout(){
 	document.body.style.backgroundImage = 'url(img/background.svg)';
 	$('#loginContainer').show();
@@ -1121,7 +1128,8 @@ function initPhone(username, password){
 	plivoBrowserSdk.client.on('remoteAudioStatus', remoteAudioStatus);
 	plivoBrowserSdk.client.on('mediaMetrics',mediaMetrics);
 	plivoBrowserSdk.client.on('audioDeviceChange',audioDeviceChange);
-	plivoBrowserSdk.client.on('onPermissionDenied', onPermissionDenied); 
+	plivoBrowserSdk.client.on('onPermissionDenied', onPermissionDenied);
+	plivoBrowserSdk.client.on('onNoiseReductionReady', onNoiseReductionReady); 
 	plivoBrowserSdk.client.on('onConnectionChange', onConnectionChange); // To show connection change events
 	plivoBrowserSdk.client.on('volume', volume);
 	//onSessionExpired
