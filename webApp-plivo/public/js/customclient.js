@@ -218,16 +218,17 @@ function onLogin(uname, time) {
 	customAlert( "connected" , "info", 'info');
 	$('.loader').hide();
 	if (postRegistrationAction.action !== '') {
+		console.log('answering the call')
 		//inform the parent tab/tabs to  disconnect itself
-		if (postRegistrationAction.action === 'answer') {
-			answerIncomingCall(postRegistrationAction.data.callerName, postRegistrationAction.data.extraHeaders, postRegistrationAction.data.callInfo)
-		} else if (postRegistrationAction.action === 'reject') {
-			rejectIncomingCall(postRegistrationAction.data.callerName, postRegistrationAction.data.extraHeaders, postRegistrationAction.data.callInfo)
-		} else {
-			ignoreIncomingCall(postRegistrationAction.data.callerName, postRegistrationAction.data.extraHeaders, postRegistrationAction.data.callInfo)
-		}
-		postRegistrationAction.action = '';
-		postRegistrationAction.data = {};
+		// if (postRegistrationAction.action === 'answer') {
+		// 	answerIncomingCall(postRegistrationAction.data.callerName, postRegistrationAction.data.extraHeaders, postRegistrationAction.data.callInfo)
+		// } else if (postRegistrationAction.action === 'reject') {
+		// 	rejectIncomingCall(postRegistrationAction.data.callerName, postRegistrationAction.data.extraHeaders, postRegistrationAction.data.callInfo)
+		// } else {
+		// 	ignoreIncomingCall(postRegistrationAction.data.callerName, postRegistrationAction.data.extraHeaders, postRegistrationAction.data.callInfo)
+		// }
+		// postRegistrationAction.action = '';
+		// postRegistrationAction.data = {};
 	}
 }
 
@@ -362,6 +363,14 @@ function onMediaPermission(evt){
 
 function onIncomingCall(callerName, extraHeaders, callInfo, caller_Name){
 	console.info('onIncomingCall : ', callerName, extraHeaders, callInfo,caller_Name);
+	broadcast.postMessage({
+		event: 'onIncomingCall',
+		tabId: uniqueId,
+		direction: 'incoming',
+		callerName, 
+		extraHeaders, 
+		callInfo
+	})
 	let prevIncoming = isIncomingCallPresent;
 	isIncomingCallPresent = true;
 	callStorage.startTime = date();
@@ -840,7 +849,6 @@ function showKeypadInfo() {
 	$('.calleridinfo').show();
 	$('#makecall').show();
 	$('.micsettingslink').show();
-	document.getElementById('noiseReduction').appendChild(document.getElementById('ongoingNoiseReduction'))
 	document.getElementById('showKeypad').value = 'showKeypad';
 	$('#showKeypad').html('SHOW KEYPAD');
 }
@@ -947,8 +955,6 @@ $('#makecall').click(function(e){
 	callStorage.startTime = date();
 	callStorage.num = to; 
 	$('.phone').hide();
-	let noiseReduction = document.getElementById('ongoingNoiseReduction')
-		document.getElementById('callanswerpad').appendChild(noiseReduction)
 	$('.AfterAnswer').show();
 	$('#boundType').html('Outgoing : '+to);
 	$('#callDuration').html('00:00:00');
@@ -1209,16 +1215,65 @@ function initPhone(username, password) {
 	plivoBrowserSdk.client.on('onPermissionDenied', onPermissionDenied);
 	plivoBrowserSdk.client.on('onNoiseReductionReady', onNoiseReductionReady); 
 	plivoBrowserSdk.client.on('onConnectionChange', onConnectionChange); // To show connection change events
-	plivoBrowserSdk.client.on('onNewCall', onNewCall); // To show connection change events
 
 	broadcast.onmessage = (event) => {
 		let broadcastData = event.data;
 		console.log('broadcast event received ', event)
-		if (broadcastData && broadcastData.event === 'onNewCall' && broadcastData.tabId !== uniqueId && !plivoBrowserSdk.client.callSession) {
+		if (broadcastData && broadcastData.event === 'onIncomingCall' && broadcastData.tabId !== uniqueId && !plivoBrowserSdk.client.callSession) {
 			//tab is not the primary tab, show incoming call notification
-			plivoBrowserSdk.client.phone._events.newRTCSession(broadcastData.data);
+			$('#callstatus').html('Ringing...');
+			const incomingNotification = Notify.success(`Incoming Call: ${broadcastData.callerName}`)
+				.button('Answer', () => {
+					//if the SDK is not registered in the tab, register it first and then take appropriate action and broadcast to other tabs
+					if (!plivoBrowserSdk.client.isRegistered()) {
+						broadcast.postMessage({
+							event: 'disconnect',
+							tabId: uniqueId,
+						})
+						postRegistrationAction.action = 'answer'
+						postRegistrationAction.data = {
+							callerName: broadcastData.callerName,
+							extraHeaders: broadcastData.extraHeaders,
+							callInfo: broadcastData.callInfo
+						}
+					}
+				})
+				.button('Reject', () => {
+					if (!plivoBrowserSdk.client.isRegistered()) {
+						broadcast.postMessage({
+							event: 'disconnect',
+							tabId: uniqueId,
+						})
+						postRegistrationAction.action = 'reject'
+						postRegistrationAction.data = {
+							callerName: broadcastData.callerName,
+							extraHeaders: broadcastData.extraHeaders,
+							callInfo: broadcastData.callInfo
+						}
+					}
+				})
+				.button('Ignore', () => {
+					if (!plivoBrowserSdk.client.isRegistered()) {
+						broadcast.postMessage({
+							event: 'disconnect',
+							tabId: uniqueId,
+						})
+						postRegistrationAction.action = 'ignore'
+						postRegistrationAction.data = {
+							callerName: broadcastData.callerName,
+							extraHeaders: broadcastData.extraHeaders,
+							callInfo: broadcastData.callInfo
+						}
+					}
+				});
+			if (broadcastData.callInfo) {
+				console.info(JSON.stringify(broadcastData.callInfo));
+				incomingNotifications.set(broadcastData.callInfo.callUUID, incomingNotification);
+			} else {
+				incomingNotificationAlert = incomingNotification;
+			}
 		}
-		if (broadcastData && broadcastData.event === 'disconnect' && plivoBrowserSdk.client.isRegistered() && !plivoBrowserSdk.client.callSession) {
+		if (broadcastData && broadcastData.event === 'disconnect' && plivoBrowserSdk.client.isRegistered() && plivoBrowserSdk.client.callSession) {
 			plivoBrowserSdk.client.logout()
 			// inform the other tab that the logout is completed, it can start the registration process
 			broadcast.postMessage({
@@ -1339,6 +1394,9 @@ function removeData(key) {
 
 function isPrimaryTabPresent() {
 	let storedData = getData()
+	if (storedData === '') {
+		return Promise.resolve(true)
+	}
 	storedData = JSON.parse(storedData)
 	let primaryTabAvaialble = false
 	return new Promise((resolve, reject) => {
