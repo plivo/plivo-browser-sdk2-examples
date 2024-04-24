@@ -6,6 +6,11 @@ const incomingNotifications = new Map();
 var speakerSourceNode;
 var ringtoneSourceNode;
 let incomingNotificationAlert = null;
+var logoutAfterHangup = false;
+var postRegistrationAction = {
+	action: '',
+	data: {}
+}
 
 var defaultSettings = {
 	"debug":"INFO",
@@ -19,14 +24,15 @@ var defaultSettings = {
 			{ "googNoiseSuppression": true }
 		]
 	},
-	"dscp":true,
-	"enableTracking":true,
-	"closeProtection":false,
-	"maxAverageBitrate":48000,
-	"allowMultipleIncomingCalls":false,
-	"preDetectOwa": false,
-	"dtmfOptions":{sendDtmfType:["outband","inband"]} 
-  };
+	"dscp": true,
+	"enableTracking": true,
+	"closeProtection": false,
+	"maxAverageBitrate": 48000,
+	"allowMultipleIncomingCalls": false,
+	registrationRefreshTimer: 100,
+	reconnectOnHeartbeatFail: true,
+	usePlivoStunServer: true
+};
 
 var iti;
 var incomingCallInfo;
@@ -121,6 +127,16 @@ function onConnectionChange(obj){
 	}
 }
 
+function onNewCall(evt) {
+	evt.data.ignoreBroadcast = true;
+	broadcast.postMessage({
+		event: 'onNewCall',
+		tabId: uniqueId,
+		direction: 'incoming',
+		data: JSON.stringify(evt.data)
+	})
+}
+
 function onWebrtcNotSupported() {
 	console.warn('no webRTC support');
 	alert('Webrtc is not supported in this broswer, Please use latest version of chrome/firefox/opera/IE Edge');
@@ -177,7 +193,13 @@ function onReady(){
 	console.info('Ready');
 }
 
-function onLogin(){
+function onLogin(uname, time) {
+	// window.onerror = (message) => {
+	// 	console.log('error overwritten by ', message)
+	// };
+	console.log("onLogin called");
+	console.log(uname, time)
+	logoutAfterHangup = false;
 	$('#loginContainer').hide();
 	$('#callContainer').show();
 	document.body.style.backgroundImage = 'none';
@@ -195,6 +217,18 @@ function onLogin(){
 	$('#makecall').attr('class', 'btn btn-success btn-block flatbtn makecall');
 	customAlert( "connected" , "info", 'info');
 	$('.loader').hide();
+	if (postRegistrationAction.action !== '') {
+		//inform the parent tab/tabs to  disconnect itself
+		if (postRegistrationAction.action === 'answer') {
+			answerIncomingCall(postRegistrationAction.data.callerName, postRegistrationAction.data.extraHeaders, postRegistrationAction.data.callInfo)
+		} else if (postRegistrationAction.action === 'reject') {
+			rejectIncomingCall(postRegistrationAction.data.callerName, postRegistrationAction.data.extraHeaders, postRegistrationAction.data.callInfo)
+		} else {
+			ignoreIncomingCall(postRegistrationAction.data.callerName, postRegistrationAction.data.extraHeaders, postRegistrationAction.data.callInfo)
+		}
+		postRegistrationAction.action = '';
+		postRegistrationAction.data = {};
+	}
 }
 
 function onLoginFailed(reason){
@@ -344,34 +378,50 @@ function onIncomingCall(callerName, extraHeaders, callInfo, caller_Name){
 		} 
 	} else {
 		$('#callstatus').html('Ringing...');
-		const incomingNotification = Notify.success(`Incoming Call: ${caller_Name}`)
-		.button('Answer', () => {
-			isIncomingCallPresent = false;
-			console.info('Call accept clicked');
-			if (callInfo) {
-			plivoBrowserSdk.client.answer(callInfo.callUUID);
-			} else {
-			plivoBrowserSdk.client.answer();
-			}  	
-  	})
-		.button('Reject', () => {
-			isIncomingCallPresent = false;
-			console.info('callReject');
-			if (callInfo) {
-			plivoBrowserSdk.client.reject(callInfo.callUUID);
-			} else {
-			plivoBrowserSdk.client.reject();
-			}  
-		})
-		.button('Ignore', () => {
-			isIncomingCallPresent = false;
-			console.info('call Ignored');
-			if (callInfo) {
-			plivoBrowserSdk.client.ignore(callInfo.callUUID);
-			} else {
-			plivoBrowserSdk.client.ignore();
-			}
-		});
+		const incomingNotification = Notify.success(`Incoming Call: ${callerName}`)
+			.button('Answer', () => {
+				//if the SDK is not registered in the tab, register it first and then take appropriate action and broadcast to other tabs
+				if (!plivoBrowserSdk.client.isRegistered()) {
+					broadcast.postMessage({
+						event: 'disconnect',
+						tabId: uniqueId,
+					})
+					postRegistrationAction.action = 'answer'
+					postRegistrationAction.data = {
+						callerName,
+						extraHeaders,
+						callInfo
+					}
+				}
+			})
+			.button('Reject', () => {
+				if (!plivoBrowserSdk.client.isRegistered()) {
+					broadcast.postMessage({
+						event: 'disconnect',
+						tabId: uniqueId,
+					})
+					postRegistrationAction.action = 'reject'
+					postRegistrationAction.data = {
+						callerName,
+						extraHeaders,
+						callInfo
+					}
+				}
+			})
+			.button('Ignore', () => {
+				if (!plivoBrowserSdk.client.isRegistered()) {
+					broadcast.postMessage({
+						event: 'disconnect',
+						tabId: uniqueId,
+					})
+					postRegistrationAction.action = 'ignore'
+					postRegistrationAction.data = {
+						callerName,
+						extraHeaders,
+						callInfo
+					}
+				}
+			});
 		if (callInfo) {
 			console.info(JSON.stringify(callInfo));
 			incomingNotifications.set(callInfo.callUUID, incomingNotification);
@@ -814,10 +864,17 @@ $('.hangup').click(function(){
 $('.answerIncoming').click(function(){
 	isIncomingCallPresent = false;
 	console.info('Call accept clicked');
-	if (incomingCallInfo) {
-	plivoBrowserSdk.client.answer(incomingCallInfo.callUUID);
-	} else {
-	plivoBrowserSdk.client.answer();
+	if (!plivoBrowserSdk.client.isRegistered()) {
+		broadcast.postMessage({
+			event: 'disconnect',
+			tabId: uniqueId,
+		})
+		postRegistrationAction.action = 'answer'
+		postRegistrationAction.data = {
+			callerName: '',
+			extraHeaders: {},
+			incomingCallInfo
+		}
 	}
 	$('.incomingCallDefault').hide();
 	$('.callinfo').show();
@@ -826,10 +883,17 @@ $('.answerIncoming').click(function(){
 $('.rejectIncoming').click(function(){
 	isIncomingCallPresent = false;
 	console.info('Call rejected');
-	if (incomingCallInfo) {
-		plivoBrowserSdk.client.reject(incomingCallInfo.callUUID);
-	} else {
-		plivoBrowserSdk.client.reject();
+	if (!plivoBrowserSdk.client.isRegistered()) {
+		broadcast.postMessage({
+			event: 'disconnect',
+			tabId: uniqueId,
+		})
+		postRegistrationAction.action = 'reject'
+		postRegistrationAction.data = {
+			callerName: '',
+			extraHeaders: {},
+			incomingCallInfo
+		}
 	}
 	$('.incomingCallDefault').hide();
 });
@@ -837,10 +901,17 @@ $('.rejectIncoming').click(function(){
 $('.ignoreIncoming').click(function(){
 	isIncomingCallPresent = false;
 	console.info('Call ignored');
-	if (incomingCallInfo) {
-		plivoBrowserSdk.client.ignore(incomingCallInfo.callUUID);
-	} else {
-		plivoBrowserSdk.client.ignore();
+	if (!plivoBrowserSdk.client.isRegistered()) {
+		broadcast.postMessage({
+			event: 'disconnect',
+			tabId: uniqueId,
+		})
+		postRegistrationAction.action = 'answer'
+		postRegistrationAction.data = {
+			callerName: '',
+			extraHeaders: {},
+			incomingCallInfo
+		}
 	}
 	$('.incomingCallDefault').hide();
 });
@@ -1107,7 +1178,14 @@ function starFeedback(){
 
 var plivoBrowserSdk; // this will be retrived from settings in UI
 
-function initPhone(username, password){
+var visiblityState;
+var uniqueId;
+const broadcast = new BroadcastChannel('plivo');
+
+
+function initPhone(username, password) {
+	uniqueId = Math.floor(Math.random() * (1000 - 0 + 1)) + 0;
+	console.log('random id generated is ', uniqueId)
 	var options = refreshSettings();
 	plivoBrowserSdk = new window.Plivo(options);
 
@@ -1131,6 +1209,62 @@ function initPhone(username, password){
 	plivoBrowserSdk.client.on('onPermissionDenied', onPermissionDenied);
 	plivoBrowserSdk.client.on('onNoiseReductionReady', onNoiseReductionReady); 
 	plivoBrowserSdk.client.on('onConnectionChange', onConnectionChange); // To show connection change events
+	plivoBrowserSdk.client.on('onNewCall', onNewCall); // To show connection change events
+
+	broadcast.onmessage = (event) => {
+		let broadcastData = event.data;
+		console.log('broadcast event received ', event)
+		if (broadcastData && broadcastData.event === 'onNewCall' && broadcastData.tabId !== uniqueId && !plivoBrowserSdk.client.callSession) {
+			//tab is not the primary tab, show incoming call notification
+			plivoBrowserSdk.client.phone._events.newRTCSession(broadcastData.data);
+		}
+		if (broadcastData && broadcastData.event === 'disconnect' && plivoBrowserSdk.client.isRegistered() && !plivoBrowserSdk.client.callSession) {
+			plivoBrowserSdk.client.logout()
+			// inform the other tab that the logout is completed, it can start the registration process
+			broadcast.postMessage({
+				event: 'performRegistration',
+				tabId: broadcastData.tabId
+			})
+		}
+		if (broadcastData && broadcastData.event === 'performRegistration' && broadcastData.tabId === uniqueId) {
+			plivoBrowserSdk.client.phone._registrator.register()
+		}
+	}
+
+	plivoBrowserSdk.client.on('onWebsocketConnected', () => {
+		// websocket is connected. Take the decision to make primary and secondary tabs
+		isPrimaryTabPresent().then((value) => {
+			if (value) {
+				setData(uniqueId, 'secondary')
+			} else {
+				plivoBrowserSdk.client.phone._registrator.register()
+				setData(uniqueId, 'primary')
+			}
+		})
+		
+	}); // To show connection change events
+	plivoBrowserSdk.client.on('onNoiseReductionReady', () => {
+		console.log('starting noise reduction')
+		plivoBrowserSdk.client.startNoiseReduction();
+	});
+	 
+	window.addEventListener('storage', (data) => {
+		isPrimaryTabPresent().then((value) => {
+			if (!value) {
+				// make any tab as primary tab
+				console.log('set any random tab as primary and register in that tab')
+				
+				if (plivoBrowserSdk.client && plivoBrowserSdk.client.phone && Number(Object.keys(storedData)[0]) === uniqueId) {
+					let storedData = getData()
+					storedData = JSON.parse(storedData)
+					storedData[Object.keys(storedData)[0]] = 'primary'
+					window.localStorage.setItem('tabIds', JSON.stringify(storedData))
+					plivoBrowserSdk.client.phone._registrator.register()
+				}
+			}
+		})
+	})
+	// To show connection change events
 	plivoBrowserSdk.client.on('volume', volume);
 	//onSessionExpired
 
@@ -1155,4 +1289,96 @@ function initPhone(username, password){
 	checkBrowserComplaince(plivoBrowserSdk.client);	
 	starFeedback();
 	console.log('initPhone ready!')
+	window.onload = () => {
+		console.log('tab loaded')
+		setData(uniqueId, visiblityState)
+	}
+	window.onunload = () => {
+		console.log('deleting the tab entry')
+		removeData(uniqueId)
+		broadcast.close()
+	}
+}
+
+function setData(randomId, state) {
+	const storageData = getData()
+	if (state === undefined) {
+		state = 'not_defined'
+	}
+	
+	if (storageData === '') {
+		console.log('setting item', randomId , state)
+		let data = {}
+		data[randomId] = state
+		window.localStorage.setItem('tabIds', JSON.stringify(data));
+	} 
+	else {
+		const parsedStoredData = JSON.parse(storageData)
+		parsedStoredData[randomId] = state
+		window.localStorage.setItem('tabIds', JSON.stringify(parsedStoredData))
+	};
+}
+
+function getData() {
+	return window.localStorage.getItem('tabIds') ?? '';
+}
+
+function removeData(key) {
+	let storedData = getData()
+	if (storedData !== '') {
+		storedData = JSON.parse(storedData)
+		if (storedData.hasOwnProperty(key)) {
+			delete storedData[key]
+		}
+		window.localStorage.setItem('tabIds', JSON.stringify(storedData))
+	}
+	window.removeEventListener('storage', () => {
+		console.log('storage listener removed')
+	})
+}
+
+function isPrimaryTabPresent() {
+	let storedData = getData()
+	storedData = JSON.parse(storedData)
+	let primaryTabAvaialble = false
+	return new Promise((resolve, reject) => {
+		let storedValues = Object.values(storedData).forEach((data) => {
+			if (data === 'primary') {
+				primaryTabAvaialble = true;
+			}
+		})
+		resolve(primaryTabAvaialble)
+	})
+}
+
+function answerIncomingCall(callerName, extraHeaders, callInfo) {
+	isIncomingCallPresent = false;
+	console.info('Call accept clicked');
+	if (callInfo) {
+		plivoBrowserSdk.client.answer(callInfo.callUUID);
+	} else {
+		plivoBrowserSdk.client.answer();
+	}
+}
+
+function rejectIncomingCall(callerName, extraHeaders, callInfo) {
+
+	isIncomingCallPresent = false;
+	console.info('callReject');
+	if (callInfo) {
+		plivoBrowserSdk.client.reject(callInfo.callUUID);		
+	} else {
+		plivoBrowserSdk.client.reject();
+	}
+}
+
+function ignoreIncomingCall(callerName, extraHeaders, callInfo) {
+
+	isIncomingCallPresent = false;
+	console.info('call Ignored');
+	if (callInfo) {
+		plivoBrowserSdk.client.ignore(callInfo.callUUID);
+	} else {
+		plivoBrowserSdk.client.ignore();
+	}
 }
