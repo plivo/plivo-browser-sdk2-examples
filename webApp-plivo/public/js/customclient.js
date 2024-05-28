@@ -24,7 +24,7 @@ var defaultSettings = {
 	"closeProtection":false,
 	"maxAverageBitrate":48000,
 	"allowMultipleIncomingCalls":false,
-	"preDetectOwa": false,
+	"enableNoiseReduction":true,
 	"dtmfOptions":{sendDtmfType:["outband","inband"]} 
   };
 
