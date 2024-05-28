@@ -12,16 +12,19 @@ var defaultSettings = {
 	"permOnClick":false,
 	"codecs":[  "OPUS", "PCMU" ],
 	"enableIPV6":false,
-	"audioConstraints":{
-	"optional":[ {
-	  "googAutoGainControl":false
-	  }]
+	"audioConstraints": {
+		"optional": [
+			{ "googAutoGainControl": true },
+			{ "googEchoCancellation": true },
+			{ "googNoiseSuppression": true }
+		]
 	},
 	"dscp":true,
 	"enableTracking":true,
 	"closeProtection":false,
 	"maxAverageBitrate":48000,
 	"allowMultipleIncomingCalls":false,
+	"preDetectOwa": false,
 	"dtmfOptions":{sendDtmfType:["outband","inband"]} 
   };
 
@@ -76,6 +79,15 @@ function audioDeviceChange(e){
 	console.log('audioDeviceChange',e);
 	if(e.change){
 		if(e.change == "added"){
+			if (e.device.kind === 'audioinput') {
+				setTimeout(() => {
+					plivoBrowserSdk.client.audio.microphoneDevices.set(e.device.deviceId)
+				}, 1000)
+			} else {
+				setTimeout(() => {
+					plivoBrowserSdk.client.audio.speakerDevices.set(e.device.deviceId)
+				}, 1000)
+			}
 			customAlert(e.change,e.device.kind +" - "+e.device.label,'info');		
 		}else{
 			customAlert(e.change,e.device.kind +" - "+e.device.label,'warn');		
@@ -154,6 +166,12 @@ function mediaMetrics(obj){
 	}
 }
 
+
+function remoteAudioStatus(hasAudio) {
+	console.log("Received remoteAudioStatus is ", hasAudio)
+	customAlert( `remoteAudioStatus: ${hasAudio}`, "info", 'info');
+}
+
 function onReady(){
 	$('#phonestatus').html('trying to login...');
 	console.info('Ready');
@@ -173,6 +191,7 @@ function onLogin(){
 		let callerid = document.getElementById("callerid");
 		callerid.value = customCallerId;
 	}
+	plivoBrowserSdk.client.audio.speakerDevices.set('default')
 	$('#makecall').attr('class', 'btn btn-success btn-block flatbtn makecall');
 	customAlert( "connected" , "info", 'info');
 	$('.loader').hide();
@@ -185,6 +204,13 @@ function onLoginFailed(reason){
 	}
 	customAlert('Login failure :',reason, 'warn');
 	$('.loader').hide()	
+}
+
+function onNoiseReductionReady()
+{
+	console.log("Noise Reduction is ready to be started")
+	// You can start the Noise Reduction process after this event.
+	// plivoBrowserSdk.client.startNoiseReduction();
 }
 
 function performLogout(){
@@ -232,6 +258,8 @@ function onCallAnswered(callInfo){
 		$('#callNum').html(callInfo.src);
 		$('#callDuration').html('00:00:00');
 		$('.callinfo').show();
+		let noiseReduction = document.getElementById('ongoingNoiseReduction')
+		document.getElementById('callanswerpad').appendChild(noiseReduction)
 		if (incomingNotifications.has(callInfo.callUUID)) {
 		const incomingCall = incomingNotifications.get(callInfo.callUUID)
 		if (incomingCall)
@@ -249,7 +277,7 @@ function onCallAnswered(callInfo){
 
 function onCallTerminated(evt, callInfo){
 	$('#callstatus').html('Call Ended');
-	console.info(`onCallTerminated ${evt}`);
+	console.info('onCallTerminated', evt);
 	clearStars();
 	$('#sendQualityFeedback').modal('show');
 	if (callInfo && callInfo.callUUID === plivoBrowserSdk.client.getCallUUID()) {
@@ -354,6 +382,24 @@ function onIncomingCall(callerName, extraHeaders, callInfo, caller_Name){
 }
 
 function onIncomingCallCanceled(callInfo){
+	if (callInfo) console.info(JSON.stringify(callInfo));
+	let incomingCallNotification; 
+  	if (callInfo) {
+		incomingCallNotification = incomingNotifications.get(callInfo.callUUID);
+		incomingNotifications.delete(callInfo.callUUID);
+	} else if(incomingNotificationAlert) {
+		incomingCallNotification = incomingNotificationAlert;
+	}
+	if (incomingCallNotification) {
+		incomingCallNotification.hide();
+	}
+	if (incomingNotifications.size === 0 && !plivoBrowserSdk.client.getCallUUID()) {
+		callOff();
+	}	
+}
+
+function onIncomingCallIgnored(callInfo){
+	console.info("onIncomingCallIgnored",callInfo);
 	if (callInfo) console.info(JSON.stringify(callInfo));
 	let incomingCallNotification; 
   	if (callInfo) {
@@ -744,6 +790,7 @@ function showKeypadInfo() {
 	$('.calleridinfo').show();
 	$('#makecall').show();
 	$('.micsettingslink').show();
+	document.getElementById('noiseReduction').appendChild(document.getElementById('ongoingNoiseReduction'))
 	document.getElementById('showKeypad').value = 'showKeypad';
 	$('#showKeypad').html('SHOW KEYPAD');
 }
@@ -829,6 +876,8 @@ $('#makecall').click(function(e){
 	callStorage.startTime = date();
 	callStorage.num = to; 
 	$('.phone').hide();
+	let noiseReduction = document.getElementById('ongoingNoiseReduction')
+		document.getElementById('callanswerpad').appendChild(noiseReduction)
 	$('.AfterAnswer').show();
 	$('#boundType').html('Outgoing : '+to);
 	$('#callDuration').html('00:00:00');
@@ -1068,7 +1117,7 @@ function initPhone(username, password){
 	plivoBrowserSdk.client.on('onLoginFailed', onLoginFailed);
 	plivoBrowserSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
 	plivoBrowserSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
-    plivoBrowserSdk.client.on('onIncomingCallIgnored', onIncomingCallCanceled);
+    plivoBrowserSdk.client.on('onIncomingCallIgnored', onIncomingCallIgnored);
 	plivoBrowserSdk.client.on('onCallFailed', onCallFailed);
 	plivoBrowserSdk.client.on('onMediaConnected', onMediaConnected);
 	plivoBrowserSdk.client.on('onCallAnswered', onCallAnswered);
@@ -1076,9 +1125,11 @@ function initPhone(username, password){
 	plivoBrowserSdk.client.on('onCalling', onCalling);
 	plivoBrowserSdk.client.on('onIncomingCall', onIncomingCall);
 	plivoBrowserSdk.client.on('onMediaPermission', onMediaPermission);
+	plivoBrowserSdk.client.on('remoteAudioStatus', remoteAudioStatus);
 	plivoBrowserSdk.client.on('mediaMetrics',mediaMetrics);
 	plivoBrowserSdk.client.on('audioDeviceChange',audioDeviceChange);
-	plivoBrowserSdk.client.on('onPermissionDenied', onPermissionDenied); 
+	plivoBrowserSdk.client.on('onPermissionDenied', onPermissionDenied);
+	plivoBrowserSdk.client.on('onNoiseReductionReady', onNoiseReductionReady); 
 	plivoBrowserSdk.client.on('onConnectionChange', onConnectionChange); // To show connection change events
 	plivoBrowserSdk.client.on('volume', volume);
 	//onSessionExpired
@@ -1088,6 +1139,15 @@ function initPhone(username, password){
 	plivoBrowserSdk.client.setRingToneBack(false);
 	plivoBrowserSdk.client.setConnectTone(true); // Dial beep will play till we get alert response from network. 
 	plivoBrowserSdk.client.setDebug("ALL"); // Allowed values are OFF, ERROR, WARN, INFO, DEBUG, ALL
+	$("#toggleButton").change(function () {
+		if (this.checked) {
+			// Button is checked (toggled on)
+			plivoBrowserSdk.client.startNoiseReduction()
+		} else {
+			// Button is not checked (toggled off)
+			plivoBrowserSdk.client.stopNoiseReduction()
+		}
+	});
 
 	/** Handle browser issues
 	* Sound devices won't work in firefox
