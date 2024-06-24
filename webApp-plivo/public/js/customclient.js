@@ -387,6 +387,7 @@ function onIncomingCall(callerName, extraHeaders, callInfo, caller_Name){
 }
 
 function onIncomingCallCanceled(callInfo){
+	console.info('**Incoming Call Canceled:** User canceled the incoming call.');
 	if (callInfo) console.info(JSON.stringify(callInfo));
 	let incomingCallNotification; 
   	if (callInfo) {
