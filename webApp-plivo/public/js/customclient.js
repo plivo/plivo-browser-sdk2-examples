@@ -103,7 +103,7 @@ function onPermissionDenied(cause,callinfo){
 }
 
 function onConnectionChange(obj){
-	console.log('onConnectionChange: ', obj);
+	console.log('onConnectionChange received: ', obj);
 	if(obj.state === "connected" ){
 		console.log( obj.state , "info", 'info');
 	}else if(obj.state === "disconnected"){
@@ -127,6 +127,7 @@ function onWebrtcNotSupported() {
 }
 
 function mediaMetrics(obj){
+	console.log("WebRTC Media Metrics Received")
 	/**
 	* Set a trigger for Quality FB popup when there is an warning druing call using sessionStorage
 	* During `onCallTerminated` event check for `triggerFB` flag
@@ -170,6 +171,10 @@ function mediaMetrics(obj){
 function remoteAudioStatus(hasAudio) {
 	console.log("Received remoteAudioStatus is ", hasAudio)
 	customAlert( `remoteAudioStatus: ${hasAudio}`, "info", 'info');
+}
+
+function handleOnDtmfReceived(data) {
+	console.info('DTMF Received: Digit:', data);
 }
 
 function onReady(){
@@ -1131,6 +1136,7 @@ function initPhone(username, password){
 	plivoBrowserSdk.client.on('onPermissionDenied', onPermissionDenied);
 	plivoBrowserSdk.client.on('onNoiseReductionReady', onNoiseReductionReady); 
 	plivoBrowserSdk.client.on('onConnectionChange', onConnectionChange); // To show connection change events
+	plivoBrowserSdk.client.on('onDtmfReceived', handleOnDtmfReceived);
 	plivoBrowserSdk.client.on('volume', volume);
 	//onSessionExpired
 
