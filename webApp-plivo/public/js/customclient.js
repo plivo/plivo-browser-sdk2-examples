@@ -174,7 +174,7 @@ function remoteAudioStatus(hasAudio) {
 }
 
 function handleOnDtmfReceived(data) {
-	console.info('DTMF Received: Digit:', data);
+	console.log('**DTMF Received:** Digit:', data);
 }
 
 function onReady(){
@@ -323,7 +323,7 @@ function onCallFailed(reason, callInfo){
 }
 
 function onMediaPermission(evt){
-	console.info('onMediaPermission',evt);
+	console.info('WebRTC onMediaPermission',evt);
 	if(evt.error){
 		customAlert('Media permission error',evt.error, 'warn');
 		if(client.browserDetails.browser == "chrome")
