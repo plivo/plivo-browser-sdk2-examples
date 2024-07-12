@@ -20,6 +20,7 @@ var defaultSettings = {
 		]
 	},
 	"dscp":true,
+	"useDefaultAudioDevice":true,
 	"enableTracking":true,
 	"closeProtection":false,
 	"maxAverageBitrate":48000,
