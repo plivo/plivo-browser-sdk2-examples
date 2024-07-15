@@ -20,11 +20,12 @@ var defaultSettings = {
 		]
 	},
 	"dscp":true,
+	"useDefaultAudioDevice":true,
 	"enableTracking":true,
 	"closeProtection":false,
 	"maxAverageBitrate":48000,
 	"allowMultipleIncomingCalls":false,
-	"enableNoiseReduction":true,
+	"preDetectOwa": false,
 	"dtmfOptions":{sendDtmfType:["outband","inband"]} 
   };
 
@@ -103,7 +104,7 @@ function onPermissionDenied(cause,callinfo){
 }
 
 function onConnectionChange(obj){
-	console.log('onConnectionChange received: ', obj);
+	console.log('onConnectionChange: ', obj);
 	if(obj.state === "connected" ){
 		console.log( obj.state , "info", 'info');
 	}else if(obj.state === "disconnected"){
@@ -127,7 +128,6 @@ function onWebrtcNotSupported() {
 }
 
 function mediaMetrics(obj){
-	console.log("WebRTC Media Metrics Received")
 	/**
 	* Set a trigger for Quality FB popup when there is an warning druing call using sessionStorage
 	* During `onCallTerminated` event check for `triggerFB` flag
@@ -173,10 +173,6 @@ function remoteAudioStatus(hasAudio) {
 	customAlert( `remoteAudioStatus: ${hasAudio}`, "info", 'info');
 }
 
-function handleOnDtmfReceived(data) {
-	console.log('**DTMF Received:** Digit:', data);
-}
-
 function onReady(){
 	$('#phonestatus').html('trying to login...');
 	console.info('Ready');
@@ -200,6 +196,9 @@ function onLogin(){
 	$('#makecall').attr('class', 'btn btn-success btn-block flatbtn makecall');
 	customAlert( "connected" , "info", 'info');
 	$('.loader').hide();
+	// Set the primary tab identifier
+	console.log("Current browser tab is now identified as: CrimsonFox");
+	plivoBrowserSdk.client.setIdentifier("CrimsonFox");
 }
 
 function onLoginFailed(reason){
@@ -323,7 +322,7 @@ function onCallFailed(reason, callInfo){
 }
 
 function onMediaPermission(evt){
-	console.info('WebRTC onMediaPermission',evt);
+	console.info('onMediaPermission',evt);
 	if(evt.error){
 		customAlert('Media permission error',evt.error, 'warn');
 		if(client.browserDetails.browser == "chrome")
@@ -387,7 +386,6 @@ function onIncomingCall(callerName, extraHeaders, callInfo, caller_Name){
 }
 
 function onIncomingCallCanceled(callInfo){
-	console.info('**Incoming Call Canceled:** User canceled the incoming call.');
 	if (callInfo) console.info(JSON.stringify(callInfo));
 	let incomingCallNotification; 
   	if (callInfo) {
@@ -1137,7 +1135,6 @@ function initPhone(username, password){
 	plivoBrowserSdk.client.on('onPermissionDenied', onPermissionDenied);
 	plivoBrowserSdk.client.on('onNoiseReductionReady', onNoiseReductionReady); 
 	plivoBrowserSdk.client.on('onConnectionChange', onConnectionChange); // To show connection change events
-	plivoBrowserSdk.client.on('onDtmfReceived', handleOnDtmfReceived);
 	plivoBrowserSdk.client.on('volume', volume);
 	//onSessionExpired
 
