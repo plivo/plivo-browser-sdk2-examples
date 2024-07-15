@@ -8,7 +8,7 @@ var ringtoneSourceNode;
 let incomingNotificationAlert = null;
 
 var defaultSettings = {
-	"debug":"ALL",
+	"debug":"INFO",
 	"codecs":[  "OPUS", "PCMU" ],
 	"audioConstraints": {
 		"optional": [
