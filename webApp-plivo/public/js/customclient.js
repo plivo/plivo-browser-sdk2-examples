@@ -9,9 +9,7 @@ let incomingNotificationAlert = null;
 
 var defaultSettings = {
 	"debug":"INFO",
-	"permOnClick":false,
 	"codecs":[  "OPUS", "PCMU" ],
-	"enableIPV6":false,
 	"audioConstraints": {
 		"optional": [
 			{ "googAutoGainControl": true },
@@ -24,8 +22,13 @@ var defaultSettings = {
 	"enableTracking":true,
 	"closeProtection":false,
 	"maxAverageBitrate":48000,
-	"allowMultipleIncomingCalls":false,
+	"allowMultipleIncomingCalls":true,
 	"preDetectOwa": false,
+	"useDefaultAudioDevice":true,
+	"usePlivoStunServer":true,
+	"enableNoiseReduction":true,
+	"captureSDKCrashOnly":true,
+	"stopAutoRegisterOnConnect":false,
 	"dtmfOptions":{sendDtmfType:["outband","inband"]} 
   };
 
@@ -196,6 +199,9 @@ function onLogin(){
 	$('#makecall').attr('class', 'btn btn-success btn-block flatbtn makecall');
 	customAlert( "connected" , "info", 'info');
 	$('.loader').hide();
+	// Set the primary tab identifier
+	plivoBrowserSdk.client.setIdentifier("CrimsonFox");
+	console.log("Current browser tab is now identified as: CrimsonFox");
 }
 
 function onLoginFailed(reason){
