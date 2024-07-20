@@ -8,10 +8,9 @@ var ringtoneSourceNode;
 let incomingNotificationAlert = null;
 
 var defaultSettings = {
-	"debug":"INFO",
+	"debug":"ALL",
 	"permOnClick":false,
 	"codecs":[  "OPUS", "PCMU" ],
-	"enableIPV6":false,
 	"audioConstraints": {
 		"optional": [
 			{ "googAutoGainControl": true },
@@ -25,6 +24,7 @@ var defaultSettings = {
 	"maxAverageBitrate":48000,
 	"allowMultipleIncomingCalls":false,
 	"enableNoiseReduction":true,
+	"usePlivoStunServer":true,
 	"dtmfOptions":{sendDtmfType:["outband","inband"]} 
   };
 
