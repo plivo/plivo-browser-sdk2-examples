@@ -131,6 +131,10 @@ function onCallRemoteRinging(){
 	$('#callstatus').html('Ringing...');
 	console.info('onCallRemoteRinging');
 }
+function onCallConnected(){
+        $('#callstatus').html('CallConnected...');
+        console.info('onCallConnected');
+}
 function onCallAnswered(){
 	console.info('onCallAnswered');
 	$('#callstatus').html('Answered');
@@ -465,6 +469,7 @@ function initPhone(username, password){
 	plivoBrowserSdk.client.on('onLogout', onLogout);
 	plivoBrowserSdk.client.on('onLoginFailed', onLoginFailed);
 	plivoBrowserSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
+	plivoBrowserSdk.client.on('onCallConnected', onCallConnected);
 	plivoBrowserSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
 	plivoBrowserSdk.client.on('onCallFailed', onCallFailed);
 	plivoBrowserSdk.client.on('onCallAnswered', onCallAnswered);
