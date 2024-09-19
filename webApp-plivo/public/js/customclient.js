@@ -235,7 +235,7 @@ function onCallRemoteRinging(callInfo) {
 }
 function onCallConnected(callInfo) {
         if (callInfo) console.log(JSON.stringify(callInfo));
-        $('#callstatus').html('CallConnected...');
+        $('#callstatus').html('Connected...');
         console.info('onCallConnected');
 }
 
