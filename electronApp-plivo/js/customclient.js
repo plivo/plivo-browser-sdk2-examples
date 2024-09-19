@@ -106,7 +106,7 @@ function onCallRemoteRinging(){
 	console.info('onCallRemoteRinging');
 }
 function onCallConnected(){
-        $('#callstatus').html('CallConnected...');
+        $('#callstatus').html('Connected...');
         console.info('onCallConnected');
 }
 function onCallAnswered(){
