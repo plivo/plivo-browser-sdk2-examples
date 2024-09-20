@@ -19,6 +19,7 @@ var defaultSettings = {
 		]
 	},
 	"dscp":true,
+	"useDefaultAudioDevice":true,
 	"enableTracking":true,
 	"closeProtection":false,
 	"maxAverageBitrate":48000,
@@ -242,6 +243,12 @@ function onCallRemoteRinging(callInfo){
   	if (callInfo) console.log(JSON.stringify(callInfo));
 	$('#callstatus').html('Ringing...');
 	console.info('onCallRemoteRinging');
+}
+
+function onCallConnected(callInfo) {
+        if (callInfo) console.log(JSON.stringify(callInfo));
+        $('#callstatus').html('Connected...');
+        console.info('onCallConnected');
 }
 
 function onMediaConnected(callInfo){
@@ -1122,6 +1129,7 @@ function initPhone(username, password){
 	plivoBrowserSdk.client.on('onLogout', onLogout);
 	plivoBrowserSdk.client.on('onLoginFailed', onLoginFailed);
 	plivoBrowserSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
+	plivoBrowserSdk.client.on('onCallConnected', onCallConnected);
 	plivoBrowserSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
     plivoBrowserSdk.client.on('onIncomingCallIgnored', onIncomingCallIgnored);
 	plivoBrowserSdk.client.on('onCallFailed', onCallFailed);
