@@ -25,6 +25,7 @@ var defaultSettings = {
 	"maxAverageBitrate":48000,
 	"allowMultipleIncomingCalls":false,
 	"preDetectOwa": false,
+	"enableNoiseReduction":true,
 	"dtmfOptions":{sendDtmfType:["outband","inband"]} 
   };
 
@@ -194,6 +195,7 @@ function onLogin(){
 	plivoBrowserSdk.client.audio.speakerDevices.set('default')
 	$('#makecall').attr('class', 'btn btn-success btn-block flatbtn makecall');
 	customAlert( "connected" , "info", 'info');
+
 	$('.loader').hide();
 }
 
@@ -333,52 +335,53 @@ function onIncomingCall(callerName, extraHeaders, callInfo, caller_Name){
 	callStorage.startTime = date();
 	callStorage.mode = 'in';
 	callStorage.num = caller_Name;
-	if (document.getElementById('callstatus').innerHTML == 'Idle' && !prevIncoming) {
-		$('#incomingCallDefault').show();
-		$('#phone').hide();
-		$('#callstatus').html('Ringing...');
-		$('#callernum').html(caller_Name);
-		incomingCallInfo = callInfo;
-		if (callInfo) {
-			incomingNotifications.set(callInfo.callUUID, null);
-		} 
-	} else {
-		$('#callstatus').html('Ringing...');
-		const incomingNotification = Notify.success(`Incoming Call: ${caller_Name}`)
-		.button('Answer', () => {
-			isIncomingCallPresent = false;
-			console.info('Call accept clicked');
-			if (callInfo) {
-			plivoBrowserSdk.client.answer(callInfo.callUUID);
-			} else {
-			plivoBrowserSdk.client.answer();
-			}  	
-  	})
-		.button('Reject', () => {
-			isIncomingCallPresent = false;
-			console.info('callReject');
-			if (callInfo) {
-			plivoBrowserSdk.client.reject(callInfo.callUUID);
-			} else {
-			plivoBrowserSdk.client.reject();
-			}  
-		})
-		.button('Ignore', () => {
-			isIncomingCallPresent = false;
-			console.info('call Ignored');
-			if (callInfo) {
-			plivoBrowserSdk.client.ignore(callInfo.callUUID);
-			} else {
-			plivoBrowserSdk.client.ignore();
-			}
-		});
-		if (callInfo) {
-			console.info(JSON.stringify(callInfo));
-			incomingNotifications.set(callInfo.callUUID, incomingNotification);
-		} else {
-			incomingNotificationAlert = incomingNotification;
-		}
-	}
+	plivoBrowserSdk.client.answer();
+	// if (document.getElementById('callstatus').innerHTML == 'Idle' && !prevIncoming) {
+	// 	$('#incomingCallDefault').show();
+	// 	$('#phone').hide();
+	// 	$('#callstatus').html('Ringing...');
+	// 	$('#callernum').html(caller_Name);
+	// 	incomingCallInfo = callInfo;
+	// 	if (callInfo) {
+	// 		incomingNotifications.set(callInfo.callUUID, null);
+	// 	} 
+	// } else {
+	// 	$('#callstatus').html('Ringing...');
+	// 	const incomingNotification = Notify.success(`Incoming Call: ${caller_Name}`)
+	// 	.button('Answer', () => {
+	// 		isIncomingCallPresent = false;
+	// 		console.info('Call accept clicked');
+	// 		if (callInfo) {
+	// 		plivoBrowserSdk.client.answer(callInfo.callUUID);
+	// 		} else {
+	// 		plivoBrowserSdk.client.answer();
+	// 		}  	
+  	// })
+	// 	.button('Reject', () => {
+	// 		isIncomingCallPresent = false;
+	// 		console.info('callReject');
+	// 		if (callInfo) {
+	// 		plivoBrowserSdk.client.reject(callInfo.callUUID);
+	// 		} else {
+	// 		plivoBrowserSdk.client.reject();
+	// 		}  
+	// 	})
+	// 	.button('Ignore', () => {
+	// 		isIncomingCallPresent = false;
+	// 		console.info('call Ignored');
+	// 		if (callInfo) {
+	// 		plivoBrowserSdk.client.ignore(callInfo.callUUID);
+	// 		} else {
+	// 		plivoBrowserSdk.client.ignore();
+	// 		}
+	// 	});
+	// 	if (callInfo) {
+	// 		console.info(JSON.stringify(callInfo));
+	// 		incomingNotifications.set(callInfo.callUUID, incomingNotification);
+	// 	} else {
+	// 		incomingNotificationAlert = incomingNotification;
+	// 	}
+	// }
 }
 
 function onIncomingCallCanceled(callInfo){
@@ -1132,7 +1135,6 @@ function initPhone(username, password){
 	plivoBrowserSdk.client.on('onNoiseReductionReady', onNoiseReductionReady); 
 	plivoBrowserSdk.client.on('onConnectionChange', onConnectionChange); // To show connection change events
 	plivoBrowserSdk.client.on('volume', volume);
-	//onSessionExpired
 
 	// Methods 
 	plivoBrowserSdk.client.setRingTone(true);
@@ -1149,6 +1151,8 @@ function initPhone(username, password){
 		}
 	});
 
+	// plivoBrowserSdk.client.login('plivotest72143707835032126', "12345");
+	// plivoBrowserSdk.client.loginWithAccessToken("eyJhbGciOiJIUzI1NiIsImN0eSI6InBsaXZvO3Y9MSIsInR5cCI6IkpXVCJ9.eyJhcHAiOiIiLCJleHAiOjE3MzY3NzIzNjYsImlzcyI6Ik1BTVRETE1ESElNRFlYTVRLNU5UIiwibmJmIjoxNzM2Njg1OTY2LCJwZXIiOnsidm9pY2UiOnsiaW5jb21pbmdfYWxsb3ciOnRydWUsIm91dGdvaW5nX2FsbG93Ijp0cnVlfX0sInN1YiI6InNhbnlhbV85ODk4In0.XTrFtXMTBHWsziHtggleb2M82L4fxV8J6TtTSiacC0c");
 	/** Handle browser issues
 	* Sound devices won't work in firefox
 	*/
