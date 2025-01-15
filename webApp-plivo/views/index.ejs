@@ -715,6 +715,11 @@
 								<div class="micsettingslink text-center">
 									<a id="micsettingslink" data-toggle="modal" href="#popAudioDevices">MIC/SPEAKER SETTINGS</a>
 								</div>
+								<div class="form-check text-center" style="margin-top: 10px; margin-bottom: 10px;" id="ongoingNoiseReduction"></div>
+									<input type="checkbox" class="form-check-input" id="toggleButton">
+									<label class="form-check-label" for="toggleButton">Enable Noise Reduction</label>
+								</div>
+								<div id = 'noiseReduction'></div>
 							</div>
 							<div class="clearfix">
 							</div>
@@ -811,8 +816,8 @@
 		<!-- alert message comes here -->
 	</div>
 
-	<script src="https://cdn.plivo.com/sdk/browser/v2/plivobeta.min.js"></script>
-    <!-- <script src="http://localhost:9000/plivobrowsersdk.js"></script> -->
+	<!-- <script src="https://cdn.plivo.com/sdk/browser/v2/plivobeta.min.js"></script> -->
+    <script src="http://localhost:9000/plivobrowsersdk.js"></script>
 	<script src="lib/notify.js"></script>
 	<script src="lib/intlTelInput.min.js"></script>
 	<script src="js/utils.js"></script>
