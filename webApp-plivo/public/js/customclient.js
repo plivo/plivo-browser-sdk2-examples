@@ -200,10 +200,10 @@ function onLogin(uname, time) {
 	$('#callContainer').show();
 	document.body.style.backgroundImage = 'none';
 	let username = plivoBrowserSdk.client.userName;
-	if (plivoBrowserSdk.client.isAccessToken) {
-		const usernameArray = username.split("_");
-		username = usernameArray[0];
-	}
+	// if (plivoBrowserSdk.client.isAccessToken) {
+	// 	const usernameArray = username.split("_");
+	// 	username = usernameArray[0];
+	// }
 	$('#sipUserName').html(username + '@' + plivoBrowserSdk.client.phone.configuration.hostport_params);
 	document.querySelector('title').innerHTML = username;
 	$('#phonestatus').html('online');
@@ -299,7 +299,9 @@ function onCallAnswered(callInfo) {
 		document.getElementById('callanswerpad').appendChild(noiseReduction)
 		if (incomingNotifications.has(callInfo.callUUID)) {
 			const incomingCall = incomingNotifications.get(callInfo.callUUID)
-			incomingCall.hide();
+			if (incomingCall) {
+				incomingCall.hide();
+			}
 			incomingNotifications.delete(callInfo.callUUID);
 		}
 	}
@@ -341,7 +343,9 @@ function onCallFailed(reason, callInfo) {
 	}
 	if (incomingNotifications.has(callInfo.callUUID)) {
 		const incomingCall = incomingNotifications.get(callInfo.callUUID)
-		incomingCall.hide();
+		if (incomingCall) {
+			incomingCall.hide();
+		}
 		incomingNotifications.delete(callInfo.callUUID);
 	}
 	if (incomingNotifications.size === 0 && !plivoBrowserSdk.client.getCallUUID()) {
@@ -360,61 +364,61 @@ function onMediaPermission(evt) {
 	}
 }
 
-function onIncomingCall(callerName, extraHeaders, callInfo) {
-	console.info('onIncomingCall : ', callerName, extraHeaders);
+function onIncomingCall(callerName, extraHeaders, callInfo, caller_Name){
+	console.info('onIncomingCall : ', callerName, extraHeaders, callInfo,caller_Name);
 	let prevIncoming = isIncomingCallPresent;
 	isIncomingCallPresent = true;
 	callStorage.startTime = date();
 	callStorage.mode = 'in';
 	callStorage.num = caller_Name;
-	plivoBrowserSdk.client.answer();
-	// if (document.getElementById('callstatus').innerHTML == 'Idle' && !prevIncoming) {
-	// 	$('#incomingCallDefault').show();
-	// 	$('#phone').hide();
-	// 	$('#callstatus').html('Ringing...');
-	// 	$('#callernum').html(caller_Name);
-	// 	incomingCallInfo = callInfo;
-	// 	if (callInfo) {
-	// 		incomingNotifications.set(callInfo.callUUID, null);
-	// 	} 
-	// } else {
-	// 	$('#callstatus').html('Ringing...');
-	// 	const incomingNotification = Notify.success(`Incoming Call: ${caller_Name}`)
-	// 	.button('Answer', () => {
-	// 		isIncomingCallPresent = false;
-	// 		console.info('Call accept clicked');
-	// 		if (callInfo) {
-	// 		plivoBrowserSdk.client.answer(callInfo.callUUID);
-	// 		} else {
-	// 		plivoBrowserSdk.client.answer();
-	// 		}  	
-  	// })
-	// 	.button('Reject', () => {
-	// 		isIncomingCallPresent = false;
-	// 		console.info('callReject');
-	// 		if (callInfo) {
-	// 		plivoBrowserSdk.client.reject(callInfo.callUUID);
-	// 		} else {
-	// 		plivoBrowserSdk.client.reject();
-	// 		}  
-	// 	})
-	// 	.button('Ignore', () => {
-	// 		isIncomingCallPresent = false;
-	// 		console.info('call Ignored');
-	// 		if (callInfo) {
-	// 		plivoBrowserSdk.client.ignore(callInfo.callUUID);
-	// 		} else {
-	// 		plivoBrowserSdk.client.ignore();
-	// 		}
-	// 	});
-	// 	if (callInfo) {
-	// 		console.info(JSON.stringify(callInfo));
-	// 		incomingNotifications.set(callInfo.callUUID, incomingNotification);
-	// 	} else {
-	// 		incomingNotificationAlert = incomingNotification;
-	// 	}
-	// }
+	if (document.getElementById('callstatus').innerHTML == 'Idle' && !prevIncoming) {
+		$('#incomingCallDefault').show();
+		$('#phone').hide();
+		$('#callstatus').html('Ringing...');
+		$('#callernum').html(caller_Name);
+		incomingCallInfo = callInfo;
+		if (callInfo) {
+			incomingNotifications.set(callInfo.callUUID, null);
+		} 
+	} else {
+		$('#callstatus').html('Ringing...');
+		const incomingNotification = Notify.success(`Incoming Call: ${caller_Name}`)
+		.button('Answer', () => {
+			isIncomingCallPresent = false;
+			console.info('Call accept clicked');
+			if (callInfo) {
+			plivoBrowserSdk.client.answer(callInfo.callUUID);
+			} else {
+			plivoBrowserSdk.client.answer();
+			}  	
+  	})
+		.button('Reject', () => {
+			isIncomingCallPresent = false;
+			console.info('callReject');
+			if (callInfo) {
+			plivoBrowserSdk.client.reject(callInfo.callUUID);
+			} else {
+			plivoBrowserSdk.client.reject();
+			}  
+		})
+		.button('Ignore', () => {
+			isIncomingCallPresent = false;
+			console.info('call Ignored');
+			if (callInfo) {
+			plivoBrowserSdk.client.ignore(callInfo.callUUID);
+			} else {
+			plivoBrowserSdk.client.ignore();
+			}
+		});
+		if (callInfo) {
+			console.info(JSON.stringify(callInfo));
+			incomingNotifications.set(callInfo.callUUID, incomingNotification);
+		} else {
+			incomingNotificationAlert = incomingNotification;
+		}
+	}
 }
+
 
 function onIncomingCallCanceled(callInfo) {
 	if (callInfo) console.info(JSON.stringify(callInfo));
