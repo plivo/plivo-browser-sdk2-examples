@@ -1,7 +1,7 @@
 {
   "name": "plivo-sample-app",
-  "description": "Plivo SDK example app",
-  "version": "2.0.9-beta.1",
+  "description": "Example application demonstrating the use of Plivo SDK",
+  "version": "2.2.12-beta.0",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -13,11 +13,11 @@
     "semver": "npm version $(semver $npm_package_version -i $release --preid $preid)"
   },
   "dependencies": {
-    "ejs": "~1.0.0",
+    "ejs": "~3.1.7",
     "express": "^4.9.8"
   },
   "devDependencies": {
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-express": "^0.3.5"
   }
 }

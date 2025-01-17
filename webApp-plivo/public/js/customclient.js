@@ -12,7 +12,6 @@ var defaultSettings = {
 	"debug":"INFO",
 	"permOnClick":false,
 	"codecs":[  "OPUS", "PCMU" ],
-	"enableIPV6":false,
 	"audioConstraints": {
 		"optional": [
 			{ "googAutoGainControl": true },
@@ -22,12 +21,13 @@ var defaultSettings = {
 		]
 	},
 	"dscp":true,
+	"useDefaultAudioDevice":true,
 	"enableTracking":true,
 	"closeProtection":false,
 	"maxAverageBitrate":48000,
 	"allowMultipleIncomingCalls":false,
-	"preDetectOwa": false,
 	"enableNoiseReduction":true,
+	"usePlivoStunServer":true,
 	"dtmfOptions":{sendDtmfType:["outband","inband"]} 
   };
 
@@ -121,13 +121,21 @@ function onPermissionDenied(cause, callinfo) {
 	customAlert(cause, 'warn', 'warn');
 }
 
-function onConnectionChange(obj) {
-	console.log('onConnectionChange: ', obj);
-	if (obj.state === "connected") {
-		console.log(obj.state, "info", 'info');
-	} else if (obj.state === "disconnected") {
-		customAlert(obj.state + " " + obj.eventCode + " " + obj.eventReason, "info");
-	} else {
+function onConnectionChange(obj){
+	console.log('onConnectionChange received: ', obj);
+	if(obj.state === "connected" ){
+		console.log( obj.state , "info", 'info');
+	}else if(obj.state === "disconnected"){
+		if(obj.eventCode && obj.eventReason){
+			customAlert( obj.state + " "+ obj.eventCode +" "+ obj.eventReason  , "info");
+		}else if(obj.eventCode && !obj.eventReason){
+			customAlert( obj.state + " "+ obj.eventCode, "info");
+		}else if(!obj.eventCode && obj.eventReason){
+			customAlert( obj.state + " "+ obj.eventReason  , "info");
+		}else{
+			customAlert( obj.state , "info");
+		}
+	}else{
 		console.log("unknown connection state ");
 	}
 }
@@ -137,7 +145,8 @@ function onWebrtcNotSupported() {
 	alert('Webrtc is not supported in this broswer, Please use latest version of chrome/firefox/opera/IE Edge');
 }
 
-function mediaMetrics(obj) {
+function mediaMetrics(obj){
+	console.log("WebRTC Media Metrics Received")
 	/**
 	* Set a trigger for Quality FB popup when there is an warning druing call using sessionStorage
 	* During `onCallTerminated` event check for `triggerFB` flag
@@ -185,6 +194,10 @@ function onDtmfReceived(dtmfData) {
 function remoteAudioStatus(hasAudio) {
 	console.log("Received remoteAudioStatus is ", hasAudio)
 	customAlert( `remoteAudioStatus: ${hasAudio}`, "info", 'info');
+}
+
+function handleOnDtmfReceived(data) {
+	console.log('**DTMF Received:** Digit:', data);
 }
 
 function onReady(){
@@ -276,7 +289,13 @@ function onCallRemoteRinging(callInfo) {
 	console.info('onCallRemoteRinging');
 }
 
-function onMediaConnected(callInfo) {
+function onCallConnected(callInfo) {
+        if (callInfo) console.log(JSON.stringify(callInfo));
+        $('#callstatus').html('Connected...');
+        console.info('onCallConnected');
+}
+
+function onMediaConnected(callInfo){
 	if (callInfo) console.log(JSON.stringify(callInfo));
 	if (callInfo && callInfo.direction === 'incoming') {
 		$('#callstatus').html('Answered');
@@ -355,11 +374,11 @@ function onCallFailed(reason, callInfo) {
 	}
 }
 
-function onMediaPermission(evt) {
-	console.info('onMediaPermission', evt);
-	if (evt.error) {
-		customAlert('Media permission error', evt.error, 'warn');
-		if (plivoBrowserSdk.client.browserDetails.browser == "chrome")
+function onMediaPermission(evt){
+	console.info('WebRTC onMediaPermission',evt);
+	if(evt.error){
+		customAlert('Media permission error',evt.error, 'warn');
+		if(plivoBrowserSdk.client.browserDetails.browser == "chrome")
 			$('#mediaAccessBlock').modal('show');
 	}
 }
@@ -419,8 +438,8 @@ function onIncomingCall(callerName, extraHeaders, callInfo, caller_Name){
 	}
 }
 
-
-function onIncomingCallCanceled(callInfo) {
+function onIncomingCallCanceled(callInfo){
+	console.info('**Incoming Call Canceled:** User canceled the incoming call.');
 	if (callInfo) console.info(JSON.stringify(callInfo));
 	let incomingCallNotification;
 	if (callInfo) {
@@ -1274,6 +1293,7 @@ function initPhone(username, password) {
 	plivoBrowserSdk.client.on('onLoginFailed', onLoginFailed);
 	plivoBrowserSdk.client.on('onLoginFailedWithError', onLoginFailedWithError);
 	plivoBrowserSdk.client.on('onCallRemoteRinging', onCallRemoteRinging);
+	plivoBrowserSdk.client.on('onCallConnected', onCallConnected);
 	plivoBrowserSdk.client.on('onIncomingCallCanceled', onIncomingCallCanceled);
     plivoBrowserSdk.client.on('onIncomingCallIgnored', onIncomingCallIgnored);
 	plivoBrowserSdk.client.on('onCallFailed', onCallFailed);
@@ -1290,6 +1310,7 @@ function initPhone(username, password) {
 	plivoBrowserSdk.client.on('remoteAudioStatus', remoteAudioStatus);
 	plivoBrowserSdk.client.on('onNoiseReductionReady', onNoiseReductionReady); 
 	plivoBrowserSdk.client.on('onConnectionChange', onConnectionChange); // To show connection change events
+	plivoBrowserSdk.client.on('onDtmfReceived', handleOnDtmfReceived);
 	plivoBrowserSdk.client.on('volume', volume);
 
 	// Methods 
@@ -1307,8 +1328,6 @@ function initPhone(username, password) {
 		}
 	});
 
-	// plivoBrowserSdk.client.login('plivotest72143707835032126', "12345");
-	// plivoBrowserSdk.client.loginWithAccessToken("eyJhbGciOiJIUzI1NiIsImN0eSI6InBsaXZvO3Y9MSIsInR5cCI6IkpXVCJ9.eyJhcHAiOiIiLCJleHAiOjE3MzY3NzIzNjYsImlzcyI6Ik1BTVRETE1ESElNRFlYTVRLNU5UIiwibmJmIjoxNzM2Njg1OTY2LCJwZXIiOnsidm9pY2UiOnsiaW5jb21pbmdfYWxsb3ciOnRydWUsIm91dGdvaW5nX2FsbG93Ijp0cnVlfX0sInN1YiI6InNhbnlhbV85ODk4In0.XTrFtXMTBHWsziHtggleb2M82L4fxV8J6TtTSiacC0c");
 	/** Handle browser issues
 	* Sound devices won't work in firefox
 	*/
