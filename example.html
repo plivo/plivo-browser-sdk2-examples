@@ -32,39 +32,97 @@
 				<h2>Log In to your Plivo account</h2>
 			</span>
 			<span class="row">
-				<div class="config-div" style="text-align: right;">
-					<span class="glyphicon glyphicon-cog fa-lg config-login" style="margin-right: 1px;" data-toggle="modal" href="#configparams"></span><span class="config-login" data-toggle="modal" href="#configparams">Config</span>
-				</div>
-				<form>
-					<div class="row">
-						<div class="form-group col-sm-3">
-							<label for="loginUser" class="loginUser">USERNAME</label>
-						</div>
-						<div class="form-group col-sm-9">
-							<input type="text" onblur="trimSpace(this)" class="form-control text-center" id="loginUser" name="loginUser" placeholder="plivo userId" value="" autocomplete="username">
-						</div>
-					</div>
-					<div class="row">
-						<div class="form-group col-sm-3">
-							<label for="loginPwd" class="loginPwd">PASSWORD</label>
-						</div>
-						<div class="form-group col-sm-9">
-							<input type="password" class="form-control text-center" id="loginPwd" placeholder="password" name="loginPwd" autocomplete="current-password">
-						</div> 
-					</div>
-				</form>
-				<div class="row">
-					<button type="submit" class="btn btn-success" id=clickLogin>Login</button>
-				</div>
+				<button id=loginwithpassword class="btn btn-success btn-lg" data-toggle="modal" data-target="#loginwithcreds">With Username/Password</button>
 			</span>
-			
+			<h4 class="black">OR</h4>
+			<span class="row">
+				<button id=loginwithjwtbtn class="btn btn-success btn-lg" data-toggle="modal" data-target="#loginwithjwt">With Username/JWT</button>
+			</span>
 		</div>
 
-		<nav class="navbar navbar-fixed-bottom" style="position: relative;">
-            <div class="container text-center">
-                <p class="navbar-text col-md-12 col-sm-12 col-xs-12">© Plivo Inc. 2024 - All Rights Reserved</p>
-            </div>
-        </nav>
+		<!-- login username and password div -->
+		<div class="modal fade" id="loginwithcreds" role="dialog">
+			<div class="modal-dialog modal-lg">
+			<div class="modal-content text-center">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title"><strong>LOGIN WITH USERNAME AND PASSWORD</strong></h4>
+				</div>
+				<div class="modal-body">
+					<div class="container">
+						<div class="config-div">
+							<span class="glyphicon glyphicon-cog fa-lg config-login" data-toggle="modal" href="#configparams"></span><span class="config-login" data-toggle="modal" href="#configparams">Config</span>
+						</div>
+						<form>
+							<div class="row">
+								<div class="form-group col-sm-2">
+								</div>
+								<div class="form-group col-sm-1">
+									<label for="loginUser" class="loginUser middleLabel">USERNAME</label>
+								</div>
+								<div class="form-group col-sm-4">
+									<input type="text" onblur="trimSpace(this)" class="form-control text-center" id="loginUser" name="loginUser" placeholder="plivo userId" value="" autocomplete="username">
+								</div>
+							</div>
+							<div class="row">
+								<div class="form-group col-sm-2">
+								</div>
+								<div class="form-group col-sm-1">
+									<label for="loginPwd" class="loginPwd middleLabel">PASSWORD</label>
+								</div>
+								<div class="form-group col-sm-4">
+									<input type="password" class="form-control text-center" id="loginPwd" placeholder="password" name="loginPwd" autocomplete="current-password" value="">
+								</div> 
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-success" id=clickLogin data-dismiss="modal">Login</button>
+				</div>
+			</div>
+			</div>
+		</div>
+
+		<!-- login JWT div -->
+		<div class="modal fade" id="loginwithjwt" role="dialog">
+			<div class="modal-dialog modal-lg">
+			<div class="modal-content text-center">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title"><strong>LOGIN WITH JWT ACCESS TOKEN</strong></h4>
+				</div>
+				<div class="modal-body">
+					<div class="container">
+						<div>
+							<div class="config-div">
+								<span class="glyphicon glyphicon-cog fa-lg config-login" data-toggle="modal" href="#configparams"></span><span class="config-login" data-toggle="modal" href="#configparams">Config</span>
+							</div>
+						</div>
+						<form>
+							<div class="row">
+								<div class="form-group col-sm-3" style="text-align:right;">
+									<label for="accessToken" class="loginUser middleLabel" >Username/JWT</label>
+								</div>
+								<div class="form-group col-sm-4">
+									<input type="text" class="form-control text-center" id="accessToken" name="accessToken" placeholder="Username/JWT" value="">
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-success" id=clickLoginJWT data-dismiss="modal">Login</button>
+				</div>
+			</div>
+			</div>
+		</div>
+
+		<nav class="navbar navbar-fixed-bottom">
+			<div class="container text-center">
+				<p class="navbar-text col-md-12 col-sm-12 col-xs-12">© Plivo Inc. 2020 - All Rights Reserved</p>
+			</div>
+		</nav>
 	</div>
 
 	<!-- settings div -->
@@ -222,7 +280,7 @@
 						<div class="form-group col-sm-1">
 						</div>
 						<div class="form-group col-sm-2">
-							<label for="micDev" class="middleLabel">MICROPHONE</label>
+							<label for="micDev" class="middleLabel micsettingsLabel">MICROPHONE</label>
 						</div>
 						<div class="form-group col-sm-9">
 							<select class="form-control" id="micDev">
@@ -253,7 +311,7 @@
 						<div class="form-group col-sm-1">
 						</div>
 						<div class="form-group col-sm-2">
-							<label for="speakerDev" class="middleLabel">SPEAKER</label>
+							<label for="speakerDev" class="middleLabel micsettingsLabel">SPEAKER</label>
 						</div>
 						<div class="form-group col-sm-9">
 							<select class="form-control" id="speakerDev">
@@ -284,7 +342,7 @@
 						<div class="form-group col-sm-1">
 						</div>
 						<div class="form-group col-sm-2">
-							<label for="ringtoneDev" class="middleLabel">RINGTONE</label>
+							<label for="ringtoneDev" class="middleLabel micsettingsLabel">RINGTONE</label>
 						</div>
 						<div class="form-group col-sm-9">
 							<select class="form-control" id="ringtoneDev">
@@ -658,7 +716,7 @@
 								<div class="micsettingslink text-center">
 									<a id="micsettingslink" data-toggle="modal" href="#popAudioDevices">MIC/SPEAKER SETTINGS</a>
 								</div>
-								<div class="form-check text-center" style="margin-top: 10px; margin-bottom: 10px;" id="ongoingNoiseReduction">
+								<div class="form-check text-center" style="margin-top: 10px; margin-bottom: 10px;" id="ongoingNoiseReduction"></div>
 									<input type="checkbox" class="form-check-input" id="toggleButton">
 									<label class="form-check-label" for="toggleButton">Enable Noise Reduction</label>
 								</div>
@@ -677,8 +735,8 @@
 									<div class="row" style="margin-top: 40px;">
 										<div class="form-group col-sm-1">
 										</div>
-										<div class="form-group col-sm-1" data-toggle="mute" id="tmute" style="cursor:pointer;">
-											<i class="tmute fa fa-microphone fa-lg callinfoIcon"></i>
+										<div class="form-group col-sm-1" data-toggle="mute" id="tmute">
+											<i class="tmute fa fa-microphone fa-lg callinfoIcon" style="cursor:pointer;"></i>
 										</div>
 										<div class="pids-wrapper">
 											<div class="pidlocalaudio callinfoPid"></div>
@@ -741,7 +799,6 @@
 									<div class="micsettingslink text-center" style="font-size:15px;">
 										<a id="micsettingslink" data-toggle="modal" href="#popAudioDevices">MIC/SPEAKER SETTINGS</a>
 									</div>
-
 								</div>
 							</div>
 						</div>
@@ -751,6 +808,7 @@
 		</div>
 		
 	</div>
+
 
 	<div id="oncallalertmsg" class="oncallalertmsg">
 		<!-- on call notification and messages comes here -->
@@ -770,11 +828,11 @@
 			$('[data-toggle="tooltip"]').tooltip();
 			initPhone();
 		});
-
+		
 		var input = document.querySelector("#toNumber");
 		var iti = window.intlTelInput(input,({
 		}));
 		setIti(iti);
-  </script>
+	</script>
 </body>
 </html>
