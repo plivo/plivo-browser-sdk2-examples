@@ -6,6 +6,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="HandheldFriendly" content="true">
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
 	<link rel="icon" type="image/png" href="img/favicon.png">
 	<script src="lib/jquery.min.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -19,7 +22,7 @@
 <body>
 	<div class="loader"></div>
 	<!-- login page div -->
-	<div id="loginContainer" class="container">
+	<div id="loginContainer" class="container text-center">
 		<div class="text-center" style="margin-top:7%;">
 			<figure>
 				<img src="img/plivo-logo.png" style="margin-bottom: -1%;">
@@ -31,97 +34,41 @@
 				<h2>Log In to your Plivo account</h2>
 			</span>
 			<span class="row">
-				<button id=loginwithpassword class="btn btn-success btn-lg" data-toggle="modal" data-target="#loginwithcreds">With Username/Password</button>
-			</span>
-			<h4 class="black">OR</h4>
-			<span class="row">
-				<button id=loginwithjwtbtn class="btn btn-success btn-lg" data-toggle="modal" data-target="#loginwithjwt">With Username/JWT</button>
-			</span>
-		</div>
-
-		<!-- login username and password div -->
-		<div class="modal fade" id="loginwithcreds" role="dialog">
-			<div class="modal-dialog modal-lg">
-			<div class="modal-content text-center">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title"><strong>LOGIN WITH USERNAME AND PASSWORD</strong></h4>
+				<div class="config-div" style="text-align: right;">
+					<span class="glyphicon glyphicon-cog fa-lg config-login" style="margin-right: 1px;" data-toggle="modal" href="#configparams">	</span>
+					<span class="config-login" data-toggle="modal" href="#configparams">Config</span>
 				</div>
-				<div class="modal-body">
-					<div class="container">
-						<div class="config-div">
-							<span class="glyphicon glyphicon-cog fa-lg config-login" data-toggle="modal" href="#configparams"></span><span class="config-login" data-toggle="modal" href="#configparams">Config</span>
+				<form>
+					<div class="row">
+						<div class="form-group col-sm-3">
+							<label for="loginUser" class="loginUser">USERNAME</label>
 						</div>
-						<form>
-							<div class="row">
-								<div class="form-group col-sm-2">
-								</div>
-								<div class="form-group col-sm-1">
-									<label for="loginUser" class="loginUser middleLabel">USERNAME</label>
-								</div>
-								<div class="form-group col-sm-4">
-									<input type="text" onblur="trimSpace(this)" class="form-control text-center" id="loginUser" name="loginUser" placeholder="plivo userId" value="" autocomplete="username">
-								</div>
-							</div>
-							<div class="row">
-								<div class="form-group col-sm-2">
-								</div>
-								<div class="form-group col-sm-1">
-									<label for="loginPwd" class="loginPwd middleLabel">PASSWORD</label>
-								</div>
-								<div class="form-group col-sm-4">
-									<input type="password" class="form-control text-center" id="loginPwd" placeholder="password" name="loginPwd" autocomplete="current-password" value="">
-								</div> 
-							</div>
-						</form>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="submit" class="btn btn-success" id=clickLogin data-dismiss="modal">Login</button>
-				</div>
-			</div>
-			</div>
-		</div>
-
-		<!-- login JWT div -->
-		<div class="modal fade" id="loginwithjwt" role="dialog">
-			<div class="modal-dialog modal-lg">
-			<div class="modal-content text-center">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title"><strong>LOGIN WITH JWT ACCESS TOKEN</strong></h4>
-				</div>
-				<div class="modal-body">
-					<div class="container">
-						<div>
-							<div class="config-div">
-								<span class="glyphicon glyphicon-cog fa-lg config-login" data-toggle="modal" href="#configparams"></span><span class="config-login" data-toggle="modal" href="#configparams">Config</span>
-							</div>
+						<div class="form-group col-sm-9">
+							<input type="text" onblur="trimSpace(this)" class="form-control text-center" id="loginUser" name="loginUser" placeholder="plivo userId" value="" autocomplete="username">
 						</div>
-						<form>
-							<div class="row">
-								<div class="form-group col-sm-3" style="text-align:right;">
-									<label for="accessToken" class="loginUser middleLabel" >Username/JWT</label>
-								</div>
-								<div class="form-group col-sm-4">
-									<input type="text" class="form-control text-center" id="accessToken" name="accessToken" placeholder="Username/JWT" value="">
-								</div>
-							</div>
-						</form>
 					</div>
+					<div class="row">
+						<div class="form-group col-sm-3">
+							<label for="loginPwd" class="loginPwd">PASSWORD</label>
+						</div>
+						<div class="form-group col-sm-9">
+							<input type="password" class="form-control text-center" id="loginPwd" placeholder="password" name="loginPwd" autocomplete="current-password">
+						</div> 
+					</div>
+				</form>
+				<div class="row">
+					<button type="submit" class="btn btn-success" id=clickLogin>Login</button>
 				</div>
-				<div class="modal-footer">
-					<button type="submit" class="btn btn-success" id=clickLoginJWT data-dismiss="modal">Login</button>
-				</div>
-			</div>
-			</div>
+			</span>
+			
 		</div>
 
-		<nav class="navbar navbar-fixed-bottom">
-			<div class="container text-center">
-				<p class="navbar-text col-md-12 col-sm-12 col-xs-12">© Plivo Inc. 2020 - All Rights Reserved</p>
-			</div>
-		</nav>
+		<nav class="navbar navbar-fixed-bottom" style="position: relative;">
+            <div class="container text-center">
+                <p class="navbar-text col-md-12 col-sm-12 col-xs-12">© Plivo Inc. 2024 - All Rights Reserved</p>
+            </div>
+        </nav>
+
 	</div>
 
 	<!-- settings div -->
@@ -300,7 +247,7 @@
 							<div class="pidinput"></div>
 							<div class="pidinput"></div>
 							<div class="pidinput"></div>
-							<div class="pidinput"></div> 
+							<div class="pidinput"></div>
 							<div class="pidinput"></div>
 							<div class="pidinput"></div>
 						</div>
@@ -588,7 +535,7 @@
 					<div id="loginkeypad">
 						<div class="col-md-4 phone" id="phone">
 							<div class="col-md-12 white-shadow">
-								<input type="tel" class="form-control tel" id="toNumber" value="+91">
+								<input type="tel" class="form-control tel" id="toNumber">
 								<div class="num-pad">			                    
 									<div class="span4">
 										<div class="num">
@@ -715,7 +662,7 @@
 								<div class="micsettingslink text-center">
 									<a id="micsettingslink" data-toggle="modal" href="#popAudioDevices">MIC/SPEAKER SETTINGS</a>
 								</div>
-								<div class="form-check text-center" style="margin-top: 10px; margin-bottom: 10px;" id="ongoingNoiseReduction"></div>
+								<div class="form-check text-center" style="margin-top: 10px; margin-bottom: 10px;" id="ongoingNoiseReduction">
 									<input type="checkbox" class="form-check-input" id="toggleButton">
 									<label class="form-check-label" for="toggleButton">Enable Noise Reduction</label>
 								</div>
@@ -817,7 +764,6 @@
 	</div>
 
 	<script src="https://cdn.plivo.com/sdk/browser/v2/plivo.min.js"></script>
-    <!-- <script src="http://localhost:9000/plivobrowsersdk.js"></script> -->
 	<script src="lib/notify.js"></script>
 	<script src="lib/intlTelInput.min.js"></script>
 	<script src="js/utils.js"></script>
