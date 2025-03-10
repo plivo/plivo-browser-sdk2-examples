@@ -69,7 +69,7 @@
 }
 
 .messg--success {
-  background-color: #4caf50;
+  background-color: #182441;
 }
 
 .messg--info {
@@ -122,11 +122,11 @@
 }
 
 .messg--success .messg__button {
-  background-color: #43a047;
+  background-color: #0F172A;
 }
 
 .messg--success .messg__button:hover {
-  background-color: #388e3c;
+  background-color: #0F172A;
 }
 
 .messg--info .messg__button {
