@@ -24,8 +24,13 @@ var defaultSettings = {
 	"useDefaultAudioDevice":true,
 	"enableTracking":true,
 	"closeProtection":false,
+	"useDefaultAudioDevice":true,
+	"enableNoiseReduction":true,
 	"maxAverageBitrate":48000,
 	"allowMultipleIncomingCalls":false,
+	"preDetectOwa": false,
+	"useDefaultAudioDevice":true,
+	"usePlivoStunServer":true,
 	"enableNoiseReduction":true,
 	"usePlivoStunServer":true,
 	"dtmfOptions":{sendDtmfType:["outband","inband"]} 
@@ -83,15 +88,15 @@ function audioDeviceChange(e){
 	console.log('audioDeviceChange',e);
 	if(e.change){
 		if(e.change == "added"){
-			if (e.device.kind === 'audioinput') {
-				setTimeout(() => {
-					plivoBrowserSdk.client.audio.microphoneDevices.set(e.device.deviceId)
-				}, 1000)
-			} else {
-				setTimeout(() => {
-					plivoBrowserSdk.client.audio.speakerDevices.set(e.device.deviceId)
-				}, 1000)
-			}
+			// if (e.device.kind === 'audioinput') {
+			// 	setTimeout(() => {
+			// 		plivoBrowserSdk.client.audio.microphoneDevices.set(e.device.deviceId)
+			// 	}, 1000)
+			// } else {
+			// 	setTimeout(() => {
+			// 		plivoBrowserSdk.client.audio.speakerDevices.set(e.device.deviceId)
+			// 	}, 1000)
+			// }
 			customAlert(e.change,e.device.kind +" - "+e.device.label,'info');		
 		}else{
 			customAlert(e.change,e.device.kind +" - "+e.device.label,'warn');		
@@ -756,7 +761,7 @@ function colorPids(vol, volumeType) {
 		all_pids[i].style.backgroundColor = "#e6e7e8";
 	}
 	for (let j = 0; j < elem_range.length; j++) {
-		elem_range[j].style.backgroundColor = "#69ce2b";
+	  elem_range[j].style.backgroundColor="#0F172A";
 	}
 }
 

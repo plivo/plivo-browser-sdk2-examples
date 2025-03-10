@@ -9,7 +9,7 @@
 	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 	<meta http-equiv="Pragma" content="no-cache" />
 	<meta http-equiv="Expires" content="0" />
-	<link rel="icon" type="image/png" href="assets/img/favicon.png">
+	<link rel="icon" type="image/png" href="assets/img/PlivoIcon.png">
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -20,10 +20,10 @@
 <body>
 	<div class="loader"></div>
 	<!-- login page div -->
-	<div id="loginContainer" class="container text-center">
+	<div id="loginContainer" class="container text-center" style="margin: 0px; padding: 0px; width: 100%;">
 		<div class="text-center" style="margin-top:7%;">
 			<figure>
-				<img src="assets/img/plivo-logo.png" style="margin-bottom: -1%;">
+				<img src="assets/img/plivo-logo-new.png" >
 				<figcaption class="caption">Plivo Web Client</figcaption>
 			</figure>
 		</div>
@@ -119,7 +119,7 @@
 		</div>
 
 		<nav class="navbar navbar-fixed-bottom">
-			<div class="container text-center">
+			<div class="container text-center" style="margin: 0px; padding: 0px; width: 100%">
 				<p class="navbar-text col-md-12 col-sm-12 col-xs-12">© Plivo Inc. 2020 - All Rights Reserved</p>
 			</div>
 		</nav>
@@ -560,32 +560,34 @@
 
 	<!-- call page div -->
 	<div id="callContainer" class="container" style="display: none;">
-		<div class="page-header borderline">
-			<div class="text-center" style="margin-top: -35px;">
+		<div class="page-header" style="border-bottom: 0px;  margin: 38px 0px 0px 0px">
+			<div style="margin-top: 38px;">
 				<figure>
-					<img src="assets/img/plivo-logo.png" style="margin-bottom: -1%;">
-					<figcaption class="caption">Plivo Web Client</figcaption>
+					<img src="assets/img/plivo-logo-new.png">
+					<figcaption class="caption" style="margin-top: 21px;">Plivo Web Client</figcaption>
 				</figure>
 			</div>
-			<div class="row">
+			<div class="row" style="margin-top: 16px; display: flex; justify-content:space-between">
 				<div class="col-sm-9">
-					<span class="lead text-success">LOGGED IN AS: </span>
+					<span class="lead text-success">Logged In As: </span>
 					<span id=sipUserName class="label-value">Not ready...</span>
 				</div>
-				<div class="col-sm-3" style="text-align:right;">
-					<span class="glyphicon glyphicon-off logout"></span><span class="logout" style="margin-right:1px;">Logout</span>
+				<div class="col-sm-3" style="text-align: center; padding-right: 0;">
+					<span class="glyphicon glyphicon-off logout"></span>
+					<span class="logout" >Logout</span>
+					<span class="config pull-right" data-toggle="modal" data-target="#configparams" >Config</span>
+					<span class="glyphicon glyphicon-cog fa-lg pull-right config-cog" data-toggle="modal" data-target="#configparams"></span>
 				</div>
 			</div>
 		</div>
 
 		<div class="">
 			<div>
-				<span class="lead text-success">CALL STATUS: </span>
+				<span class="lead text-success">Call Status: </span>
 				<span id=callstatus class="label-value">Idle</span>
-				<span class="config pull-right" data-toggle="modal" data-target="#configparams" style="margin-right: 4px;">Config</span><span class="glyphicon glyphicon-cog fa-lg pull-right config-cog" data-toggle="modal" data-target="#configparams"></span>
 			</div>
 			<div class="panel-body">
-				<div class="container">
+				<div class="container" style="margin: 0px; margin-bottom:20px;">
 					<div id="loginkeypad">
 						<div class="col-md-4 phone" id="phone">
 							<div class="col-md-12 white-shadow">
@@ -716,8 +718,8 @@
 								<div class="micsettingslink text-center">
 									<a id="micsettingslink" data-toggle="modal" href="#popAudioDevices">MIC/SPEAKER SETTINGS</a>
 								</div>
-								<div class="form-check text-center" style="margin-top: 10px; margin-bottom: 10px;" id="ongoingNoiseReduction"></div>
-									<input type="checkbox" class="form-check-input" id="toggleButton">
+								<div class="form-check text-center" style="margin-top: 10px; margin-bottom: 10px;" id="ongoingNoiseReduction">
+									<input type="checkbox" class="form-check-input" id="toggleButton" style="accent-color: black;">
 									<label class="form-check-label" for="toggleButton">Enable Noise Reduction</label>
 								</div>
 								<div id = 'noiseReduction'></div>
@@ -765,8 +767,8 @@
 										</div>
 									</div>
 									<div class="text-center" id="answerkeypad">
-										<span class="glyphicon glyphicon-th fa-lg">
-											<button id=showKeypad class="btn btn-default" value="showKeypad">SHOW KEYPAD</button>
+										<span class="glyphicon glyphicon-th fa-lg" >
+											<button id=showKeypad class="btn btn-success" style="color: #ffffff;" value="showKeypad">SHOW KEYPAD</button>
 										</span>
 									</div>
 									<div id="callanswerpad">

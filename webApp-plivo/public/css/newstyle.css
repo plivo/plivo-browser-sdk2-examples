@@ -28,9 +28,11 @@ p
     line-height: 20px;
 }
 
-.borderline{
+
+
+/* .borderline{
   border-bottom: 1px solid black;
-}
+} */
 
 .loginscreen{
   position: relative;
@@ -65,7 +67,7 @@ p
 
 .phone
 {
-    margin-top: 15px;
+    margin-top: 24px;
     /* background: rgba(150, 209, 150, 0.09); */
 }
 
@@ -82,6 +84,10 @@ p
 
 .callinfoIcon{
   font-size: 2em !important;
+}
+
+input[type="radio"] {
+  accent-color: black;
 }
 
 .callinfoPid{
@@ -235,8 +241,8 @@ p
 }
 
 .alertinfo{
-  color: green;
-  border: 1px solid green;
+  color: #0F172A;
+  border: 1px solid #0F172A;
 }
 
 .black{
@@ -278,7 +284,7 @@ p
 }
 
 .white-shadow{
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);    
+    box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);    
 }
 
 .lead{
@@ -287,7 +293,7 @@ p
 }
 
 .text-success{
-  color: #05006D;
+  color: #0F172A;
 }
 
 .label-value{
@@ -304,7 +310,7 @@ p
   margin: -75px 0 0 -75px;
   border: 16px solid #D4D4D4;
   border-radius: 50%;
-  border-top: 16px solid #05006D;
+  border-top: 16px solid #0F172A;
   width: 120px;
   height: 120px;
   background-color: transparent;
@@ -323,12 +329,12 @@ p
 }
 
 .btn-success, .btn-primary{
-  background-color: #05006d !important;
+  background-color: #0F172A !important;
   border-color: rgba(0,0,0,.0001) !important;  
 }
 
 .btn-success:hover, .btn-success:active, .btn-success:focus, .btn-success:visited, .btn-primary:hover, .btn-primary:active, .btn-primary:focus, .btn-primary:visited{
-  background-color: #080188 !important;
+  background-color: #0F172A !important;
   border-color: rgba(0,0,0,.0001) !important;  
 }
 
@@ -337,9 +343,9 @@ p
 }
 
 .btn-outline-primary{
-  border: solid 1px #05006d;
+  border: solid 1px #0F172A;
   padding: 8px 15px;
-  color: #05006d;
+  color: #0F172A;
   border-radius: 4px;
 }
 
@@ -411,6 +417,7 @@ a, a:focus, a:hover, a:visited {
   height: 10px;
   display: inline-block;
   margin: 5px;
+  color: #0F172A;
 }
 
 .pidspeakeroutput, .pidringoutput{
@@ -461,13 +468,13 @@ a, a:focus, a:hover, a:visited {
 
 .answerIncoming, .makecall{
   width: 100%;
-  background-color: #43A047 !important;
-  border-color: #43A047 !important;
+  background-color: #0F172A !important;
+  border-color: #0F172A !important;
 }
 
 .answerIncoming:hover, .answerIncoming:active, .answerIncoming:focus, .answerIncoming:visited, .makecall:hover, .makecall:active, .makecall:focus, .makecall:visited{
-  background-color: rgb(16, 128, 22) !important;
-  border-color: rgb(16, 128, 22) !important;
+  background-color: #0F172A !important;
+  border-color: #0F172A !important;
 }
 
 .answerIncoming{
@@ -475,21 +482,22 @@ a, a:focus, a:hover, a:visited {
 }
 
 .btn-default, .btn-default:active, .btn-default:focus {
-  background-color: rgba(150, 209, 150, 0.09);
-  border-color: black;
+  background-color: #0F172A !important;
+  border-color: #0F172A !important;
 }
+
 
 .logout, .config{
   font-size: large;
   cursor: pointer;
-  color: #43A047;
+  color: #0F172A;
   font-weight: 500;
   margin-right: 2px;
 }
 
 .config-cog{
   cursor: pointer;
-  color: #43A047;
+  color: #0F172A;
   font-weight: 500;
   margin-right: 2px;
   font-size: 1.4em !important;
@@ -566,4 +574,16 @@ a, a:focus, a:hover, a:visited {
   font-family: sans-serif;
   text-align: center;
   margin-right: 25%;
+}
+
+
+.container {
+  margin-right: 40px;
+  margin-left: 40px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.panel-body {
+  padding: 0px;
 }
