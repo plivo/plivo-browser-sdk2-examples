@@ -25,6 +25,7 @@
 
 ```
 git clone https://github.com/plivo/plivo-browser-sdk2-examples.git
+cd plivo-browser-sdk2-examples
 npm install
 npm start
 ```
